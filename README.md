@@ -1,4 +1,4 @@
-# RandomMonomialIdeals.m2
+# RandomMonomialIdeals in Macaulay2
 RMI summer 2017 IIT working group
 
 RandomMonomialIdeals.m2 is our main package file.
