@@ -21,6 +21,11 @@ newPackage(
 		HomePage => "add me"
 	    },	
 	    {
+		Name => "Tanner Zielinski", 
+		Email => "tzielin1@hawk.iit.edu", 
+		HomePage => "https://www.linkedin.com/in/tannerzielinski/"
+	    },	
+	    {
 		Name => "add your name here", 
 		Email => "add me", 
 		HomePage => "add me, if any; if not, comment out?"
