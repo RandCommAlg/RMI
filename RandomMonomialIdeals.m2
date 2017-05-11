@@ -26,6 +26,11 @@ newPackage(
 		HomePage => "https://www.linkedin.com/in/tannerzielinski/"
 	    },	
 	    {
+		Name => "Daniel Kosmas", 
+		Email => "dkosmas@hawk.iit.edu", 
+		HomePage => "https://www.linkedin.com/in/daniel-kosmas-03160988/"
+	    },
+	    {
 		Name => "add your name here", 
 		Email => "add me", 
 		HomePage => "add me, if any; if not, comment out?"
