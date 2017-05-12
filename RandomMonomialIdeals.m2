@@ -83,16 +83,16 @@ randomGeneratingSets = method(TypicalValue => List)
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
-    allMonomials := drop(flatten flatten apply(D+1,d->entries basis(d,R)),1);  
-    -- [the following comments will be moved to documentation node and/or deleted; they are kept here for your reference for now]: 
-    -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1); 
-    -- if that number <= p, then include the monomial m in a generating set: 
-    --B=select(allMonomials, m-> random(0.0,1.0)<=p) 
-    -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p. 
-    --In addition, we need a sample of size N of sets of monomials like these, so here we go: 
+    allMonomials := flatten flatten apply(1..D,d->entries basis(d,R));
+    -- [the following comments will be moved to documentation node and/or deleted; they are kept here for your reference for now]:
+    -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1);
+    -- if that number <= p, then include the monomial m in a generating set:
+    --B=select(allMonomials, m-> random(0.0,1.0)<=p)
+    -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
+    --In addition, we need a sample of size N of sets of monomials like these, so here we go:
     B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) )
     --the result:
-    -- B = list of random monomial ideal generating sets. 
+    -- B = list of random monomial ideal generating sets.
 )
 
 --**********************************--
