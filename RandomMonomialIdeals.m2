@@ -31,10 +31,15 @@ newPackage(
 		HomePage => "https://www.linkedin.com/in/daniel-kosmas-03160988/"
 	    },
 	    {
+		Name => "Parker Joncus", 
+		Email => "pjoncus@hawk.iit.edu", 
+		-- HomePage => "add me, if any; if not, comment out?"
+	    }
+	    {
 		Name => "add your name here", 
 		Email => "add me", 
 		HomePage => "add me, if any; if not, comment out?"
-	    }	
+	    }
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
