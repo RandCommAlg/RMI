@@ -17,8 +17,8 @@ newPackage(
 	    },	
 	    {
 		Name => "Dane Wilburne", 
-		Email => "add me", 
-		HomePage => "add me"
+		Email => "", 
+		HomePage => ""
 	    },	
 	    {
 		Name => "Tanner Zielinski", 
@@ -33,18 +33,18 @@ newPackage(
 	    {
 		Name => "Parker Joncus", 
 		Email => "pjoncus@hawk.iit.edu", 
-		-- HomePage => "add me, if any; if not, comment out?"
+		HomePage => ""
 	    },
 	    {
 		Name => "Richard Osborn", 
 		Email => "rosborn@hawk.iit.edu", 
-		-- HomePage => "add me, if any; if not, comment out?"
-	    },
-	    {
-		Name => "add your name here", 
-		Email => "add me", 
-		HomePage => "add me, if any; if not, comment out?"
+		HomePage => ""
 	    }
+	    --{
+	    --	Name => "add your name here", 
+	    --	Email => "", 
+	    --	HomePage => ""
+	    --}
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
@@ -113,7 +113,7 @@ multidoc ///
   Key
    RandomMonomialIdeals
   Headline
-   A package for generating Erdos-Renyi-type random monomial ideals
+     A package for generating Erdos-Renyi-type random monomial ideals
   Description
    Text
     {\em RandomMonomialIdeals} is a  package that... 
