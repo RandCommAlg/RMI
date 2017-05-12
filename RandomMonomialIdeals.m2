@@ -40,11 +40,11 @@ newPackage(
 		Email => "rosborn@hawk.iit.edu", 
 		HomePage => ""
 	    }
-	    --{
-	    --	Name => "Monica Yun", 
-	    --	Email => "myun1@hawk.iit.edu", 
-	    --	HomePage => ""
-	    --}
+	    {
+	    	Name => "Monica Yun", 
+	    	Email => "myun1@hawk.iit.edu", 
+	    	HomePage => ""
+	    }
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
