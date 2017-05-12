@@ -41,8 +41,8 @@ newPackage(
 		HomePage => ""
 	    }
 	    --{
-	    --	Name => "add your name here", 
-	    --	Email => "", 
+	    --	Name => "Monica Yun", 
+	    --	Email => "myun1@hawk.iit.edu", 
 	    --	HomePage => ""
 	    --}
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
