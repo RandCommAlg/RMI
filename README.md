@@ -10,3 +10,9 @@ load "RandomMonomialIdeals.m2"
 randomGeneratingSets(2,3,0.2,10)      
 
 See if you understand what the output is. See comments in the .m2 file. We will discuss this Friday 5/12. 
+
+Then to install a package:
+
+installPackage("RandomMonomialIdeals")
+
+or even better (to update the documentation): installPackage("RandomMonomialIdeals", RerunExamples=>true)
