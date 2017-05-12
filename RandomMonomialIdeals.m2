@@ -116,9 +116,9 @@ multidoc ///
      A package for generating Erdos-Renyi-type random monomial ideals
   Description
    Text
-    {\em FirstPackage} is a basic package to be used as an example.
+    {\em RandomMonomialIdeals} is a  package that... 
   Caveat
-    Still trying to figure this out.
+    Still trying to figure this out. [REMOVE ME]
  Node
   Key
    (firstFunction,ZZ)
@@ -138,6 +138,30 @@ multidoc ///
    Example
     firstFunction 1
     firstFunction 0
+ Node
+  Key
+   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+   randomGeneratingSets
+  Headline
+   generates ... 
+  Usage
+   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+  Inputs
+   n: ZZ--num of vars
+   D: ZZ--degree bound
+   p: RR--probability parameter
+   N: ZZ--sample size
+  Outputs
+   :
+    a list of generating sets
+  Description
+   Text
+    n is the num of vars,  D is the degree bound, p is the probability parameter, N is the sample size [REWRITE ME]
+    For example, to obtain .... we run: 
+   Example
+    randomGeneratingSets(2,3,0.2,10)
+   Text 
+    Explain some more. 
 ///
 
 
