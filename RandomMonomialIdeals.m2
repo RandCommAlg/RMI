@@ -113,7 +113,7 @@ multidoc ///
   Key
    RandomMonomialIdeals
   Headline
-     A package for generating Erdos-Renyi-type random monomial ideals
+   A package for generating Erdos-Renyi-type random monomial ideals
   Description
    Text
     {\em RandomMonomialIdeals} is a  package that... 
@@ -147,10 +147,10 @@ multidoc ///
   Usage
    randomGeneratingSets (ZZ,ZZ,RR,ZZ)
   Inputs
-   n: ZZ--num of vars
-   D: ZZ--degree bound
-   p: RR--probability parameter
-   N: ZZ--sample size
+   n: ZZ
+   D: ZZ
+   p: RR
+   N: ZZ
   Outputs
    :
     a list of generating sets
@@ -162,6 +162,8 @@ multidoc ///
     randomGeneratingSets(2,3,0.2,10)
    Text 
     Explain some more. 
+  SeeAlso
+   firstFunction
 ///
 
 
