@@ -17,8 +17,8 @@ newPackage(
 	    },	
 	    {
 		Name => "Dane Wilburne", 
-		Email => "", 
-		HomePage => ""
+		Email => "dwilburn@hawk.iit.edu", 
+		HomePage => "http://mypages.iit.edu/~dwilburn/"
 	    },	
 	    {
 		Name => "Tanner Zielinski", 
