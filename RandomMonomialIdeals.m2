@@ -173,9 +173,56 @@ doc ///
 -- TESTS     	     	       	    	    -- 
 --******************************************--
 
+--************************--
+--  randomGeneratingSets  --
+--************************--
 
 TEST ///
-    assert ( firstFunction 2 == "D'oh!" )
+    -- Check there are N samples
+    N=10;
+    assert (N==#randomGeneratingSets(3,2,0.5,N))
+///
+
+TEST ///
+    -- Check no terms are chosen for a probability of 0
+    assert (0==#(randomGeneratingSets(5,5,0.0,1))#0)
+///
+
+TEST ///
+    -- Check all possible values are outputted with a probability of 1
+    D=3;
+    n=4;
+    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
+    D=2;
+    n=6;
+    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
+///
+
+TEST ///
+    -- Check every monomial is generated
+    L=(randomGeneratingSets(2,3,1.0,1))#0
+    R=ring(L#0)
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
+///
+
+TEST ///
+    -- Check max degree of monomial less than or equal to D
+    n=10;
+    D=5;
+    assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    n=4;
+    D=7;
+    assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+///
+
+TEST ///
+    -- Check min degree of monomial greater than or equal to 1
+    n=8;
+    D=6;
+    assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    n=3;
+    D=5;
+    assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
 ///
 
 end
@@ -184,4 +231,3 @@ You can write anything you want down here.  I like to keep examples
 as I’m developing here.  Clean it up before submitting for
 publication.  If you don't want to do that, you can omit the "end"
 above.
-
