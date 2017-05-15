@@ -202,7 +202,7 @@ TEST ///
     -- Check every monomial is generated
     L=(randomGeneratingSets(2,3,1.0,1))#0
     R=ring(L#0)
-    assert(sort L==sort {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
 ///
 
 TEST ///
