@@ -17,8 +17,8 @@ newPackage(
 	    },	
 	    {
 		Name => "Dane Wilburne", 
-		Email => "", 
-		HomePage => ""
+		Email => "dwilburn@hawk.iit.edu", 
+		HomePage => "http://mypages.iit.edu/~dwilburn/"
 	    },	
 	    {
 		Name => "Tanner Zielinski", 
@@ -39,12 +39,17 @@ newPackage(
 		Name => "Richard Osborn", 
 		Email => "rosborn@hawk.iit.edu", 
 		HomePage => ""
+	    },
+	    {
+	    	Name => "Monica Yun", 
+	    	Email => "myun1@hawk.iit.edu", 
+	    	HomePage => ""
+	    },
+	    {
+	    	Name => "Genevieve Hummel", 
+	    	Email => "ghummel1@hawk.iit.edu", 
+	    	HomePage => ""
 	    }
-	    --{
-	    --	Name => "add your name here", 
-	    --	Email => "", 
-	    --	HomePage => ""
-	    --}
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
@@ -75,24 +80,19 @@ firstFunction ZZ := String => n -> if n == 1 then "Hello World!" else "D'oh!"
 --  Methods that need documentation --
 --**********************************--
 randomGeneratingSets = method(TypicalValue => List)
--- INPUTS [these comments will be moved to documentation node, here for your reference for now]: 
--- n= num of vars
--- D= degree bound
--- p= prob param
--- N= sample size
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
+
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    -- [the following comments will be moved to documentation node and/or deleted; they are kept here for your reference for now]: 
-    -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1); 
-    -- if that number <= p, then include the monomial m in a generating set: 
-    --B=select(allMonomials, m-> random(0.0,1.0)<=p) 
-    -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p. 
-    --In addition, we need a sample of size N of sets of monomials like these, so here we go: 
+    -- this generates a list of all possible monomials of degree <= D in n variables
+    -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1);
+    -- if that number <= p, then include the monomial m in a generating set B
+    -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
+    -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
     B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) )
     --the result:
-    -- B = list of random monomial ideal generating sets. 
+    -- B = list of random monomial ideal generating sets.
 )
 
 --**********************************--
@@ -105,66 +105,68 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
 --******************************************--
-
-
 beginDocumentation()
-multidoc ///
- Node
-  Key
-   RandomMonomialIdeals
-  Headline
-     A package for generating Erdos-Renyi-type random monomial ideals
-  Description
-   Text
-    {\em RandomMonomialIdeals} is a  package that... 
-  Caveat
-    Still trying to figure this out. [REMOVE ME]
- Node
-  Key
-   (firstFunction,ZZ)
-   firstFunction
-  Headline
-   a silly first function
-  Usage
-   firstFunction n
-  Inputs
-   n:
-  Outputs
-   :
-    a silly string, depending on the value of {\tt n}
-  Description
-   Text
-    Here we show an example.
-   Example
-    firstFunction 1
-    firstFunction 0
- Node
-  Key
-   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
-   randomGeneratingSets
-  Headline
-   generates ... 
-  Usage
-   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
-  Inputs
-   n: ZZ
-   D: ZZ
-   p: RR
-   N: ZZ
-  Outputs
-   :
-    a list of generating sets
-  Description
-   Text
-    n is the num of vars,  D is the degree bound, p is the probability parameter, N is the sample size [REWRITE ME]
-    For example, to obtain .... we run: 
-   Example
-    randomGeneratingSets(2,3,0.2,10)
-   Text 
-    Explain some more. 
-  SeeAlso
-   firstFunction
+
+doc ///
+ Key
+  RandomMonomialIdeals
+ Headline
+  A package for generating Erdos-Renyi-type random monomial ideals
+ Description
+  Text
+   {\em RandomMonomialIdeals} is a  package that... 
+  -- Caveat
+  -- Still trying to figure this out. [REMOVE ME]
 ///
+
+doc ///
+ Key
+  firstFunction
+  (firstFunction,ZZ)
+ Headline
+  a silly first function
+ Usage
+  firstFunction n
+ Inputs
+  n:ZZ
+ Outputs
+  :String
+   a silly string, depending on the value of {\tt n}
+ Description
+  Text
+   Here we show an example.
+  Example
+   firstFunction 1
+   firstFunction 0
+///
+
+doc ///
+ Key
+  randomGeneratingSets
+  (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+ Headline
+  randomly generates lists of monomials, up to a given dimension
+ Usage
+  randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+ Inputs
+  n: ZZ
+  D: ZZ
+  p: RR
+  N: ZZ
+ Outputs
+  B: List
+   a list of generating sets of monomials
+ Description
+  Text
+   given number of variables n, degree bound D, and probability parameter p, N generating sets of monomials are randomly generated
+  Example
+   B=randomGeneratingSets(2,3,0.2,10)
+   randomGeneratingSets(3,4,1.0,1)
+   randomGeneratingSets(5,2,0.6,4)
+ SeeAlso
+  firstFunction
+///
+
 
 
 --******************************************--
