@@ -89,12 +89,11 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
     allMonomials := flatten flatten apply(1..D,d->entries basis(d,R));
-    -- [the following comments will be moved to documentation node and/or deleted; they are kept here for your reference for now]:
+    -- this generates a list of all possible monomials of degree <= D in n variables
     -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1);
-    -- if that number <= p, then include the monomial m in a generating set:
-    --B=select(allMonomials, m-> random(0.0,1.0)<=p)
+    -- if that number <= p, then include the monomial m in a generating set B
     -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
-    --In addition, we need a sample of size N of sets of monomials like these, so here we go:
+    -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
     B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) )
     --the result:
     -- B = list of random monomial ideal generating sets.
@@ -150,7 +149,7 @@ doc ///
   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
   randomGeneratingSets
  Headline
-  generates ... 
+  randomly generates lists of monomials, up to a given dimension
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
  Inputs
@@ -160,13 +159,14 @@ doc ///
   N: ZZ
  Outputs
   :
-  a list of generating sets
+  a list of generating sets of monomials
  Description
   Text
-   n is the num of vars,  D is the degree bound, p is the probability parameter, N is the sample size [REWRITE ME]
-   For example, to obtain .... we run: 
+   given number of variables {n}, degree bound {D}, and probability parameter {p}, {N} generating sets of monomials are randomly generated
   Example
    randomGeneratingSets(2,3,0.2,10)
+   randomGeneratingSets(3,4,1,1)
+   randomGeneratingSets(5,2,0.6,4)
   Text
    Explain some more.
  SeeAlso
