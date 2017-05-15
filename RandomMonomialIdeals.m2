@@ -110,24 +110,24 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
 --******************************************--
-
-
 beginDocumentation()
-multidoc ///
- Node
-  Key
-   RandomMonomialIdeals
-  Headline
-     A package for generating Erdos-Renyi-type random monomial ideals
-  Description
-   Text
-    {\em RandomMonomialIdeals} is a  package that... 
+
+doc ///
+ Key
+  RandomMonomialIdeals
+ Headline
+  A package for generating Erdos-Renyi-type random monomial ideals
+ Description
+  Text
+   {\em RandomMonomialIdeals} is a  package that... 
   Caveat
-    Still trying to figure this out. [REMOVE ME]
- Node
-  Key
-   (firstFunction,ZZ)
-   firstFunction
+   Still trying to figure this out. [REMOVE ME]
+///
+
+doc ///
+ Key
+  (firstFunction,ZZ)
+  firstFunction
   Headline
    a silly first function
   Usage
@@ -136,39 +136,41 @@ multidoc ///
    n:
   Outputs
    :
-    a silly string, depending on the value of {\tt n}
+   a silly string, depending on the value of {\tt n}
   Description
    Text
     Here we show an example.
    Example
     firstFunction 1
     firstFunction 0
- Node
-  Key
-   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
-   randomGeneratingSets
-  Headline
-   generates ... 
-  Usage
-   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
-  Inputs
-   n: ZZ
-   D: ZZ
-   p: RR
-   N: ZZ
-  Outputs
-   :
-    a list of generating sets
-  Description
-   Text
-    n is the num of vars,  D is the degree bound, p is the probability parameter, N is the sample size [REWRITE ME]
-    For example, to obtain .... we run: 
-   Example
-    randomGeneratingSets(2,3,0.2,10)
-   Text 
-    Explain some more. 
-  SeeAlso
-   firstFunction
+ ///
+ 
+doc ///
+ Key
+  (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets
+ Headline
+  generates ... 
+ Usage
+  randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+ Inputs
+  n: ZZ
+  D: ZZ
+  p: RR
+  N: ZZ
+ Outputs
+  :
+  a list of generating sets
+ Description
+  Text
+   n is the num of vars,  D is the degree bound, p is the probability parameter, N is the sample size [REWRITE ME]
+   For example, to obtain .... we run: 
+  Example
+   randomGeneratingSets(2,3,0.2,10)
+  Text
+   Explain some more.
+ SeeAlso
+  firstFunction
 ///
 
 
