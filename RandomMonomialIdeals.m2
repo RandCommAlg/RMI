@@ -117,26 +117,26 @@ doc ///
   -- Caveat
   -- Still trying to figure this out. [REMOVE ME]
 ///
-{*
+
 doc ///
  Key
   firstFunction
   (firstFunction,ZZ)
-  Headline
-   a silly first function
-  Usage
-   firstFunction n
-  Inputs
-   n:ZZ
-  Outputs
-   :String
-    a silly string, depending on the value of {\tt n}
-  Description
-   Text
-    Here we show an example.
-   Example
-    firstFunction 1
-    firstFunction 0
+ Headline
+  a silly first function
+ Usage
+  firstFunction n
+ Inputs
+  n:ZZ
+ Outputs
+  :String
+   a silly string, depending on the value of {\tt n}
+ Description
+  Text
+   Here we show an example.
+  Example
+   firstFunction 1
+   firstFunction 0
 ///
 
 doc ///
@@ -160,12 +160,12 @@ doc ///
    given number of variables n, degree bound D, and probability parameter p, N generating sets of monomials are randomly generated
   Example
    B=randomGeneratingSets(2,3,0.2,10)
-   randomGeneratingSets(3,4,1,1)
+   randomGeneratingSets(3,4,1.0,1)
    randomGeneratingSets(5,2,0.6,4)
  SeeAlso
   firstFunction
 ///
-*}
+
 
 
 --******************************************--
