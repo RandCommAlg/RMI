@@ -39,17 +39,17 @@ newPackage(
 		Name => "Richard Osborn", 
 		Email => "rosborn@hawk.iit.edu", 
 		HomePage => ""
-	    }
+	    },
 	    {
 	    	Name => "Monica Yun", 
 	    	Email => "myun1@hawk.iit.edu", 
 	    	HomePage => ""
-	    }
-	     {
+	    },
+	    {
 	    	Name => "Genevieve Hummel", 
 	    	Email => "ghummel1@hawk.iit.edu", 
 	    	HomePage => ""
-	    }
+	    },
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
@@ -162,8 +162,6 @@ doc ///
    randomGeneratingSets(2,3,0.2,10)
    randomGeneratingSets(3,4,1,1)
    randomGeneratingSets(5,2,0.6,4)
-  Text
-   Explain some more.
  SeeAlso
   firstFunction
 ///
