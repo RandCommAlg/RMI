@@ -117,7 +117,7 @@ doc ///
   -- Caveat
   -- Still trying to figure this out. [REMOVE ME]
 ///
-
+{*
 doc ///
  Key
   firstFunction
@@ -127,18 +127,18 @@ doc ///
   Usage
    firstFunction n
   Inputs
-   n:
+   n:ZZ
   Outputs
-   :
-   a silly string, depending on the value of {\tt n}
+   :String
+    a silly string, depending on the value of {\tt n}
   Description
    Text
     Here we show an example.
    Example
     firstFunction 1
     firstFunction 0
- ///
- 
+///
+
 doc ///
  Key
   randomGeneratingSets
@@ -154,17 +154,18 @@ doc ///
   N: ZZ
  Outputs
   B: List
-  a list of generating sets of monomials
+   a list of generating sets of monomials
  Description
   Text
    given number of variables n, degree bound D, and probability parameter p, N generating sets of monomials are randomly generated
   Example
-   randomGeneratingSets(2,3,0.2,10)
+   B=randomGeneratingSets(2,3,0.2,10)
    randomGeneratingSets(3,4,1,1)
    randomGeneratingSets(5,2,0.6,4)
  SeeAlso
   firstFunction
 ///
+*}
 
 
 --******************************************--
