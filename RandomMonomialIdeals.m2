@@ -213,7 +213,7 @@ TEST ///
 ///
 
 TEST ///
-    -- Check min degree of monomial less than or equal to 1
+    -- Check min degree of monomial greater than or equal to 1
     n=8;
     D=6;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
