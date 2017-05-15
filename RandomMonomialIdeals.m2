@@ -153,7 +153,7 @@ doc ///
   p: RR
   N: ZZ
  Outputs
-  :
+  B: List
   a list of generating sets of monomials
  Description
   Text
