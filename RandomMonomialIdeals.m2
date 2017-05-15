@@ -157,7 +157,7 @@ doc ///
   a list of generating sets of monomials
  Description
   Text
-   given number of variables {\tt n}, degree bound {\tt D}, and probability parameter {\tt p}, {\tt N} generating sets of monomials are randomly generated
+   given number of variables n, degree bound D, and probability parameter p, N generating sets of monomials are randomly generated
   Example
    randomGeneratingSets(2,3,0.2,10)
    randomGeneratingSets(3,4,1,1)
