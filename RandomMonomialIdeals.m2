@@ -120,8 +120,8 @@ doc ///
 
 doc ///
  Key
-  (firstFunction,ZZ)
   firstFunction
+  (firstFunction,ZZ)
   Headline
    a silly first function
   Usage
@@ -141,8 +141,8 @@ doc ///
  
 doc ///
  Key
-  (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
   randomGeneratingSets
+  (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
  Headline
   randomly generates lists of monomials, up to a given dimension
  Usage
