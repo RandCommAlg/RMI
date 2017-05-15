@@ -49,7 +49,7 @@ newPackage(
 	    	Name => "Genevieve Hummel", 
 	    	Email => "ghummel1@hawk.iit.edu", 
 	    	HomePage => ""
-	    },
+	    }
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
