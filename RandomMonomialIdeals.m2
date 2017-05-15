@@ -114,8 +114,8 @@ doc ///
  Description
   Text
    {\em RandomMonomialIdeals} is a  package that... 
-  Caveat
-   Still trying to figure this out. [REMOVE ME]
+  -- Caveat
+   -- Still trying to figure this out. [REMOVE ME]
 ///
 
 doc ///
