@@ -80,11 +80,6 @@ firstFunction ZZ := String => n -> if n == 1 then "Hello World!" else "D'oh!"
 --  Methods that need documentation --
 --**********************************--
 randomGeneratingSets = method(TypicalValue => List)
--- INPUTS [these comments will be moved to documentation node, here for your reference for now]: 
--- n= num of vars
--- D= degree bound
--- p= prob param
--- N= sample size
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
