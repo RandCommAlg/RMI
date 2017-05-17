@@ -90,9 +90,9 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     -- if that number <= p, then include the monomial m in a generating set B
     -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
     -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
-    B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) )
-    --the result:
-    -- B = list of random monomial ideal generating sets.
+    B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) );
+    -- we need 0 ideals stored in the appropriate ring; hence do this: 
+    apply(#B,i-> if B_i==={} then B=replace(i,0_R,B))
 )
 
 --**********************************--
