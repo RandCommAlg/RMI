@@ -84,6 +84,7 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
     -- graded model
+    -- edit 2
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     -- this generates a list of all possible monomials of degree <= D in n variables
     -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1);
