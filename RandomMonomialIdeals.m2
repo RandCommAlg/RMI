@@ -60,25 +60,13 @@ newPackage(
     	)
 
 export {
-    "firstFunction",
     "randomGeneratingSets"
     }
 
 --***************************************--
---  Function provided by FirstPackage.m2 --
+--  Exported methods 	     	     	 --
 --***************************************--
 
-firstFunction = method(TypicalValue => String)
-firstFunction ZZ := String => n -> if n == 1 then "Hello World!" else "D'oh!"
-
---****************************************************************--
---  Methods written by D.Wilburne and S.Petrovic for RMI, 2016-17 --
---****************************************************************--
-
-
---**********************************--
---  Methods that need documentation --
---**********************************--
 randomGeneratingSets = method(TypicalValue => List)
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
@@ -97,10 +85,9 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
 )
 
 --**********************************--
---  Methods that need reformatting  --
+--  Internal methods	    	    --
 --**********************************--
 
--- TO BE ADDED BY S.P. 
 
 
 --******************************************--
@@ -118,27 +105,6 @@ doc ///
    {\em RandomMonomialIdeals} is a  package that... 
   -- Caveat
   -- Still trying to figure this out. [REMOVE ME]
-///
-
-doc ///
- Key
-  firstFunction
-  (firstFunction,ZZ)
- Headline
-  a silly first function
- Usage
-  firstFunction n
- Inputs
-  n:ZZ
- Outputs
-  :String
-   a silly string, depending on the value of {\tt n}
- Description
-  Text
-   Here we show an example.
-  Example
-   firstFunction 1
-   firstFunction 0
 ///
 
 doc ///
