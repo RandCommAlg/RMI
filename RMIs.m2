@@ -33,7 +33,9 @@ readBs = filename -> lines(get(filename))
 --creates ideals from random gen sets
 --saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
 --see RMIscript.m2 for short script to run this function
-makeRandIdeals = (B,p,D,basefilename) -> (
+--makeRandIdeals = (B,p,D,basefilename) -> ( 
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {includeZeroIdeals => false})
+idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     --inputs:
 	--B = list of random generating sets
 	--p (probability for ER model) is predefined in sript.m2 
@@ -47,14 +49,16 @@ makeRandIdeals = (B,p,D,basefilename) -> (
 	-- Zero ideals are NOT added to the list of ideals, because that causes all kinds of trouble for computing invarinats (e.g.reg(0)=-infty).
 	ideals = append(ideals, ideal( B#i)); -- append all of them to the list then drop the zero ones:
 	filename << toString B#i << endl; 
-	nonZeroIdeals = select(ideals,i->i != ideal(0)*ring(i));
+    	if not o.includeZeroIdeals then (
+	nonZeroIdeals = select(ideals,i->i != 0); --ideal(0)*ring(i));
 	numZeroIdeals = # ideals - # nonZeroIdeals;
+	    )
 	};
     filename<<close;
     print(concatenate("Sanity  check: there are ", toString(#B)," ideals in total."));
     print concatenate("There were ", toString numZeroIdeals, " zero ideals in this simulation.");
-    return (nonZeroIdeals,numZeroIdeals);
-    ) 
+    if o.includeZeroIdeals then return ideals else return (nonZeroIdeals,numZeroIdeals); 
+)
 
 
 
