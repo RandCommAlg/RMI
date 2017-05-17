@@ -92,7 +92,8 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
     B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) );
     -- we need 0 ideals stored in the appropriate ring; hence do this: 
-    apply(#B,i-> if B_i==={} then B=replace(i,0_R,B))
+    apply(#B,i-> if B_i==={} then B=replace(i,0_R,B));
+    return(B)
 )
 
 --**********************************--
@@ -185,7 +186,7 @@ TEST ///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
-    assert (0==#(randomGeneratingSets(5,5,0.0,1))#0)
+    assert (0==(randomGeneratingSets(5,5,0.0,1))#0)
 ///
 
 TEST ///
