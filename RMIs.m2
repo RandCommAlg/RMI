@@ -55,8 +55,8 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 	    )
 	};
     filename<<close;
-    print(concatenate("Sanity  check: there are ", toString(#B)," ideals in total."));
-    print concatenate("There were ", toString numZeroIdeals, " zero ideals in this simulation.");
+    print(concatenate("There are ", toString(#B)," ideals in this sample."));
+    print(concatenate("Of those, ", toString numZeroIdeals, " were the zero ideal."));
     if o.includeZeroIdeals then return ideals else return (nonZeroIdeals,numZeroIdeals); 
 )
 
