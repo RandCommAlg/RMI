@@ -84,6 +84,14 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     return(B)
 )
 
+randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
+    x :=symbol x;
+    R := QQ[x_1..x_n];
+    B := apply(N,i-> flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1))));
+    apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
+    return(B)
+)
+
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
@@ -115,10 +123,12 @@ doc ///
   randomly generates lists of monomials, up to a given dimension
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets (ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
   D: ZZ
   p: RR
+     or @ofClass List@
   N: ZZ
  Outputs
   B: List
