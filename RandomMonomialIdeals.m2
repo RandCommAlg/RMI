@@ -112,20 +112,20 @@ doc ///
   randomGeneratingSets
   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
  Headline
-  randomly generates lists of monomials, up to a given dimension
+  randomly generates lists of monomials, up to a given degree
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
  Inputs
-  n: ZZ
-  D: ZZ
-  p: RR
-  N: ZZ
+  n: ZZ, n is the number of variables
+  D: ZZ, D is the maximum degree
+  p: RR, p is the probabilty to select a monomial
+  N: ZZ, N is the number of sets generated
  Outputs
   B: List
-   a list of generating sets of monomials
+   a random list of generating sets of monomials
  Description
   Text
-   given number of variables n, degree bound D, and probability parameter p, N generating sets of monomials are randomly generated
+   randomMonomialIdeals first generates all possible monomials with a degree 1 to D and number of variables 1 to n. Once all possible monomials are generated, each monomial has a probabilty p to be selected. The monomials selected are then outputted as a random set. This function does not include the monomial with degree 0.
   Example
    B=randomGeneratingSets(2,3,0.2,10)
    randomGeneratingSets(3,4,1.0,1)
