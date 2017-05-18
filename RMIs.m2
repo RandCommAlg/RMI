@@ -33,29 +33,50 @@ readBs = filename -> lines(get(filename))
 --creates ideals from random gen sets
 --saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
 --see RMIscript.m2 for short script to run this function
-makeRandIdeals = (B,p,D,basefilename) -> (
+--makeRandIdeals = (B,p,D,basefilename) -> ( 
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {includeZeroIdeals => false})
+idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     --inputs:
 	--B = list of random generating sets
 	--p (probability for ER model) is predefined in sript.m2 
 	--D (max deg) is predefined in script.m2
-    ideals = {};        
     fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
     filename=concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
     for i from 0 to #B-1 do {
-	-- Special note on ZERO ideals:
-        -- Zero ideals are written to the file (these are empty sets B so they are just {})
-	-- Zero ideals are NOT added to the list of ideals, because that causes all kinds of trouble for computing invarinats (e.g.reg(0)=-infty).
-	ideals = append(ideals, ideal( B#i)); -- append all of them to the list then drop the zero ones:
+	ideals = B / (b-> ideal b);
 	filename << toString B#i << endl; 
-	nonZeroIdeals = select(ideals,i->i != ideal(0)*ring(i));
-	numZeroIdeals = # ideals - # nonZeroIdeals;
+    	if not o.includeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) = extractNonzeroIdeals(ideals); 
 	};
     filename<<close;
-    print(concatenate("Sanity  check: there are ", toString(#B)," ideals in total."));
-    print concatenate("There were ", toString numZeroIdeals, " zero ideals in this simulation.");
-    return (nonZeroIdeals,numZeroIdeals);
-    ) 
+    print(concatenate("There are ", toString(#B)," ideals in this sample."));
+    print(concatenate("Of those, ", toString numZeroIdeals, " were the zero ideal."));
+    if o.includeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+)
 
+
+-- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
+    -- input list of ideals 
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+-- (not exported, therefore no need to document) 
+extractNonzeroIdeals = ( ideals ) -> (
+    nonzeroIdeals = select(ideals,i->i != 0);
+    numberOfZeroIdeals = # ideals - # nonzeroIdeals;
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
+    return(nonzeroIdeals,numberOfZeroIdeals)
+    )
+
+
+-- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
+-- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
+    -- input list of generating sets
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+-- (not exported, therefore no need to document) 
+extractNonzeroIdealsFromGens = ( generatingSets ) -> (
+    nonzeroIdeals = select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
+    numberOfZeroIdeals = # generatingSets - # nonzeroIdeals;
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
+    return(nonzeroIdeals,numberOfZeroIdeals)
+    )
 
 
 -------------------------------------------------------------------------------------

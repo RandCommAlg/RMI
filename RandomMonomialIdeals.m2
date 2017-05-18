@@ -60,25 +60,13 @@ newPackage(
     	)
 
 export {
-    "firstFunction",
     "randomGeneratingSets"
     }
 
 --***************************************--
---  Function provided by FirstPackage.m2 --
+--  Exported methods 	     	     	 --
 --***************************************--
 
-firstFunction = method(TypicalValue => String)
-firstFunction ZZ := String => n -> if n == 1 then "Hello World!" else "D'oh!"
-
---****************************************************************--
---  Methods written by D.Wilburne and S.Petrovic for RMI, 2016-17 --
---****************************************************************--
-
-
---**********************************--
---  Methods that need documentation --
---**********************************--
 randomGeneratingSets = method(TypicalValue => List)
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     x :=symbol x;
@@ -90,16 +78,16 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     -- if that number <= p, then include the monomial m in a generating set B
     -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
     -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
-    B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) )
-    --the result:
-    -- B = list of random monomial ideal generating sets.
+    B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) );
+    -- we need 0 ideals stored in the appropriate ring; hence do this: 
+    apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
+    return(B)
 )
 
 --**********************************--
---  Methods that need reformatting  --
+--  Internal methods	    	    --
 --**********************************--
 
--- TO BE ADDED BY S.P. 
 
 
 --******************************************--
@@ -117,27 +105,6 @@ doc ///
    {\em RandomMonomialIdeals} is a  package that... 
   -- Caveat
   -- Still trying to figure this out. [REMOVE ME]
-///
-
-doc ///
- Key
-  firstFunction
-  (firstFunction,ZZ)
- Headline
-  a silly first function
- Usage
-  firstFunction n
- Inputs
-  n:ZZ
- Outputs
-  :String
-   a silly string, depending on the value of {\tt n}
- Description
-  Text
-   Here we show an example.
-  Example
-   firstFunction 1
-   firstFunction 0
 ///
 
 doc ///
@@ -163,8 +130,6 @@ doc ///
    B=randomGeneratingSets(2,3,0.2,10)
    randomGeneratingSets(3,4,1.0,1)
    randomGeneratingSets(5,2,0.6,4)
- SeeAlso
-  firstFunction
 ///
 
 
@@ -185,7 +150,7 @@ TEST ///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
-    assert (0==#(randomGeneratingSets(5,5,0.0,1))#0)
+    assert (0==(randomGeneratingSets(5,5,0.0,1))#0#0)
 ///
 
 TEST ///
