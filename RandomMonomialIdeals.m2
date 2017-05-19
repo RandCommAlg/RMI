@@ -129,11 +129,18 @@ doc ///
    random generating sets of monomials
  Description
   Text
-   randomGeneratingSets first generates all possible monomials with a degree 1 to D and number of variables 1 to n. Once all possible monomials are generated, each monomial has a probabilty p to be selected. The monomials selected are then outputted as a random set. This function does not include the monomial with degree 0.
+   randomGeneratingSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
+   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
   Example
    B=randomGeneratingSets(2,3,0.2,10)
-   randomGeneratingSets(3,4,1.0,1)
    randomGeneratingSets(5,2,0.6,4)
+  Text
+   Note that this model does not generate the monomial $1$: 
+  Example
+   randomGeneratingSets(3,4,1.0,1)
+  Text 
+   If $p$ is a list of real numbers of length $D$, then [TO ADD with task 4] 
 ///
 
 
