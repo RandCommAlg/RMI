@@ -183,9 +183,9 @@ TEST ///
     L=(randomGeneratingSets(2,3,1.0,1))#0
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=(randomGeneratingSets(2,3,{1.0,1.0,1.0},1))#0
+    L=(randomGeneratingSets(3,3,{0.0,1.0,0.0},1))#0
     R=ring(L#0)
-    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
+    assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
 ///
 
 TEST ///
