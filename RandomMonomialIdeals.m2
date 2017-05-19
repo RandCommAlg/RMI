@@ -116,10 +116,14 @@ doc ///
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
  Inputs
-  n: ZZ, n is the number of variables
-  D: ZZ, D is the maximum degree
-  p: RR, p is the probabilty to select a monomial
-  N: ZZ, N is the number of sets generated
+  n:ZZ
+    n is the number of variables
+  D:ZZ
+    D is the maximum degree
+  p:RR
+    p is the probabilty to select a monomial
+  N:ZZ
+    N is the number of sets generated
  Outputs
   B: List
    a random list of generating sets of monomials
