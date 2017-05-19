@@ -126,7 +126,7 @@ doc ///
     N is the number of sets generated
  Outputs
   B: List
-   a random list of generating sets of monomials
+   random generating sets of monomials
  Description
   Text
    randomMonomialIdeals first generates all possible monomials with a degree 1 to D and number of variables 1 to n. Once all possible monomials are generated, each monomial has a probabilty p to be selected. The monomials selected are then outputted as a random set. This function does not include the monomial with degree 0.
