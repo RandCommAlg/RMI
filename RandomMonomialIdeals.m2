@@ -83,6 +83,16 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
     return(B)
 )
+randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List =>  (n,D,M,N) -> (
+    x :=symbol x;
+    R := QQ[x_1..x_n];
+    --this generates a list of all possible monomials of degree <=D in n variables
+    --randomizes the list of all monomials and selects the first M as the a generating set
+    --this is repeated N times to get a sample size of N sets of monomials 
+    allMonomials := toList(flatten flatten apply(toList(1..D),d->entries basis(d,R)));
+    B :=  apply(N,i-> take(random(allMonomials), {0,M-1}) );
+    return(B)
+)
 
 --**********************************--
 --  Internal methods	    	    --
