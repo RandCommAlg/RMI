@@ -129,6 +129,7 @@ doc ///
  Key
   randomGeneratingSets
   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+  (randomGeneratingSets,ZZ,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials, up to a given degree
  Usage
@@ -141,7 +142,7 @@ doc ///
     maximum degree
   p: RR
      or @ofClass List@
-     probability to select a monomial
+     , probability to select a monomial
   N: ZZ
     number of sets generated
  Outputs
@@ -153,14 +154,19 @@ doc ///
    If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
   Example
-   B=randomGeneratingSets(2,3,0.2,10)
-   randomGeneratingSets(5,2,0.6,4)
+   randomGeneratingSets(2,3,0.2,10)
+   randomGeneratingSets(3,2,0.6,4)
   Text
    Note that this model does not generate the monomial $1$: 
   Example
-   randomGeneratingSets(3,4,1.0,1)
+   randomGeneratingSets(3,2,1.0,1)
   Text 
-   If $p$ is a list of real numbers of length $D$, then [TO ADD with task 4] 
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
+   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
+  Example
+   randomGeneratingSets(2,3,{0.0,1.0,1.0},1)
+  Text
+   Note that the degree 1 monomials were not generated.
 ///
 
 
