@@ -84,6 +84,14 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
     return(B)
 )
 
+randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
+    x :=symbol x;
+    R := QQ[x_1..x_n];
+    B := apply(N,i-> flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1))));
+    apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
+    return(B)
+)
+
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
@@ -115,10 +123,12 @@ doc ///
   randomly generates lists of monomials, up to a given dimension
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets (ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
   D: ZZ
   p: RR
+     or @ofClass List@
   N: ZZ
  Outputs
   B: List
@@ -145,22 +155,27 @@ doc ///
 TEST ///
     -- Check there are N samples
     N=10;
-    assert (N==#randomGeneratingSets(3,2,0.5,N))
+    n=3; D=2; p=0.5;
+    assert (N==#randomGeneratingSets(n,D,p,N))
+    N=13;
+    n=5; D=3; p={0.5,0.25,0.3};
+    assert (N==#randomGeneratingSets(n,D,p,N))
 ///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
     assert (0==(randomGeneratingSets(5,5,0.0,1))#0#0)
+    assert (0==(randomGeneratingSets(5,4,toList(4:0.0),1))#0#0)
 ///
 
 TEST ///
     -- Check all possible values are outputted with a probability of 1
-    D=3;
-    n=4;
+    D=3; n=4;
     assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
-    D=2;
-    n=6;
+    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,{1.0,1.0,1.0},1))#0)
+    D=2; n=6;
     assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
+    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,{1.0,1.0},1))#0)
 ///
 
 TEST ///
@@ -168,26 +183,29 @@ TEST ///
     L=(randomGeneratingSets(2,3,1.0,1))#0
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
+    L=(randomGeneratingSets(3,3,{0.0,1.0,0.0},1))#0
+    R=ring(L#0)
+    assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
 ///
 
 TEST ///
     -- Check max degree of monomial less than or equal to D
-    n=10;
-    D=5;
+    n=10; D=5;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    n=4;
-    D=7;
+    assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    n=4; D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
 ///
 
 TEST ///
     -- Check min degree of monomial greater than or equal to 1
-    n=8;
-    D=6;
+    n=8; D=6;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    n=3;
-    D=5;
+    assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    n=3; D=5;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
 ///
 
 end
