@@ -156,9 +156,6 @@ TEST ///
     -- Check there are N samples
     N=10;
     assert (N==#randomGeneratingSets(3,2,0.5,N))
-    N=10;
-    n=3; D=2; M=10;
-    assert (N==#randomGeneratingSets(n,D,M,N))
 ///
 
 TEST ///
@@ -181,9 +178,6 @@ TEST ///
     L=(randomGeneratingSets(2,3,1.0,1))#0
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=(randomGeneratingSets(2,3,9,1))#0
-    R=ring(L#0)
-    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
 ///
 
 TEST ///
@@ -194,7 +188,6 @@ TEST ///
     n=4;
     D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    M=product(toList((D+1)..(D+n)))/n!-1;
 ///
 
 TEST ///
