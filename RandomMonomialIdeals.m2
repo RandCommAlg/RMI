@@ -60,34 +60,62 @@ newPackage(
     	)
 
 export {
-    "randomGeneratingSets"
+    "randomGeneratingSets",
+    "randomGeneratingSet",
+    "Strategy"
     }
 
 --***************************************--
 --  Exported methods 	     	     	 --
 --***************************************--
 
-randomGeneratingSets = method(TypicalValue => List)
-randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
-    randomGeneratingSets(n,D,toList(D:p),N)
+ER = getSymbol "ER"
+Minimal = getSymbol "Minimal"
+
+randomGeneratingSets = method(TypicalValue => List, Options => {Strategy => ER})
+randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o-> (n,D,p,N) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomGeneratingSets(n,D,toList(D:p),N,Strategy=>o.Strategy)
 )
 
-randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List =>  (n,D,M,N) -> (
+randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    apply(N,i-> randomGeneratingSet(n,D,M))
+)
+
+randomGeneratingSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    apply(N,i-> randomGeneratingSet(n,D,p))
+)
+
+randomGeneratingSet = method(TypicalValue => List, Options => {Strategy => ER})
+randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomGeneratingSet(n,D,toList(D:p))
+)
+
+randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
+    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
+    if o.Strategy === Minimal then error "Minimal not implemented for fixed size ER model";
     x :=symbol x;
     R := QQ[x_1..x_n];
     --this generates a list of all possible monomials of degree <=D in n variables
     --randomizes the list of all monomials and selects the first M as the a generating set
     --this is repeated N times to get a sample size of N sets of monomials 
-    allMonomials := toList(flatten flatten apply(toList(1..D),d->entries basis(d,R)));
-    B :=  apply(N,i-> take(random(allMonomials), {0,M-1}) );
-    return(B)
+    allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
+    take(random(allMonomials), M)
 )
 
-randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
+randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if #p != D then error "p expected to be a list of length D";
+    if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
+    if o.Strategy === Minimal then
+        return null;--randomMinimalGeneratingSets(n,D,toList(D:p),N)
     x := symbol x;
     R := QQ[x_1..x_n];
-    B := apply(N,i-> flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1))));
-    apply(B,b-> if b==={} then {0_R} else b)
+    B := flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+    if B==={} then {0_R} else B
 )
 
 --**********************************--
