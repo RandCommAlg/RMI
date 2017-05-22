@@ -111,9 +111,9 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if #p != D then error "p expected to be a list of length D";
     if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
     if o.Strategy === Minimal then
-        return null;--randomMinimalGeneratingSets(n,D,toList(D:p),N)
     x := symbol x;
     R := QQ[x_1..x_n];
+        return randomMinimalGeneratingSets(n,D,toList(D:p));
     B := flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
 )
@@ -123,6 +123,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --**********************************--
 
 
+randomMinimalGeneratingSets = (n,D,p) -> null;
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
