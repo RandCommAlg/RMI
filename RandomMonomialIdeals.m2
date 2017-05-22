@@ -113,7 +113,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if o.Strategy === Minimal then
     x := symbol x;
     R := QQ[x_1..x_n];
-        return randomMinimalGeneratingSets(n,D,toList(D:p));
+        return randomMinimalGeneratingSet(n,D,toList(D:p));
     B := flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
 )
@@ -122,8 +122,8 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --  Internal methods	    	    --
 --**********************************--
 
-
-randomMinimalGeneratingSets(ZZ,ZZ,List) = (n,D,p) -> (
+randomMinimalGeneratingSet = method();
+randomMinimalGeneratingSet(ZZ,ZZ,List) = (n,D,p) -> (
  x:=symbol x;
  R:=QQ[x_1..x_n];
  B:={};
