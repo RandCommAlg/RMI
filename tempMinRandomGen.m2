@@ -10,7 +10,7 @@ randomMinGeneratingSets(ZZ, ZZ, Sequence) := (n,D,p) -> (
  currentRing=R;
  apply(D, d-> (
   chosen:=select(flatten entries basis(d+1,currentRing), m->random(0.0,1.0)<=p_d);
-  B=flatten append(B, chosen/(i->sub(i, R));
+  B=flatten append(B, chosen/(i->sub(i, R)));
   currentRing = currentRing/promote(ideal(chosen),currentRing)
   )
 );
