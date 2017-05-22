@@ -170,7 +170,7 @@ doc ///
   Example
    randomGeneratingSets(2,3,3,1)
   Text
-   Note that the degree 1 monomials were not generated, and each set has $M$ monomoials.
+   Note that the degree 1 monomials were not generated, and each set has $M$ monomials.
   Text 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
