@@ -34,7 +34,7 @@ readBs = filename -> lines(get(filename))
 --saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
 --see RMIscript.m2 for short script to run this function
 --makeRandIdeals = (B,p,D,basefilename) -> ( 
-idealsFromGeneratingSets =  method(TypicalValue => List, Options => {includeZeroIdeals => false})
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
 idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     --inputs:
 	--B = list of random generating sets
@@ -45,12 +45,12 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     for i from 0 to #B-1 do {
 	ideals = B / (b-> ideal b);
 	filename << toString B#i << endl; 
-    	if not o.includeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) = extractNonzeroIdeals(ideals); 
+    	if not o.IncludeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) = extractNonzeroIdeals(ideals); 
 	};
     filename<<close;
     print(concatenate("There are ", toString(#B)," ideals in this sample."));
     print(concatenate("Of those, ", toString numZeroIdeals, " were the zero ideal."));
-    if o.includeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
 
