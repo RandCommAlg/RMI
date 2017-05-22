@@ -57,8 +57,6 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     print(concatenate("Of those, ", toString numZeroIdeals, " were the zero ideal."));
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
-
-
 -- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
     -- input list of ideals 
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
