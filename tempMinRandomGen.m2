@@ -1,9 +1,9 @@
-randomMinGeneratingSets = method()
-randomMinGeneratingSets(ZZ, ZZ, RR) := (n,D,p) -> (
-    return randomMinGeneratingSets(n,D,D:p)
+randomMinGeneratingSet = method()
+randomMinGeneratingSet(ZZ, ZZ, RR) := (n,D,p) -> (
+    return randomMinGeneratingSet(n,D,D:p)
  )
 
-randomMinGeneratingSets(ZZ, ZZ, Sequence) := (n,D,p) -> (
+randomMinGeneratingSet(ZZ, ZZ, Sequence) := (n,D,p) -> (
  x:=symbol x;
  R:=QQ[x_1..x_n];
  B:={};
