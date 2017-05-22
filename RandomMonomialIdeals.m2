@@ -62,6 +62,8 @@ newPackage(
 export {
     "randomGeneratingSets",
     "randomGeneratingSet",
+    "Coefficient",
+    "VariableName",
     "Strategy"
     }
 
@@ -72,36 +74,49 @@ export {
 ER = getSymbol "ER"
 Minimal = getSymbol "Minimal"
 
-randomGeneratingSets = method(TypicalValue => List, Options => {Strategy => ER})
-randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o-> (n,D,p,N) -> (
+randomGeneratingSets = method(TypicalValue => List, Options => {Coefficient => QQ,
+	                                                        VariableName => "x",
+								Strategy => ER})
+randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomGeneratingSets(n,D,toList(D:p),N,Strategy=>o.Strategy)
+    randomGeneratingSets(n,D,toList(D:p),N,
+	                 Coefficient=>o.Coefficient,
+			 VariableName=>o.VariableName,
+			 Strategy=>o.Strategy)
 )
 
 randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomGeneratingSet(n,D,M))
+    apply(N,i-> randomGeneratingSet(n,D,M,
+	                            Coefficient=>o.Coefficient,
+				    VariableName=>o.VariableName,
+				    Strategy=>o.Strategy))
 )
 
 randomGeneratingSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomGeneratingSet(n,D,p))
+    apply(N,i-> randomGeneratingSet(n,D,p,
+	                            Coefficient=>o.Coefficient,
+				    VariableName=>o.VariableName,
+				    Strategy=>o.Strategy))
 )
 
-randomGeneratingSet = method(TypicalValue => List, Options => {Strategy => ER})
+randomGeneratingSet = method(TypicalValue => List, Options => {Coefficient => QQ,
+	                                                       VariableName => "x",
+							       Strategy => ER})
 randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomGeneratingSet(n,D,toList(D:p))
+    randomGeneratingSet(n,D,toList(D:p),
+	                Coefficient=>o.Coefficient,
+			VariableName=>o.VariableName,
+			Strategy=>o.Strategy)
 )
 
 randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
     if o.Strategy === Minimal then error "Minimal not implemented for fixed size ER model";
-    x :=symbol x;
-    R := QQ[x_1..x_n];
-    --this generates a list of all possible monomials of degree <=D in n variables
-    --randomizes the list of all monomials and selects the first M as the a generating set
-    --this is repeated N times to get a sample size of N sets of monomials 
+    x := toSymbol o.VariableName;
+    R := o.Coefficient[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     take(random(allMonomials), M)
 )
@@ -110,11 +125,18 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if n<1 then error "n expected to be a positive integer";
     if #p != D then error "p expected to be a list of length D";
     if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
-    if o.Strategy === Minimal then
-        return randomMinimalGeneratingSet(n,D,p);
-    x := symbol x;
-    R := QQ[x_1..x_n];
-    B := flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+    x := toSymbol o.VariableName;
+    R := o.Coefficient[x_1..x_n];
+    B := {};
+    if o.Strategy === Minimal then (
+        currentRing := R;
+        apply(D, d->(
+            chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
+            B = flatten append(B, chosen/(i->sub(i, R)));
+            currentRing = currentRing/promote(ideal(chosen), currentRing)
+        )))
+    else
+        B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
 )
 
@@ -122,19 +144,14 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --  Internal methods	    	    --
 --**********************************--
 
-randomMinimalGeneratingSet = (n,D,p) -> (
- x := symbol x;
- R := QQ[x_1..x_n];
- B := {};
- currentRing:=R;
- apply(D, d->(
-   chosen:=select(flatten entries basis(d+1,currentRing), m->random(0.0,1.0)<=p_d);
-   B = flatten append(B, chosen/(i->sub(i, R)));
-   currentRing = currentRing/promote(ideal(chosen),currentRing)
-  )
- );
- return(B)
-)
+toSymbol = (p) -> (
+     if instance(p,Symbol)
+         then p
+     else if instance(p,String)
+         then getSymbol p
+     else
+         error ("expected a string or symbol, but got: ", toString p))
+
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
@@ -218,88 +235,88 @@ TEST ///
 ///
 
 TEST ///
+    -- Check multiple samples agree
+    n=4; D=3;
+    L = randomGeneratingSets(n,D,1.0,3);
+    R = ring(L#0#0);
+    L = apply(L,l-> apply(l,m-> sub(m,R)));
+    assert (set L#0===set L#1)
+    assert (set L#0===set L#2)
+    assert (set L#1===set L#2)
+///
+
+--***********************--
+--  randomGeneratingSet  --
+--***********************--
+
+TEST ///
     -- Check no terms are chosen for a probability of 0
-    assert (0==(randomGeneratingSets(5,5,0.0,1))#0#0)
-    assert (0==(randomGeneratingSets(5,4,toList(4:0.0),1))#0#0)
+    assert (0==(randomGeneratingSet(5,5,0.0))#0)
+    assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
+    assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>Minimal))#0)
+    assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>Minimal))#0)
 ///
 
 TEST ///
     -- Check all possible values are outputted with a probability of 1
-    D=3; n=4;
-    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
-    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,{1.0,1.0,1.0},1))#0)
-    D=2; n=6;
-    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,1.0,1))#0)
-    assert (product(toList((D+1)..D+n))/n!-1==#(randomGeneratingSets(n,D,{1.0,1.0},1))#0)
+    n=4; D=3;
+    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,1.0))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,{1.0,1.0,1.0}))
+    n=6; D=2;
+    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,1.0))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,{1.0,1.0}))
+    n=4;D=5;
+    assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomGeneratingSet(n,D,1.0, Strategy=>Minimal))
+    assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,1.0,1.0,1.0,1.0}, Strategy=>Minimal))
+    assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,1.0,1.0,1.0}, Strategy=>Minimal))
+    assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,1.0,1.0}, Strategy=>Minimal))
+    assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal))
 ///
 
 TEST ///
     -- Check every monomial is generated
-    L=(randomGeneratingSets(2,3,1.0,1))#0
+    L=randomGeneratingSet(2,3,1.0)
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=(randomGeneratingSets(3,3,{0.0,1.0,0.0},1))#0
+    L=randomGeneratingSet(3,3,{0.0,1.0,0.0})
     R=ring(L#0)
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
+    L=randomGeneratingSet(3,3,1.0, Strategy=>Minimal);
+    R=ring(L#0);
+    assert(set L===set {R_0, R_1, R_2})
+    L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>Minimal);
+    R=ring(L#0);
+    assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
+    L=randomGeneratingSet(3,3,{0.0,0.0,1.0}, Strategy=>Minimal);
+    R=ring(L#0);
+    assert(set L===set {R_0^3,R_0^2*R_1,R_0^2*R_2,R_0*R_1*R_2,R_1^3,R_0*R_1^2,R_1^2*R_2,R_0*R_2^2,R_1*R_2^2,R_2^3})
 ///
 
 TEST ///
     -- Check max degree of monomial less than or equal to D
     n=10; D=5;
-    assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
+    assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
     n=4; D=7;
-    assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
+    assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    n=10; D=5;
+    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal),m->first degree m))))
 ///
 
 TEST ///
     -- Check min degree of monomial greater than or equal to 1
     n=8; D=6;
-    assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
+    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
     n=3; D=5;
-    assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
+    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    n=10; D=5;
+    assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>Minimal),m->first degree m))))
+    assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>Minimal),m->first degree m))))
 ///
-TEST ///
--- Check no terms are chosen for a probability of 0
-n=4;
-assert ({}=randomMinGeneratingSet(n,5,0.0))
-assert ({}=randomMinGeneratingSet(n,4,n:0.0))
-///
-TEST ///
--- Check all possible monomials of degree d are outputted with probability 1.0
-n=4;
-D=5;
-assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomMinGeneratingSet(n,D,1.0))
-assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomMinGeneratingSet(n,D,(0.0,1.0,1.0,1.0,1.0))
-assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomMinGeneratingSet(n,D,(0.0,0.0,1.0,1.0,1.0))
-assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomMinGeneratingSet(n,D,(0.0,0.0,0.0,1.0,1.0))
-assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomMinGeneratingSet(n,D,(0.0,0.0,0.0,0.0,1.0))
-///
-TEST ///
--- Check all monomials of degree d are generated with probability 1.0
-L=randomMinGeneratingSet(3,3,1.0);
-R=ring(L#0)
-assert(set L===set {R_0, R_1, R_2})
-L=randomMinGeneratingSet(3,3,(0.0,1.0,1.0))
-assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
-L=randomMinGeneratingSet(3,3,(0.0,0.0,1.0))
-assert(set L===set {R_0^3,R_0^2*R_1,R_0^2*R_2,R_0*R_1*R_2,R_1^3,R_0*R_1^2,R_1^2*R_2,R_0*R_2^2,R_1*R_2^2,R_2^3})
-///
-TEST ///
--- Check max degree of monomial less than or equal to D
-n=10;
-D=5;
-assert(D==max(apply((randomGeneratingSets(n,D,(0.0,0.0,0.0,0.0,1.0))#0,m->first degree m)))
-///
-TEST ///
--- Check min degree of monomial greater than or equal to 1
-n=10;
-D=5;
-assert(D==min(apply((randomGeneratingSets(n,D,1.0)#0,m->first degree m)))
-///
+
 end
 
 You can write anything you want down here.  I like to keep examples
