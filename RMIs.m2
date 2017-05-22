@@ -30,20 +30,25 @@
 readBs = filename -> lines(get(filename))
 
 
---creates ideals from random gen sets
+--creates monomialIdeal objects from generating sets
 --saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
 --see RMIscript.m2 for short script to run this function
 --makeRandIdeals = (B,p,D,basefilename) -> ( 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
+-- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
 idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     --inputs:
 	--B = list of random generating sets
 	--p (probability for ER model) is predefined in sript.m2 
 	--D (max deg) is predefined in script.m2
+	-- THOUGHTS ON EDITS:   (May 2017)
+	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
+	-- i.e., do (p,D,baseFileName) as input. 
+	-- maybe the filename should be optional and make it "temp" for default. 
     fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
     filename=concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
     for i from 0 to #B-1 do {
-	ideals = B / (b-> ideal b);
+	ideals = B / (b-> monomialIdeal b);
 	filename << toString B#i << endl; 
     	if not o.IncludeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) = extractNonzeroIdeals(ideals); 
 	};
@@ -371,7 +376,8 @@ borelFixed = method()
 borelFixed (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     bor = 0;
     for i from 0 to #ideals-1 do ( 
-        if isBorel(monomialIdeal(ideals_i)) == true then bor = bor + 1 else bor = bor);            
+        if isBorel(monomialIdeal(ideals_i)) == true then bor = bor + 1 else bor = bor);     
+    	-- ^^ we already made the change for this ideal to be monomialIdeal when we created it -- so remove that piece.        
     print "Percent Borel-fixed:" expression(sub((bor+Z)/N, RR));
     sub((bor+Z)/N, RR) -- this is the returned value.
     )
