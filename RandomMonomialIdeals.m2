@@ -105,14 +105,14 @@ randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-avgDim = method(TypicalValue => RR)
-avgDim =   (ideals,N,Z,basefilename,fileNameExt) -> (
-    dims = (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
-    dimsHistogram=toList(Z:numgens ring ideals_0);
-    filename = basefilename|"dimension"|fileNameExt;
-    fileHist = basefilename|"dimensionHistogram"|fileNameExt;
+avgDim = method()
+avgDim :=  (ideals,N,Z,basefilename,fileNameExt) -> (
+    dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
+    dimsHistogram :=toList(Z:numgens ring ideals_0);
+    filename := basefilename|"dimension"|fileNameExt;
+    fileHist := basefilename|"dimensionHistogram"|fileNameExt;
     apply(#ideals,i->( 
-        dimi = dim ideals_i;
+        dimi := dim ideals_i;
 	filename << dimi << endl;
         dims = dims + dimi;
 	dimsHistogram = append(dimsHistogram, dimi)
@@ -124,7 +124,7 @@ avgDim =   (ideals,N,Z,basefilename,fileNameExt) -> (
     fileHist<<close; 
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
     sub(1/N*dims, RR)
-    )
+)
 
 --**********************************--
 --  Internal methods	    	    --
