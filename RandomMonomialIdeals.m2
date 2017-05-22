@@ -191,10 +191,13 @@ TEST ///
     n=10;
     D=5;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    M=product(toList((D+1)..(D+n)))/n!-1
+    assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
     n=4;
     D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     M=product(toList((D+1)..(D+n)))/n!-1;
+    assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
 ///
 
 TEST ///
