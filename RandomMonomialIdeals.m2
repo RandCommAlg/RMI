@@ -111,9 +111,9 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if #p != D then error "p expected to be a list of length D";
     if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
     if o.Strategy === Minimal then
+        return randomMinimalGeneratingSet(n,D,p);
     x := symbol x;
     R := QQ[x_1..x_n];
-        return randomMinimalGeneratingSet(n,D,toList(D:p));
     B := flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
 )
@@ -123,18 +123,18 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --**********************************--
 
 randomMinimalGeneratingSet = (n,D,p) -> (
- x:=symbol x;
- R:=QQ[x_1..x_n];
- B:={};
+ x := symbol x;
+ R := QQ[x_1..x_n];
+ B := {};
  currentRing:=R;
- apply(D, d-> (
-  chosen:=select(flatten entries basis(d+1,currentRing), m->random(0.0,1.0)<=p_d);
-  B=flatten append(B, chosen/(i->sub(i, R)));
-  currentRing = currentRing/promote(ideal(chosen),currentRing)
+ apply(D, d->(
+   chosen:=select(flatten entries basis(d+1,currentRing), m->random(0.0,1.0)<=p_d);
+   B = flatten append(B, chosen/(i->sub(i, R)));
+   currentRing = currentRing/promote(ideal(chosen),currentRing)
   )
-);
+ );
  return(B)
- )
+)
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
