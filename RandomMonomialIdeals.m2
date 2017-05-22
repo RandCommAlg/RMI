@@ -246,12 +246,11 @@ TEST ///
     n=4; D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
-    M=product(toList((D+1)..(D+n)))/n!-1
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
-    n=4;
-    D=7;
+    n=4; D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-    M=product(toList((D+1)..(D+n)))/n!-1;
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
 ///
 
@@ -259,13 +258,14 @@ TEST ///
     -- Check min degree of monomial greater than or equal to 1
     n=8; D=6;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
-
     assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
-    assert(1==min(apply((randomGeneratingSets(n,D,10,1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
     n=3; D=5;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
-    assert(1==min(apply((randomGeneratingSets(n,D,10,1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
 ///
 
 end
