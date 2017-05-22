@@ -122,8 +122,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --  Internal methods	    	    --
 --**********************************--
 
-randomMinimalGeneratingSet = method();
-randomMinimalGeneratingSet(ZZ,ZZ,List) = (n,D,p) -> (
+randomMinimalGeneratingSet = (n,D,p) -> (
  x:=symbol x;
  R:=QQ[x_1..x_n];
  B:={};
