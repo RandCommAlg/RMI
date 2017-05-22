@@ -129,11 +129,13 @@ doc ///
  Key
   randomGeneratingSets
   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+  (randomGeneratingSets,ZZ,ZZ,ZZ,ZZ)
   (randomGeneratingSets,ZZ,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials, up to a given degree
  Usage
   randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets(ZZ,ZZ,ZZ,ZZ)
   randomGeneratingSets (ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
@@ -143,6 +145,8 @@ doc ///
   p: RR
      or @ofClass List@
      , probability to select a monomial
+  M: ZZ
+     number of monomials in each generating set
   N: ZZ
     number of sets generated
  Outputs
@@ -160,6 +164,19 @@ doc ///
    Note that this model does not generate the monomial $1$: 
   Example
    randomGeneratingSets(3,2,1.0,1)
+  Text 
+   If $M$ is an integer, then randomGeneratingSets creates $N$ random sets of monomials of size $M$:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
+  Example
+   randomGeneratingSets(2,3,3,1)
+  Text
+   Note that the degree 1 monomials were not generated, and each set has $M$ monomials.
+  Text
+   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them).
+  Example
+   randomGeneratingSets(2,2,10,1)
+  Text
+   returns 5 monomials in a generating set, and not 10, since there do not exist 10 to choose from.
   Text 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
