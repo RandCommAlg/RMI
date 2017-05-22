@@ -69,20 +69,9 @@ export {
 
 randomGeneratingSets = method(TypicalValue => List)
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List =>  (n,D,p,N) -> (
-    x :=symbol x;
-    R := QQ[x_1..x_n];
-
-    allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    -- this generates a list of all possible monomials of degree <= D in n variables
-    -- go through list allMonomials, and for each monomial m in the list, select a number in Unif(0,1);
-    -- if that number <= p, then include the monomial m in a generating set B
-    -- since iid~Unif(0,1), this is same as keeping each possible monomial w/ probability p.
-    -- we need a sample of size N of sets of monomials like these, so we repeat this process N times:
-    B := apply(N,i-> select(allMonomials, m-> random(0.0,1.0)<=p) );
-    -- we need 0 ideals stored in the appropriate ring; hence do this: 
-    apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
-    return(B)
+    randomGeneratingSets(n,D,toList(D:p),N)
 )
+
 randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List =>  (n,D,M,N) -> (
     x :=symbol x;
     R := QQ[x_1..x_n];
@@ -95,11 +84,10 @@ randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List =>  (n,D,M,N) -> (
 )
 
 randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
-    x :=symbol x;
+    x := symbol x;
     R := QQ[x_1..x_n];
     B := apply(N,i-> flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1))));
-    apply(#B,i-> if B_i==={} then B=replace(i,{0_R},B));
-    return(B)
+    apply(B,b-> if b==={} then {0_R} else b)
 )
 
 --**********************************--
