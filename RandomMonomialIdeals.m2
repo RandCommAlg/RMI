@@ -168,9 +168,9 @@ doc ///
    If $M$ is an integer, then randomGeneratingSets creates $N$ random sets of monomials of size $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
   Example
-   randomGeneratingSets(2,3,3,1)
+   randomGeneratingSets(10,5,4,3)
   Text
-   Note that the degree 1 monomials were not generated, and each set has $M$ monomials.
+   Note that each set has $M = 3$ monomials.
   Text
    If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them).
   Example
@@ -183,7 +183,7 @@ doc ///
   Example
    randomGeneratingSets(2,3,{0.0,1.0,1.0},1)
   Text
-   Note that the degree 1 monomials were not generated.
+   Note that the degree 1 monomials were not generated, since the first probability vector entry is 0.
 ///
 
 
