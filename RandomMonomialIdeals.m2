@@ -134,9 +134,9 @@ doc ///
  Headline
   randomly generates lists of monomials, up to a given degree
  Usage
-  randomGeneratingSets (ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets(ZZ,ZZ,RR,ZZ)
   randomGeneratingSets(ZZ,ZZ,ZZ,ZZ)
-  randomGeneratingSets (ZZ,ZZ,List,ZZ)
+  randomGeneratingSets(ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
@@ -158,7 +158,8 @@ doc ///
    If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
   Example
-   randomGeneratingSets(2,3,0.2,10)
+   n=2; D=3; p=0.2; N=10;
+   randomGeneratingSets(n,D,p,N)
    randomGeneratingSets(3,2,0.6,4)
   Text
    Note that this model does not generate the monomial $1$: 
@@ -168,11 +169,12 @@ doc ///
    If $M$ is an integer, then randomGeneratingSets creates $N$ random sets of monomials of size $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
   Example
-   randomGeneratingSets(2,3,3,1)
+   n=10; D=5; M=4; N=3;
+   randomGeneratingSets(n,D,M,N)
   Text
-   Note that the degree 1 monomials were not generated, and each set has $M$ monomials.
+   Note that each set has $M = 4$ monomials.
   Text
-   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them).
+   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example: 
   Example
    randomGeneratingSets(2,2,10,1)
   Text
@@ -181,9 +183,10 @@ doc ///
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   randomGeneratingSets(2,3,{0.0,1.0,1.0},1)
+   p={0.0, 1.0, 1.0}; 
+   randomGeneratingSets(2,3,p,1)
   Text
-   Note that the degree 1 monomials were not generated.
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
 
 
