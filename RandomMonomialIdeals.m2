@@ -157,8 +157,8 @@ toSymbol = (p) -> (
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
 -- (not exported, therefore no need to document) 
 extractNonzeroIdeals = ( ideals ) -> (
-    nonzeroIdeals = select(ideals,i->i != 0);
-    numberOfZeroIdeals = # ideals - # nonzeroIdeals;
+    nonzeroIdeals := select(ideals,i->i != 0);
+    numberOfZeroIdeals := # ideals - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
     )
@@ -168,8 +168,8 @@ extractNonzeroIdeals = ( ideals ) -> (
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
 -- (not exported, therefore no need to document) 
 extractNonzeroIdealsFromGens = ( generatingSets ) -> (
-    nonzeroIdeals = select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
-    numberOfZeroIdeals = # generatingSets - # nonzeroIdeals;
+    nonzeroIdeals := select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
+    numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
     )
