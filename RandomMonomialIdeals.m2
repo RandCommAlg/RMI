@@ -261,9 +261,9 @@ doc ///
  Headline
   randomly generates a list of monomials, up to a given degree
  Usage
-  randomGeneratingSets(ZZ,ZZ,RR)
-  randomGeneratingSets(ZZ,ZZ,ZZ)
-  randomGeneratingSets(ZZ,ZZ,List)
+  randomGeneratingSet(ZZ,ZZ,RR)
+  randomGeneratingSet(ZZ,ZZ,ZZ)
+  randomGeneratingSet(ZZ,ZZ,List)
  Inputs
   n: ZZ
     number of variables
@@ -325,7 +325,13 @@ doc ///
   Description
     Text
       Put {\tt Coefficients => r} for a choice of ring r as an argument in
-      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
+    Example 
+      n=2; D=3; p=0.2;
+      randomGeneratingSet(n,D,p)
+      ring ideal oo
+      randomGeneratingSet(n,D,p,Coefficients=>ZZ/101)
+      ring ideal oo
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
@@ -342,6 +348,10 @@ doc ///
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
       the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+    Example 
+      n=2; D=3; p=0.2;
+      randomGeneratingSet(n,D,p)
+      randomGeneratingSet(n,D,p,VariableName => y)
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
@@ -356,7 +366,8 @@ doc ///
     optional input to choose the strategy for generating the monomial set
   Description
     Text
-      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
+      "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list.
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
