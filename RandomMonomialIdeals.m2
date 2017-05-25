@@ -149,19 +149,19 @@ avgDim :=  (ideals,basefilename,fileNameExt) -> (
     Z := (extractNonzeroIdeals(ideals))_1;
     dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
     dimsHistogram :=toList(Z:numgens ring ideals_0);
-    filename := basefilename|"dimension"|fileNameExt;
-    fileHist := basefilename|"dimensionHistogram"|fileNameExt;
+    --filename := basefilename|"dimension"|fileNameExt;
+    --fileHist := basefilename|"dimensionHistogram"|fileNameExt;
     apply(#ideals,i->( 
         dimi := dim ideal(ideals_i);
-	filename << dimi << endl;
+	--filename << dimi << endl;
         dims = dims + dimi;
 	dimsHistogram = append(dimsHistogram, dimi)
 	)
     );
-    filename << close;
-    fileHist << values tally dimsHistogram << endl; 
-    fileHist << tally dimsHistogram;
-    fileHist<<close; 
+    --filename << close;
+    --fileHist << values tally dimsHistogram << endl; 
+    --fileHist << tally dimsHistogram;
+    --fileHist<<close; 
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
     sub(1/N*dims, RR)
 )
