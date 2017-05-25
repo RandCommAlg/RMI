@@ -140,6 +140,19 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if B==={} then {0_R} else B
 )
 
+--computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
+--prints and returns avg. degree (real number)
+avgDeg = method()
+avgDeg List :=  ideals -> (
+    deg = 0;
+    apply(#ideals,i-> ( 
+        degi = degree ideals_i;
+        deg = deg + degi;
+	)
+    );
+    sub(1/#ideals*deg, RR)
+    )
+
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
