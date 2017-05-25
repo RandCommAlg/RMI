@@ -174,12 +174,14 @@ doc ///
  Key
   randomGeneratingSets
   (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
+  (randomGeneratingSets,ZZ,ZZ,ZZ,ZZ)
   (randomGeneratingSets,ZZ,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials, up to a given degree
  Usage
-  randomGeneratingSets (ZZ,ZZ,RR,ZZ)
-  randomGeneratingSets (ZZ,ZZ,List,ZZ)
+  randomGeneratingSets(ZZ,ZZ,RR,ZZ)
+  randomGeneratingSets(ZZ,ZZ,ZZ,ZZ)
+  randomGeneratingSets(ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
@@ -188,6 +190,8 @@ doc ///
   p: RR
      or @ofClass List@
      , probability to select a monomial
+  M: ZZ
+     number of monomials in each generating set
   N: ZZ
     number of sets generated
  Outputs
@@ -199,19 +203,35 @@ doc ///
    If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
   Example
-   randomGeneratingSets(2,3,0.2,10)
+   n=2; D=3; p=0.2; N=10;
+   randomGeneratingSets(n,D,p,N)
    randomGeneratingSets(3,2,0.6,4)
   Text
    Note that this model does not generate the monomial $1$: 
   Example
    randomGeneratingSets(3,2,1.0,1)
   Text 
+   If $M$ is an integer, then randomGeneratingSets creates $N$ random sets of monomials of size $M$:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
+  Example
+   n=10; D=5; M=4; N=3;
+   randomGeneratingSets(n,D,M,N)
+  Text
+   Note that each set has $M = 4$ monomials.
+  Text
+   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example: 
+  Example
+   randomGeneratingSets(2,2,10,1)
+  Text
+   returns 5 monomials in a generating set, and not 10, since there do not exist 10 to choose from.
+  Text 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   randomGeneratingSets(2,3,{0.0,1.0,1.0},1)
+   p={0.0, 1.0, 1.0}; 
+   randomGeneratingSets(2,3,p,1)
   Text
-   Note that the degree 1 monomials were not generated.
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
 
 
@@ -232,6 +252,9 @@ TEST ///
     N=13;
     n=5; D=3; p={0.5,0.25,0.3};
     assert (N==#randomGeneratingSets(n,D,p,N))
+    N=10;
+    n=3; D=2; M=10;
+    assert (N==#randomGeneratingSets(n,D,M,N))
 ///
 
 TEST ///
@@ -278,6 +301,9 @@ TEST ///
     L=randomGeneratingSet(2,3,1.0)
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
+    L=randomGeneratingSet(2,3,9)
+    R=ring(L#0)
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
     L=randomGeneratingSet(3,3,{0.0,1.0,0.0})
     R=ring(L#0)
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
@@ -297,11 +323,14 @@ TEST ///
     n=10; D=5;
     assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
     assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
+    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal),m->first degree m))))
     n=4; D=7;
     assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
     assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
-    n=10; D=5;
-    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal),m->first degree m))))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
 ///
 
 TEST ///
@@ -309,9 +338,13 @@ TEST ///
     n=8; D=6;
     assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
     assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply(randomGeneratingSet(n,D,M),m->first degree m)))
     n=3; D=5;
     assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
     assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply(randomGeneratingSet(n,D,M),m->first degree m)))
     n=10; D=5;
     assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>Minimal),m->first degree m))))
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>Minimal),m->first degree m))))
