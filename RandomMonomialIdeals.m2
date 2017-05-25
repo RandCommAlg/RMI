@@ -105,7 +105,7 @@ randomGeneratingSets (ZZ,ZZ,List,ZZ) := List =>  (n,D,p,N) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-avgDim = method()
+avgDim = method(TypicalValue => RR)
 avgDim :=  (ideals,N,Z,basefilename,fileNameExt) -> (
     dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
     dimsHistogram :=toList(Z:numgens ring ideals_0);
