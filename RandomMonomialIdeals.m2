@@ -207,6 +207,9 @@ TEST ///
     N=13;
     n=5; D=3; p={0.5,0.25,0.3};
     assert (N==#randomGeneratingSets(n,D,p,N))
+    N=10;
+    n=3; D=2; M=10;
+    assert (N==#randomGeneratingSets(n,D,M,N))
 ///
 
 TEST ///
@@ -233,6 +236,9 @@ TEST ///
     L=(randomGeneratingSets(3,3,{0.0,1.0,0.0},1))#0
     R=ring(L#0)
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
+    L=(randomGeneratingSets(2,3,9,1))#0
+    R=ring(L#0)
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
 ///
 
 TEST ///
@@ -243,6 +249,12 @@ TEST ///
     n=4; D=7;
     assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     assert(D==max(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
+    n=4; D=7;
+    assert(D==max(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(D==max(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
 ///
 
 TEST ///
@@ -250,9 +262,13 @@ TEST ///
     n=8; D=6;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
     n=3; D=5;
     assert(1==min(apply((randomGeneratingSets(n,D,1.0,1))#0,m->first degree m)))
     assert(1==min(apply((randomGeneratingSets(n,D,toList(D:1.0),1))#0,m->first degree m)))
+    M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
+    assert(1==min(apply((randomGeneratingSets(n,D,M,1))#0,m->first degree m)))
 ///
 
 end
