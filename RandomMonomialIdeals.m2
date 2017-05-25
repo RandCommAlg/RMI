@@ -144,7 +144,9 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
 avgDim = method(TypicalValue => RR)
-avgDim :=  (ideals,N,Z,basefilename,fileNameExt) -> (
+avgDim :=  (ideals,basefilename,fileNameExt) -> (
+    N:= #ideals;
+    Z:= (extractNonzeroIdeals(ideals))_1;
     dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
     dimsHistogram :=toList(Z:numgens ring ideals_0);
     filename := basefilename|"dimension"|fileNameExt;
@@ -163,6 +165,7 @@ avgDim :=  (ideals,N,Z,basefilename,fileNameExt) -> (
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
     sub(1/N*dims, RR)
 )
+
 
 --**********************************--
 --  Internal methods	    	    --
