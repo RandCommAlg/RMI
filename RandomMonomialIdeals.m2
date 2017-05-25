@@ -152,10 +152,10 @@ avgDim :=  (ideals,basefilename,fileNameExt) -> (
     --filename := basefilename|"dimension"|fileNameExt;
     --fileHist := basefilename|"dimensionHistogram"|fileNameExt;
     apply(#ideals,i->( 
-        dimi := dim ideal(ideals_i);
+        dimi := dim ideals_i;
 	--filename << dimi << endl;
-        dims = dims + dimi;
-	dimsHistogram = append(dimsHistogram, dimi)
+        dims := dims + dimi;
+	dimsHistogram := append(dimsHistogram, dimi)
 	)
     );
     --filename << close;
