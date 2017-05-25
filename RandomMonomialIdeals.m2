@@ -64,7 +64,8 @@ export {
     "randomGeneratingSet",
     "Coefficient",
     "VariableName",
-    "Strategy"
+    "Strategy",
+    "avgDim"
     }
 
 --***************************************--
@@ -144,18 +145,19 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
 avgDim = method(TypicalValue => RR)
-avgDim :=  (ideals,basefilename,fileNameExt) -> (
+avgDim List :=  (ideals) -> (
     N := #ideals;
-    Z := (extractNonzeroIdeals(ideals))_1;
-    dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
-    dimsHistogram :=toList(Z:numgens ring ideals_0);
+    listOfIdeals := apply(ideals, i-> ideal i);
+    Z := (extractNonzeroIdeals(listOfIdeals))_1;
+    dims := (numgens ring listOfIdeals_0)*Z; --since zero ideals fill the space but were not included in ideals
+    dimsHistogram :=toList(Z:numgens ring listOfIdeals_0);
     --filename := basefilename|"dimension"|fileNameExt;
     --fileHist := basefilename|"dimensionHistogram"|fileNameExt;
     apply(#ideals,i->( 
-        dimi := dim ideals_i;
+        dimi := dim listOfIdeals_i;
 	--filename << dimi << endl;
-        dims := dims + dimi;
-	dimsHistogram := append(dimsHistogram, dimi)
+        dims = dims + dimi;
+	dimsHistogram = append(dimsHistogram, dimi)
 	)
     );
     --filename << close;
