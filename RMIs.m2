@@ -387,6 +387,15 @@ borelFixed (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
 avgDeg = method()
+avgDeg List :=  ideals -> (
+    deg = 0;
+    apply(#ideals,i-> ( 
+        degi = degree ideals_i;
+        deg = deg + degi;
+	)
+    );
+    sub(1/#ideals*deg, RR)
+    )
 avgDeg (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
     deg = 0;
     degHist={};
