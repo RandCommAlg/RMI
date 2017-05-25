@@ -62,7 +62,7 @@ newPackage(
 export {
     "randomGeneratingSets",
     "randomGeneratingSet",
-    "Coefficient",
+    "Coefficients",
     "VariableName",
     "Strategy"
     }
@@ -74,13 +74,13 @@ export {
 ER = getSymbol "ER"
 Minimal = getSymbol "Minimal"
 
-randomGeneratingSets = method(TypicalValue => List, Options => {Coefficient => QQ,
+randomGeneratingSets = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                        VariableName => "x",
 								Strategy => ER})
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomGeneratingSets(n,D,toList(D:p),N,
-	                 Coefficient=>o.Coefficient,
+	                 Coefficients=>o.Coefficients,
 			 VariableName=>o.VariableName,
 			 Strategy=>o.Strategy)
 )
@@ -88,7 +88,7 @@ randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
 randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     apply(N,i-> randomGeneratingSet(n,D,M,
-	                            Coefficient=>o.Coefficient,
+	                            Coefficients=>o.Coefficients,
 				    VariableName=>o.VariableName,
 				    Strategy=>o.Strategy))
 )
@@ -96,18 +96,18 @@ randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
 randomGeneratingSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     apply(N,i-> randomGeneratingSet(n,D,p,
-	                            Coefficient=>o.Coefficient,
+	                            Coefficients=>o.Coefficients,
 				    VariableName=>o.VariableName,
 				    Strategy=>o.Strategy))
 )
 
-randomGeneratingSet = method(TypicalValue => List, Options => {Coefficient => QQ,
+randomGeneratingSet = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                       VariableName => "x",
 							       Strategy => ER})
 randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomGeneratingSet(n,D,toList(D:p),
-	                Coefficient=>o.Coefficient,
+	                Coefficients=>o.Coefficients,
 			VariableName=>o.VariableName,
 			Strategy=>o.Strategy)
 )
@@ -116,7 +116,7 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
     if o.Strategy === Minimal then error "Minimal not implemented for fixed size ER model";
     x := toSymbol o.VariableName;
-    R := o.Coefficient[x_1..x_n];
+    R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     take(random(allMonomials), M)
 )
@@ -126,7 +126,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if #p != D then error "p expected to be a list of length D";
     if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
     x := toSymbol o.VariableName;
-    R := o.Coefficient[x_1..x_n];
+    R := o.Coefficients[x_1..x_n];
     B := {};
     if o.Strategy === Minimal then (
         currentRing := R;
@@ -253,6 +253,116 @@ doc ///
    randomGeneratingSets(2,3,p,1)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+///
+
+doc ///
+ Key
+  randomGeneratingSet
+  (randomGeneratingSet,ZZ,ZZ,RR)
+  (randomGeneratingSet,ZZ,ZZ,ZZ)
+  (randomGeneratingSet,ZZ,ZZ,List)
+ Headline
+  randomly generates a list of monomials, up to a given degree
+ Usage
+  randomGeneratingSets(ZZ,ZZ,RR)
+  randomGeneratingSets(ZZ,ZZ,ZZ)
+  randomGeneratingSets(ZZ,ZZ,List)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  p: RR
+     or @ofClass List@
+     , probability to select a monomial
+  M: ZZ
+     number of monomials in each generating set
+ Outputs
+  B: List
+   random generating set of monomials
+ Description
+  Text
+   randomGeneratingSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model:
+   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
+  Example
+   n=2; D=3; p=0.2;
+   randomGeneratingSet(n,D,p)
+   randomGeneratingSet(3,2,0.6)
+  Text
+   Note that this model does not generate the monomial $1$:
+  Example
+   randomGeneratingSet(3,2,1.0)
+  Text
+   If $M$ is an integer, then randomGeneratingSet creates a list of monomials of size $M$:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
+  Example
+   n=10; D=5; M=4;
+   randomGeneratingSet(n,D,M)
+  Text
+   Note that it returns a set with $M = 4$ monomials.
+  Text
+   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
+  Example
+   randomGeneratingSet(2,2,10)
+  Text
+   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from.
+  Text
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSet generates the set utilizing the graded Erdos-Renyi-type model:
+   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
+  Example
+   p={0.0, 1.0, 1.0};
+   randomGeneratingSet(2,3,p)
+  Text
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+///
+
+
+doc ///
+  Key
+    Coefficients
+    [randomGeneratingSet, Coefficients]
+    [randomGeneratingSets, Coefficients]
+  Headline
+    optional input to choose the coefficient ring of the generated polynomials
+  Description
+    Text
+      Put {\tt Coefficients => r} for a choice of ring r as an argument in
+      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+  SeeAlso
+    randomGeneratingSet
+    randomGeneratingSets
+///
+
+doc ///
+  Key
+    VariableName
+    [randomGeneratingSet, VariableName]
+    [randomGeneratingSets, VariableName]
+  Headline
+    optional input to choose the variable name for the generated polynomials
+  Description
+    Text
+      Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
+      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+  SeeAlso
+    randomGeneratingSet
+    randomGeneratingSets
+///
+
+doc ///
+  Key
+    Strategy
+    [randomGeneratingSet, Strategy]
+    [randomGeneratingSets, Strategy]
+  Headline
+    optional input to choose the strategy for generating the monomial set
+  Description
+    Text
+      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+  SeeAlso
+    randomGeneratingSet
+    randomGeneratingSets
 ///
 
 
