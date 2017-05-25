@@ -145,8 +145,6 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --also saves the histogram of dimensions
 avgDim = method(TypicalValue => RR)
 avgDim :=  (ideals,basefilename,fileNameExt) -> (
-    N:= #ideals;
-    Z:= (extractNonzeroIdeals(ideals))_1;
     dims := (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
     dimsHistogram :=toList(Z:numgens ring ideals_0);
     filename := basefilename|"dimension"|fileNameExt;
