@@ -71,12 +71,9 @@ export {
 --  Exported methods 	     	     	 --
 --***************************************--
 
-ER = getSymbol "ER"
-Minimal = getSymbol "Minimal"
-
 randomGeneratingSets = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                        VariableName => "x",
-								Strategy => ER})
+								Strategy => "ER"})
 randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomGeneratingSets(n,D,toList(D:p),N,
@@ -103,7 +100,7 @@ randomGeneratingSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
 
 randomGeneratingSet = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                       VariableName => "x",
-							       Strategy => ER})
+							       Strategy => "ER"})
 randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomGeneratingSet(n,D,toList(D:p),
@@ -114,7 +111,7 @@ randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
 
 randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === Minimal then error "Minimal not implemented for fixed size ER model";
+    if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
@@ -128,7 +125,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
-    if o.Strategy === Minimal then (
+    if o.Strategy === "Minimal" then (
         currentRing := R;
         apply(D, d->(
             chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
@@ -407,8 +404,8 @@ TEST ///
     -- Check no terms are chosen for a probability of 0
     assert (0==(randomGeneratingSet(5,5,0.0))#0)
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
-    assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>Minimal))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>Minimal))#0)
+    assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
+    assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
 ///
 
 TEST ///
@@ -420,11 +417,11 @@ TEST ///
     assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,1.0))
     assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,{1.0,1.0}))
     n=4;D=5;
-    assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomGeneratingSet(n,D,1.0, Strategy=>Minimal))
-    assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,1.0,1.0,1.0,1.0}, Strategy=>Minimal))
-    assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,1.0,1.0,1.0}, Strategy=>Minimal))
-    assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,1.0,1.0}, Strategy=>Minimal))
-    assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal))
+    assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"))
+    assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,1.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"))
 ///
 
 TEST ///
@@ -438,13 +435,13 @@ TEST ///
     L=randomGeneratingSet(3,3,{0.0,1.0,0.0})
     R=ring(L#0)
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
-    L=randomGeneratingSet(3,3,1.0, Strategy=>Minimal);
+    L=randomGeneratingSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
-    L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>Minimal);
+    L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
-    L=randomGeneratingSet(3,3,{0.0,0.0,1.0}, Strategy=>Minimal);
+    L=randomGeneratingSet(3,3,{0.0,0.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^3,R_0^2*R_1,R_0^2*R_2,R_0*R_1*R_2,R_1^3,R_0*R_1^2,R_1^2*R_2,R_0*R_2^2,R_1*R_2^2,R_2^3})
 ///
@@ -456,7 +453,7 @@ TEST ///
     assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
-    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>Minimal),m->first degree m))))
+    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"),m->first degree m))))
     n=4; D=7;
     assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
     assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
@@ -477,8 +474,8 @@ TEST ///
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(1==min(apply(randomGeneratingSet(n,D,M),m->first degree m)))
     n=10; D=5;
-    assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>Minimal),m->first degree m))))
-    assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>Minimal),m->first degree m))))
+    assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
 ///
 
 end
