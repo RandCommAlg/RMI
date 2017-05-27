@@ -147,10 +147,10 @@ avgDeg = method(TypicalValue =>RR)
 avgDeg List :=  (ideals) -> (
     N := #ideals;
     listOfIdeals := apply(ideals, i-> ideal i);
-    deg := 0.0;
-    apply(#ideals,i-> ( 
+    deg := 0;
+    apply(#ideals,i->( 
         degi := degree listOfIdeals_i;
-        deg := deg + degi;
+        deg = deg + degi;
 	)
     );
     sub(1/N*deg, RR)
@@ -268,10 +268,10 @@ doc ///
    avgDeg computes the average degree of R/I for a list of monomial ideals.
    The degree of each monomial ideal is calculated using the degree function.
    The degrees of each of the monomial ideals are added together and then divided by the total number of ideals to calculate the average.   
---Example
--- RR[x,y,z]
--- L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
--- avgDeg L
+  Example
+   RR[x,y,z]
+   L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
+   avgDeg L
 ///
 
 
