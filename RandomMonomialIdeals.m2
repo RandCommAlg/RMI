@@ -64,7 +64,8 @@ export {
     "randomGeneratingSet",
     "Coefficient",
     "VariableName",
-    "Strategy"
+    "Strategy",
+    "avgDeg"
     }
 
 --***************************************--
@@ -143,11 +144,12 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
 avgDeg = method()
-avgDeg List :=  ideals -> (
-    deg = 0;
+avgDeg List :=  (ideals) -> (
+    listOfIdeals := apply(ideals, i->ideal i);
+    deg := 0;
     apply(#ideals,i-> ( 
-        degi = degree ideals_i;
-        deg = deg + degi;
+        degi := degree listOfIdeals_i;
+        deg := deg + degi;
 	)
     );
     sub(1/#ideals*deg, RR)
@@ -265,10 +267,10 @@ doc ///
    avgDeg computes the average degree of R/I for a list of monomial ideals.
    The degree of each monomial ideal is calculated using the degree function.
    The degrees of each of the monomial ideals are added together and then divided by the total number of ideals to calculate the average.
-  Example
-   ZZ[x,y,z]
-   L={monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
-   avgDeg L
+--  Example
+--   ZZ[x,y,z]
+--   L={monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
+--   avgDeg L
 ///
 
 
