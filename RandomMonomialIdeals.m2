@@ -62,6 +62,8 @@ newPackage(
 export {
     "randomGeneratingSets",
     "randomGeneratingSet",
+    "idealsFromGeneratingSets",
+    "randomMonomialIdeals"
     "Coefficient",
     "VariableName",
     "Strategy"
@@ -138,6 +140,39 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     else
         B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
+)
+
+--creates a list of monomialIdeal objects from a list of monomial generating sets 
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
+-- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
+-- see branch @25 for this fix. 
+idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
+	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
+	-- i.e., do (p,D,baseFileName) as input. 
+	-- maybe the filename should be optional and make it "temp" for default. 
+    N := # B;
+    n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
+    -- see branch @25 for the file writing: 
+    --    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
+    --    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
+    ideals := {};
+    for i from 0 to #B-1 do {
+	ideals = B / (b-> monomialIdeal b);
+	--	filename << toString B#i << endl; 
+	};
+    --    filename<<close;
+    (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
+    print(concatenate("There are ", toString(#B)," ideals in this sample."));
+    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
+    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+)
+
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficient => QQ,
+ 								 VariableName => "x",
+ 								 IncludeZeroIdeals => false})
+ randomMonomialIdeal (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+ 	B=randomGeneratingSets(n,D,p,N,Strategy => Minimal);
+	idealsFromGeneratingSets(B,p,D,"temporary")
 )
 
 --**********************************--
