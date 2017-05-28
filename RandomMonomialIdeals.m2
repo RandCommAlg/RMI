@@ -170,7 +170,7 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficient => QQ,
  								 VariableName => "x",
  								 IncludeZeroIdeals => false})
- randomMonomialIdeal (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+ randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
  	B=randomGeneratingSets(n,D,p,N,Strategy => Minimal);
 	idealsFromGeneratingSets(B,p,D,"temporary")
 )
