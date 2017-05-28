@@ -152,6 +152,27 @@ toSymbol = (p) -> (
      else
          error ("expected a string or symbol, but got: ", toString p))
 
+-- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
+    -- input list of ideals 
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+-- (not exported, therefore no need to document) 
+extractNonzeroIdeals = ( ideals ) -> (
+    nonzeroIdeals := select(ideals,i->i != 0);
+    numberOfZeroIdeals := # ideals - # nonzeroIdeals;
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
+    return(nonzeroIdeals,numberOfZeroIdeals)
+    )
+-- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
+-- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
+    -- input list of generating sets
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+-- (not exported, therefore no need to document) 
+extractNonzeroIdealsFromGens = ( generatingSets ) -> (
+    nonzeroIdeals := select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
+    numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
+    return(nonzeroIdeals,numberOfZeroIdeals)
+    )
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
