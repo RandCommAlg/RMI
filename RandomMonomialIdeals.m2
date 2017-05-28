@@ -63,7 +63,7 @@ export {
     "randomGeneratingSets",
     "randomGeneratingSet",
     "idealsFromGeneratingSets",
-    "randomMonomialIdeals"
+    "randomMonomialIdeals",
     "Coefficient",
     "VariableName",
     "Strategy"
