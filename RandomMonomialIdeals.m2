@@ -172,12 +172,26 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
                                                                  IncludeZeroIdeals => false})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
- 	B=randomGeneratingSets(n,D,p,N,Strategy=>Minimal);
+ 	B=randomGeneratingSets(n,D,p,N,
+			       Coefficients=>o.Coefficients,
+			       VariableName=>o.VariableName,
+			       Strategy=>Minimal);
 	idealsFromGeneratingSets(B,p_0,D,"temporary")
+	--idealsFromGeneratingSets currently doesn't have input options for p being a list
+	--"temporary" needed since idealsFromGeneratingSets needs a String input
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
- 	B=randomGeneratingSets(n,D,p,N,Strategy=>Minimal);
-	idealsFromGeneratingSets(B,p,D,"temporary")
+ 	B=randomGeneratingSets(n,D,p,N,
+			       Coefficients=>o.Coefficients,
+			       VariableName=>o.VariableName,
+			       Strategy=>Minimal);
+	idealsFromGeneratingSets(B,p,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
+)
+ randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
+ 	B=randomGeneratingSets(n,D,M,N,
+			       Coefficients=>o.Coefficients,
+			       VariableName=>o.VariableName);
+	idealsFromGeneratingSets(B,.5,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
 --**********************************--
