@@ -181,7 +181,7 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 )
  randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
  	B:=randomGeneratingSets(n,D,M,N);
-	idealsFromGeneratingSets(B,.5,D,"temporary",Coefficient=>o.Coefficient,VariableName=>o.VariableName,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+	idealsFromGeneratingSets(B,.5,D,"temporary",VariableName=>o.VariableName,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 	-- need .5, since idealsFromGeneratingSets needs a RR input
 )
 
