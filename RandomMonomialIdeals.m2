@@ -300,7 +300,63 @@ doc ///
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
 
-
+doc ///
+ Key
+  randomMonomialIdeals
+  (randomMonomialIdeals,ZZ,ZZ,RR,ZZ)
+  (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialIdeals,ZZ,ZZ,List,ZZ)
+ Headline
+  randomly generates mononial ideals, with each monomial up to a given degree
+ Usage
+  randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
+  randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialIdeals(ZZ,ZZ,List,ZZ)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  p: RR
+     or @ofClass List@
+     , probability to select a monomial
+  M: ZZ
+     maximum number of monomials in each generating set for the ideal
+  N: ZZ
+    number of ideals generated
+ Outputs
+  B: List
+   random monomial ideals
+ Description
+  Text
+   randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   If $p$ is a real number, it generates each of these ideals according to the Erdos-Renyi-type model: 
+   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
+  Example
+   n=2; D=3; p=0.2; N=10;
+   randomMonomialIdeals(n,D,p,N)
+   randomMonomialIdeals(5,3,0.4,4)
+  Text
+   Note that this model does not generate the monomial $1$: 
+  Example
+   randomMonomialIdeals(3,2,1.0,1)
+  Text 
+   If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate its ideal.
+  Example
+   n=8; D=4; M=7; N=3;
+   randomMonomialIdeals(n,D,M,N)
+  Text
+   Note that each generating set for the ideal has at most $M = 4$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set
+  Text 
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
+   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
+  Example
+   p={0.0, 1.0, 1.0}; 
+   randomGeneratingSets(2,3,p,1)
+  Text
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+///
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
