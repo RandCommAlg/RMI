@@ -65,7 +65,10 @@ export {
     "Coefficients",
     "VariableName",
     "Strategy",
-    "avgDim"
+    "avgDim",
+    "ShowDimensionTally",
+    "BaseFileName",
+    "FileNameExt"
     }
 
 --***************************************--
@@ -141,28 +144,32 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-avgDim = method(TypicalValue => RR)
-avgDim List :=  (ideals) -> (
+avgDim = method(TypicalValue => RR, Options => {ShowDimensionTally => false,
+	                                        BaseFileName =>"",
+						FileNameExt => ""})
+avgDim List := o-> (ideals) -> (
     N := #ideals;
     listOfIdeals := apply(ideals, i-> ideal i);
     Z := (extractNonzeroIdeals(listOfIdeals))_1;
     dims := (numgens ring listOfIdeals_0)*Z; --since zero ideals fill the space but were not included in ideals
     dimsHistogram :=toList(Z:numgens ring listOfIdeals_0);
-    --filename := basefilename|"dimension"|fileNameExt;
-    --fileHist := basefilename|"dimensionHistogram"|fileNameExt;
+    filename := o.BaseFileName|"dimension"|o.FileNameExt;
+    fileHist := o.BaseFileName|"dimensionHistogram"|o.FileNameExt;
     apply(#ideals,i->( 
         dimi := dim listOfIdeals_i;
-	--filename << dimi << endl;
+	filename << dimi << endl;
         dims = dims + dimi;
 	dimsHistogram = append(dimsHistogram, dimi)
 	)
     );
-    --filename << close;
-    --fileHist << values tally dimsHistogram << endl; 
-    --fileHist << tally dimsHistogram;
-    --fileHist<<close; 
+    filename << close;
+    fileHist << values tally dimsHistogram << endl; 
+    fileHist << tally dimsHistogram;
+    fileHist<<close; 
+    if o.ShowDimensionTally 
+         then print("dimension histogram tally", tally dimsHistogram);
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    sub(1/N*dims, RR)
+    sub(1/N*dims, RR);
 )
 
 --**********************************--
