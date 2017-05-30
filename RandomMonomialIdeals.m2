@@ -307,7 +307,7 @@ doc ///
   (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
   (randomMonomialIdeals,ZZ,ZZ,List,ZZ)
  Headline
-  randomly generates mononial ideals, with each monomial up to a given degree
+  randomly generates monomial ideals, with each monomial up to a given degree
  Usage
   randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
   randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
@@ -342,12 +342,12 @@ doc ///
    randomMonomialIdeals(3,2,1.0,1)
   Text 
    If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
-   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate its ideal.
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the ideal from this set.
   Example
    n=8; D=4; M=7; N=3;
    randomMonomialIdeals(n,D,M,N)
   Text
-   Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set
+   Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
   Text 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
@@ -355,7 +355,7 @@ doc ///
    p={0.0, 1.0, 1.0}; 
    randomGeneratingSets(2,3,p,1)
   Text
-   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+   Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
 ///
 
 --******************************************--
