@@ -347,7 +347,7 @@ doc ///
    n=8; D=4; M=7; N=3;
    randomMonomialIdeals(n,D,M,N)
   Text
-   Note that each generating set for the ideal has at most $M = 4$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set
+   Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set
   Text 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
@@ -472,6 +472,23 @@ TEST ///
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>Minimal),m->first degree m))))
 ///
 
+--************************--
+--  randomMonomialIdeals  --
+--************************--
+
+TEST ///
+  -- check the number of ideals
+  n=5; D=5; p=.6; N=3;
+  B = flatten randomMonomialIdeals(n,D,p,N);
+  assert ((N+1)===#B)
+///
+
+TEST ///
+  -- check the number of monomials in the generating set of the ideal
+  n=4; D=6; M=7; N=1;
+  B = flatten randomMonomialIdeals(n,D,p,N);
+  assert (M>=numgens B_0)
+///
 end
 
 You can write anything you want down here.  I like to keep examples
