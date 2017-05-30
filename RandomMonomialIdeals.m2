@@ -115,7 +115,8 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    take(random(allMonomials), M)
+    C := take(random(allMonomials), M);
+    if C==={} then {0_R} else C
 )
 
 randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
@@ -417,6 +418,7 @@ TEST ///
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
     assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
+    assert (0==(randomGeneratingSet(5,4,0))#0)
 ///
 
 TEST ///
