@@ -62,13 +62,9 @@ newPackage(
 export {
     "randomGeneratingSets",
     "randomGeneratingSet",
-<<<<<<< HEAD
     "idealsFromGeneratingSets",
     "randomMonomialIdeals",
-    "Coefficient",
-=======
     "Coefficients",
->>>>>>> refs/remotes/origin/master
     "VariableName",
     "Strategy"
     }
@@ -172,13 +168,13 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => false})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>Minimal);
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
 	idealsFromGeneratingSets(B,p_0,D,"temporary")
 	-- idealsFromGeneratingSets currently doesn't have input options for p being a list
 	-- "temporary" needed since idealsFromGeneratingSets needs a String input
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>Minimal);
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
 	idealsFromGeneratingSets(B,p,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
@@ -304,7 +300,6 @@ doc ///
 
 doc ///
  Key
-<<<<<<< HEAD
   randomMonomialIdeals
   (randomMonomialIdeals,ZZ,ZZ,RR,ZZ)
   (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
@@ -315,18 +310,6 @@ doc ///
   randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
   randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
   randomMonomialIdeals(ZZ,ZZ,List,ZZ)
-=======
-  randomGeneratingSet
-  (randomGeneratingSet,ZZ,ZZ,RR)
-  (randomGeneratingSet,ZZ,ZZ,ZZ)
-  (randomGeneratingSet,ZZ,ZZ,List)
- Headline
-  randomly generates a list of monomials, up to a given degree
- Usage
-  randomGeneratingSet(ZZ,ZZ,RR)
-  randomGeneratingSet(ZZ,ZZ,ZZ)
-  randomGeneratingSet(ZZ,ZZ,List)
->>>>>>> refs/remotes/origin/master
  Inputs
   n: ZZ
     number of variables
@@ -336,13 +319,12 @@ doc ///
      or @ofClass List@
      , probability to select a monomial
   M: ZZ
-<<<<<<< HEAD
      maximum number of monomials in each generating set for the ideal
   N: ZZ
     number of ideals generated
  Outputs
   B: List
-   randomly generated @TO monomialIdeal@
+   randomly generated @TO monomialIdeal@, and the number of zero ideals
  Description
   Text
    randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
@@ -376,7 +358,27 @@ doc ///
    randomGeneratingSets
    idealsFromGeneratingSets
 ///
-=======
+
+doc ///
+  randomGeneratingSet
+  (randomGeneratingSet,ZZ,ZZ,RR)
+  (randomGeneratingSet,ZZ,ZZ,ZZ)
+  (randomGeneratingSet,ZZ,ZZ,List)
+ Headline
+  randomly generates a list of monomials, up to a given degree
+ Usage
+  randomGeneratingSet(ZZ,ZZ,RR)
+  randomGeneratingSet(ZZ,ZZ,ZZ)
+  randomGeneratingSet(ZZ,ZZ,List)
+Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  p: RR
+     or @ofClass List@
+     , probability to select a monomial
+  M: ZZ
      number of monomials in each generating set
  Outputs
   B: List
@@ -417,7 +419,6 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-
 
 doc ///
   Key
@@ -476,9 +477,6 @@ doc ///
     randomGeneratingSet
     randomGeneratingSets
 ///
-
-
->>>>>>> refs/remotes/origin/master
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
