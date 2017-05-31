@@ -354,9 +354,6 @@ doc ///
    randomMonomialIdeals(2,3,p,1)
   Text
    Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
-  SeeAlso
-    randomGeneratingSets
-    idealsFromGeneratingSets
 ///
 
 doc ///
