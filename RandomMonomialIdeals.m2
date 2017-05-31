@@ -368,7 +368,7 @@ doc ///
   randomGeneratingSet(ZZ,ZZ,RR)
   randomGeneratingSet(ZZ,ZZ,ZZ)
   randomGeneratingSet(ZZ,ZZ,List)
-Inputs
+ Inputs
   n: ZZ
     number of variables
   D: ZZ
@@ -417,6 +417,7 @@ Inputs
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
+
 
 doc ///
   Key
