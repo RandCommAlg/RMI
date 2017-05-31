@@ -117,7 +117,7 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    C:=take(random(allMonomials), M)
+    C:=take(random(allMonomials), M);
     if C==={} then {0_R} else C
 )
 
