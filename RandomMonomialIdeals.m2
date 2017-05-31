@@ -357,6 +357,7 @@ doc ///
 ///
 
 doc ///
+ Key
   randomGeneratingSet
   (randomGeneratingSet,ZZ,ZZ,RR)
   (randomGeneratingSet,ZZ,ZZ,ZZ)
