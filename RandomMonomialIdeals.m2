@@ -121,7 +121,8 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    take(random(allMonomials), M)
+    C:=take(random(allMonomials), M)
+    if C==={} then {0_R} else C
 )
 
 randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
@@ -168,20 +169,20 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
- randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficient => QQ, VariableName => "x", IncludeZeroIdeals => false})
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => false})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficient=>o.Coefficient,VariableName=>o.VariableName,Strategy=>Minimal);
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>Minimal);
 	idealsFromGeneratingSets(B,p_0,D,"temporary")
 	-- idealsFromGeneratingSets currently doesn't have input options for p being a list
 	-- "temporary" needed since idealsFromGeneratingSets needs a String input
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficient=>o.Coefficient,VariableName=>o.VariableName,Strategy=>Minimal);
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>Minimal);
 	idealsFromGeneratingSets(B,p,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
- 	B:=randomGeneratingSets(n,D,M,N,Coefficient=>o.Coefficient,VariableName=>o.VariableName);
+ 	B:=randomGeneratingSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,.5,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
 	-- need .5, since idealsFromGeneratingSets needs a RR input
 )
@@ -341,7 +342,7 @@ doc ///
     number of ideals generated
  Outputs
   B: List
-   random monomial ideals
+   randomly generated @TO monomialIdeal@
  Description
   Text
    randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
@@ -368,9 +369,12 @@ doc ///
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
    p={0.0, 1.0, 1.0}; 
-   randomGeneratingSets(2,3,p,1)
+   randomMonomialIdeals(2,3,p,1)
   Text
    Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
+  SeeAlso
+   randomGeneratingSets
+   idealsFromGeneratingSets
 ///
 =======
      number of monomials in each generating set
