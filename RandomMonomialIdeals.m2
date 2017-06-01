@@ -67,7 +67,6 @@ export {
     "VariableName",
     "Strategy",
     "IncludeZeroIdeals"
->>>>>>> master
     }
 
 --***************************************--
@@ -143,7 +142,6 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 
 
-
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
 -- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
@@ -170,7 +168,7 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 )
 
 
->>>>>>> master
+
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
