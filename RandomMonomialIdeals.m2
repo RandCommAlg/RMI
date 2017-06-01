@@ -66,7 +66,8 @@ export {
     "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
-    "Strategy"
+    "Strategy",
+    "IncludeZeroIdeals"
     }
 
 --***************************************--
