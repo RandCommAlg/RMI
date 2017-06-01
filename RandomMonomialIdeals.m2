@@ -177,15 +177,19 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 dimStats = method(TypicalValue => RR, Options => {ShowDimensionTally => false,
 	                                        BaseFileName =>"",
 						FileNameExt => ""})
-dimStats List := o-> (ideals) -> (
-    N := #ideals;
-    listOfIdeals := apply(ideals, i-> ideal i);
-    Z := (extractNonzeroIdeals(listOfIdeals))_1;
-    dims := (numgens ring listOfIdeals_0)*Z; --since zero ideals fill the space but were not included in ideals
-    dimsHistogram :=toList(Z:numgens ring listOfIdeals_0);
+dimStats List := o-> (listOfIdeals) -> (
+    N := #listOfIdeals;
+    --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100),1.0,100,"",IncludeZeroIdeals=>true);
+    --listOfIdeals := apply(ideals, i-> ideal i);
+    --Z := 0;
+    --(listOfIdeals, Z) = extractNonzeroIdeals(listOfIdeals);
+    --dims := (numgens ring listOfIdeals_0)*Z; --since zero ideals fill the space but were not included in ideals
+    --dimsHistogram :=toList(Z:numgens ring listOfIdeals_0);
+    dims:=0;
+    dimsHistogram:={};
     filename := o.BaseFileName|"dimension"|o.FileNameExt;
     fileHist := o.BaseFileName|"dimensionHistogram"|o.FileNameExt;
-    apply(#ideals,i->( 
+    apply(#listOfIdeals,i->( 
         dimi := dim listOfIdeals_i;
     filename << dimi << endl;
         dims = dims + dimi;
