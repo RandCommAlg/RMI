@@ -62,13 +62,18 @@ newPackage(
 export {
     "randomGeneratingSets",
     "randomGeneratingSet",
+    "idealsFromGeneratingSets",
     "Coefficients",
     "VariableName",
     "Strategy",
+<<<<<<< HEAD
     "avgDim",
     "ShowDimensionTally",
     "BaseFileName",
     "FileNameExt"
+=======
+    "IncludeZeroIdeals"
+>>>>>>> master
     }
 
 --***************************************--
@@ -142,6 +147,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if B==={} then {0_R} else B
 )
 
+<<<<<<< HEAD
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
@@ -173,6 +179,35 @@ avgDim List := o-> (ideals) -> (
     sub(1/N*dims, RR);
 )
 
+=======
+
+--creates a list of monomialIdeal objects from a list of monomial generating sets 
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
+-- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
+-- see branch @25 for this fix. 
+idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
+	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
+	-- i.e., do (p,D,baseFileName) as input. 
+	-- maybe the filename should be optional and make it "temp" for default. 
+    N := # B;
+    n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
+    -- see branch @25 for the file writing: 
+    --    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
+    --    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
+    ideals := {};
+    for i from 0 to #B-1 do {
+	ideals = B / (b-> monomialIdeal b);
+	--	filename << toString B#i << endl; 
+	};
+    --    filename<<close;
+    (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
+    print(concatenate("There are ", toString(#B)," ideals in this sample."));
+    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
+    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+)
+
+
+>>>>>>> master
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
