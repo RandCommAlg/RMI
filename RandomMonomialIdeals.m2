@@ -145,7 +145,8 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
 -- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
 -- see branch @25 for this fix. 
-idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
+idealsFromGeneratingSets(List):= o -> (B) -> (
+--idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
 	-- i.e., do (p,D,baseFileName) as input. 
 	-- maybe the filename should be optional and make it "temp" for default. 
@@ -170,18 +171,15 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
  	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
-	idealsFromGeneratingSets(B,p_0,D,"temporary")
-	-- idealsFromGeneratingSets currently doesn't have input options for p being a list
-	-- "temporary" needed since idealsFromGeneratingSets needs a String input
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
  	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
-	idealsFromGeneratingSets(B,p,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
  	B:=randomGeneratingSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
-	idealsFromGeneratingSets(B,.5,D,"temporary",IncludeZeroIdeals=>o.IncludeZeroIdeals)
-	-- need .5, since idealsFromGeneratingSets needs a RR input
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
 --**********************************--
