@@ -67,7 +67,7 @@ export {
     "VariableName",
     "Strategy",
     "IncludeZeroIdeals",
-    "avgDim",
+    "dimStats",
     "ShowDimensionTally",
     "BaseFileName",
     "FileNameExt"
@@ -174,10 +174,10 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-avgDim = method(TypicalValue => RR, Options => {ShowDimensionTally => false,
+dimStats = method(TypicalValue => RR, Options => {ShowDimensionTally => false,
 	                                        BaseFileName =>"",
 						FileNameExt => ""})
-avgDim List := o-> (ideals) -> (
+dimStats List := o-> (ideals) -> (
     N := #ideals;
     listOfIdeals := apply(ideals, i-> ideal i);
     Z := (extractNonzeroIdeals(listOfIdeals))_1;
