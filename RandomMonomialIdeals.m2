@@ -605,13 +605,13 @@ TEST ///
   B = flatten randomMonomialIdeals(n,D,p,N);
   assert ((N+1)===#B)
   C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
-  assert (N===#B)
+  assert (N===#C)
 ///
 
 TEST ///
   -- check the number of monomials in the generating set of the ideal
   n=4; D=6; M=7; N=1;
-  B = flatten randomMonomialIdeals(n,D,p,N);
+  B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
 ///
 end
