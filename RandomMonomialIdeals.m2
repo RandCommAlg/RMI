@@ -67,10 +67,14 @@ export {
     "VariableName",
     "Strategy",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "avgDim",
     "ShowDimensionTally",
     "BaseFileName",
     "FileNameExt"
+=======
+    "IncludeZeroIdeals"
+>>>>>>> master
 =======
     "IncludeZeroIdeals"
 >>>>>>> master
@@ -148,6 +152,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 )
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
@@ -180,6 +185,8 @@ avgDim List := o-> (ideals) -> (
 )
 
 =======
+=======
+>>>>>>> master
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
@@ -207,6 +214,9 @@ idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 )
 
 
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 --**********************************--
 --  Internal methods	    	    --
