@@ -428,6 +428,7 @@ doc ///
     Coefficients
     [randomGeneratingSet, Coefficients]
     [randomGeneratingSets, Coefficients]
+    [randomMonomialIdeals, Coefficients]
   Headline
     optional input to choose the coefficient ring of the generated polynomials
   Description
@@ -443,6 +444,7 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -450,6 +452,7 @@ doc ///
     VariableName
     [randomGeneratingSet, VariableName]
     [randomGeneratingSets, VariableName]
+    [randomMonomialIdeals, VariableName]
   Headline
     optional input to choose the variable name for the generated polynomials
   Description
@@ -463,6 +466,7 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -479,6 +483,24 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+///
+
+doc ///
+ Key
+   IncludeZeroIdeals
+   [randomMonomialIdeals, IncludeZeroIdeals]
+ Headline
+   optional input to choose whether or not zero ideals should be included in the list of ideals
+ Description
+   Text
+     If {\tt IncludeZeroIdeals => false}, then any empty sets generated will be listed as the empty set, and the number at the end of the list indicates the number of such empty sets.
+     If {\tt IncludeZeroIdeals => true}, then empty sets will be included as the zero ideal.
+   Example
+     n=2;D=2;p=0.0;N=1;
+     randomMonomialIdeals(n,D,p,N)
+     randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true)
+ See Also
+   randomMonomialIdeals
 ///
 
 --******************************************--
