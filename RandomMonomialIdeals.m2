@@ -325,7 +325,7 @@ doc ///
     number of ideals generated
  Outputs
   B: List
-   randomly generated @TO monomialIdeal@, and the number of zero ideals
+   list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
  Description
   Text
    randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
