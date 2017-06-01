@@ -604,7 +604,7 @@ TEST ///
   n=5; D=5; p=.6; N=3;
   B = flatten randomMonomialIdeals(n,D,p,N);
   assert ((N+1)===#B)
-  C = randomMonomialIdeals(n,D,p,N);
+  C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
   assert (N===#B)
 ///
 
