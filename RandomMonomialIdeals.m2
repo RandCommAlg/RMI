@@ -499,7 +499,7 @@ doc ///
      n=2;D=2;p=0.0;N=1;
      randomMonomialIdeals(n,D,p,N)
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true)
- See Also
+ SeeAlso
    randomMonomialIdeals
 ///
 
