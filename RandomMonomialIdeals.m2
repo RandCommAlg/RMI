@@ -118,7 +118,7 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
-    C:=take(random(allMonomials), M);
+    C := take(random(allMonomials), M);
     if C==={} then {0_R} else C
 )
 
@@ -140,6 +140,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
         B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
     if B==={} then {0_R} else B
 )
+
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
@@ -543,6 +544,7 @@ TEST ///
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
     assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
+    assert (0==(randomGeneratingSet(5,4,0))#0)
 ///
 
 TEST ///
