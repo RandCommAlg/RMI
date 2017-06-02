@@ -142,10 +142,11 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
-idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
 -- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
 -- see branch @25 for this fix. 
-idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
+idealsFromGeneratingSets(List):= o -> (B) -> (
+--idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
 	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
 	-- i.e., do (p,D,baseFileName) as input. 
 	-- maybe the filename should be optional and make it "temp" for default. 
