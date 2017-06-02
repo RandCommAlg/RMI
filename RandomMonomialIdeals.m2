@@ -168,7 +168,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
- randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => false})
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
  	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
@@ -429,10 +429,10 @@ doc ///
     [randomGeneratingSets, Coefficients]
     [randomMonomialIdeals, Coefficients]
   Headline
-    optional input to choose the coefficient ring of the generated polynomials
+    optional input to choose the coefficients of the ambient polynomial ring
   Description
     Text
-      Put {\tt Coefficients => r} for a choice of ring r as an argument in
+      Put {\tt Coefficients => r} for a choice of field r as an argument in
       the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
     Example 
       n=2; D=3; p=0.2;
@@ -492,12 +492,19 @@ doc ///
    optional input to choose whether or not zero ideals should be included in the list of ideals
  Description
    Text
-     If {\tt IncludeZeroIdeals => false}, then any empty sets generated will be listed as the empty set, and the number at the end of the list indicates the number of such empty sets.
-     If {\tt IncludeZeroIdeals => true}, then empty sets will be included as the zero ideal.
+     If {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
+     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be included, along with the number of them. 
    Example
      n=2;D=2;p=0.0;N=1;
-     randomMonomialIdeals(n,D,p,N)
-     randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true)
+     ideals = randomMonomialIdeals(n,D,p,N)
+   Text
+     The 0 listed is the zero ideal: 
+   Example
+     ideals_0
+   Text
+     In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
+   Example
+     randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
  SeeAlso
    randomMonomialIdeals
 ///
@@ -624,7 +631,7 @@ TEST ///
 TEST ///
   -- check the number of ideals
   n=5; D=5; p=.6; N=3;
-  B = flatten randomMonomialIdeals(n,D,p,N);
+  B = flatten randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false);
   assert ((N+1)===#B)
   C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
   assert (N===#C)
