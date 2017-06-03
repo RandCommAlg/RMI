@@ -493,7 +493,7 @@ doc ///
  Description
    Text
      If {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
-     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be included, along with the number of them. 
+     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them. 
    Example
      n=2;D=2;p=0.0;N=1;
      ideals = randomMonomialIdeals(n,D,p,N)
