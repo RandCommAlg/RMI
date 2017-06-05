@@ -560,7 +560,12 @@ TEST ///
     assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
 ///
-
+--************************--
+--  dimStats  --
+--************************--
+TEST ///
+    
+///
 end
 
 You can write anything you want down here.  I like to keep examples
