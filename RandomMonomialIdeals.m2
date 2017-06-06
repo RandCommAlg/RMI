@@ -574,6 +574,20 @@ TEST ///
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
 ///
 
+--*************************--
+--  degStats  --
+--*************************--
+TEST///
+   -- Check that average is correctly calculated
+   Q=QQ[x,y,z];
+   listOfIdeals={monomialIdeal(x^3,y^4*z^2),monomialIdeal(x^2),monomialIdeal(x^3*z^4,y^2),monomialIdeal(x*y^3,z^6)};
+   assert(14.5==degStats(listOfIdeals))
+   -- Check that average works when one ideal is the zero ideal
+   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
+   assert(1.5==degStats(listOfIdeals))
+ 
+///
+
 end
 
 You can write anything you want down here.  I like to keep examples
