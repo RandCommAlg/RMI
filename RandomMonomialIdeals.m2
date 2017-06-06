@@ -680,11 +680,14 @@ TEST ///
     L=randomGeneratingSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    assert(.5==dimStats(listOfIdeals))
+    assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
     listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
-    assert(2.5== dimStats(listOfIdeals))
+    assert(2.5== (dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
     listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
-    assert(sub(5/3,RR)==dimStats(listOfIdeals))
+    assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
+    assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
 ///
 --************************--
 --  randomMonomialIdeals  --
