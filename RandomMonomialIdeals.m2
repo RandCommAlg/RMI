@@ -529,7 +529,7 @@ TEST ///
     n=10; D=5;
     assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
-    assert(1==min(apply(randomGeneratingSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
+    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1)), m->first degree m)))
 ///
 
 end
