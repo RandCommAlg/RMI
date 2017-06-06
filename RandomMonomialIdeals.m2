@@ -204,7 +204,7 @@ dimStats List := o-> (listOfIdeals) -> (
     fileHist<<close; 
     ret:= ();
     if o.ShowDimensionTally 
-         then ret = (sub(1/N*dims, RR), tally dimsHistogram); return ret;
+         then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
     ret = toSequence{sub(1/N*dims, RR)}
 )
