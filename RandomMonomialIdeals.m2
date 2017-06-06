@@ -246,7 +246,7 @@ doc ///
      or @ofClass List@
      , probability to select a monomial
   M: ZZ
-     number of monomials in each generating set
+     , number of monomials in each generating set
   N: ZZ
     number of sets generated
  Outputs
