@@ -600,7 +600,7 @@ doc ///
 doc ///
  Key
    ShowDimensionTally
-   [dimStats]
+   [dimStats, ShowDimensionTally]
  Headline
    optional input to choose whether or not to return a histogram of tallys for the dimesnsions
  Description
