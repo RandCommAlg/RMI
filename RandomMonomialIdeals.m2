@@ -311,7 +311,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-{*
+
 doc ///
  Key
   degStats
@@ -331,12 +331,15 @@ doc ///
    The degree of each monomial ideal is calculated using the degree function.
    The degrees of each of the monomial ideals are added together and then divided by the total number of ideals to calculate the average.   
   Example
-   RR[x,y,z]
+   QQ[x,y,z]
    L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
    degStats L
-*}
-
+  Text
+   --add something about the histogram output
 ///
+
+doc ///
+ Key
   randomGeneratingSet
   (randomGeneratingSet,ZZ,ZZ,RR)
   (randomGeneratingSet,ZZ,ZZ,ZZ)
