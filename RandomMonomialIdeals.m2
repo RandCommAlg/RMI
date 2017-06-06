@@ -138,7 +138,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
             apply(D, d->(
                 chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
                 B = flatten append(B, chosen/(i->sub(i, R)));
-                currentRing = currentRing/promote(ideal(chosen), currentRing)
+                currentRing = currentRing/promote(ideal(chosen), currentRing);
             )))
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
