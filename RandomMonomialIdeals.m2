@@ -307,14 +307,16 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
+     , the probability of selecting a monomial, 
      or @ofClass List@
-     , probability to select a monomial
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
   M: ZZ
+     , number of monomials in each set, 
      or @ofClass List@
-     number of monomials in each generating set
+     of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
   B: List
-   random generating set of monomials
+   random set of monomials
  Description
   Text
    randomGeneratingSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
@@ -353,10 +355,10 @@ doc ///
   Text
    If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomGeneratingSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
   Example
-   M={1,1,1};
+   M={2,1,1};
    randomGeneratingSet(2,3,M)
   Text
-   Observe that there is one degree-1 monomial, one degree-2 monomial, and one degree-3 monomial.
+   Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
 ///
 
 
