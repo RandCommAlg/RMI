@@ -439,6 +439,9 @@ TEST ///
     N=10;
     n=3; D=2; M=10;
     assert (N==#randomGeneratingSets(n,D,M,N))
+    N=7;
+    n=4; D=3; M={3,3,3};
+    assert (N==#randomGeneratingSets(n,D,M,N))
 ///
 
 TEST ///
@@ -463,6 +466,7 @@ TEST ///
     assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
     assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
     assert (0==(randomGeneratingSet(5,4,0))#0)
+    assert (0==(randomGeneratingSet(5,4,toList(4:0)))#0)
 ///
 
 TEST ///
