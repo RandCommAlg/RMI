@@ -550,6 +550,35 @@ doc ///
    randomMonomialIdeals
 ///
 
+doc ///
+ Key
+   ShowDimensionTally
+   [dimStats]
+ Headline
+   optional input to choose whether or not to return a histogram of tallys for the dimesnsions
+ Description
+   Text
+     If {\tt ShowDimensionTally => false} (the default), then only the avarage krull dimension will be returned. 
+     If {\tt ShowDimensionTally => true}, then both the average krull deimension and the tally histogram will be returned. 
+   Example
+     n=3;D=3;p=0.0;N=3;
+     ideals = randomMonomialIdeals(n,D,p,N)
+     dimStats(ideals)
+   Text
+     The Average Krull Dimension is printed and outputted as 3: 
+   Example
+     dimStats(ideals,ShowDimensionTally=>false)
+   Text
+     In the example above, it can be seen that setting ShowDimensionTally to false is the same as calling dimStats.
+   Example
+     dimStats(ideals,ShowDimensionTally=>true)
+   Text
+     In this last example, ShowDimensionTally is set to true, so both the average Krull Dimension and the Tally Histogram are returned as a sequence. 
+ SeeAlso
+   dimStats
+///
+
+
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
