@@ -487,6 +487,9 @@ TEST ///
     L=randomGeneratingSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
+    L=randomGeneratingSet(2,3,{2,3,4})
+    R=ring(L#0)
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
     L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
