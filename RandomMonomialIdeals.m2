@@ -202,9 +202,9 @@ dimStats List := o-> (listOfIdeals) -> (
     fileHist << tally dimsHistogram;
     fileHist<<close; 
     if o.ShowDimensionTally 
-         then print("dimension histogram tally", tally dimsHistogram);
+         then return (sub(1/N*dims, RR), tally dimsHistogram);
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    sub(1/N*dims, RR);
+    sub(1/N*dims, RR)
 )
 
 
@@ -564,7 +564,23 @@ TEST ///
 --  dimStats  --
 --************************--
 TEST ///
-    
+    --check for p = 0 the average krull dimension is n
+    listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(3,4,0.0,6));
+    assert(3==dimStats(listOfIdeals))
+    listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(7,2,0,3));
+    assert(7==dimStats(listOfIdeals))
+    --check for p = 1 the average krull dimension is 0
+     listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(3,4,1.0,6));
+    assert(0==dimStats(listOfIdeals))
+    --check for set monomials
+    L=randomGeneratingSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    assert(.5==dimStats(listOfIdeals))
+    listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
+    assert(2.5== dimStats(listOfIdeals))
+    listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
+    assert(sub(5/3,RR)==dimStats(listOfIdeals))
 ///
 end
 
