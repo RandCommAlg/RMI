@@ -66,7 +66,10 @@ export {
     "Coefficients",
     "VariableName",
     "Strategy",
-    "avgDeg"
+    "degStats",
+    "ShowDegreeTally",
+    "BaseFileName",
+    "FileNameExt",
     "IncludeZeroIdeals"
     }
 
@@ -143,16 +146,29 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
-avgDeg = method(TypicalValue =>RR)
-avgDeg List :=  (ideals) -> (
-    N := #ideals;
-    listOfIdeals := apply(ideals, i-> ideal i);
+degStats = method(TypicalValue =>RR,Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
+degStats List :=  o-> (listOfIdeals) -> (
+    N := #listOfIdeals;
+    --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100));
     deg := 0;
-    apply(#ideals,i->( 
+    degHistogram:={};
+    --filename := o.BaseFileName|"degree"|o.FileNameExt;
+    --fileHist := o.BaseFileName|"degreeHistogram"|o.FileNameExt;
+    
+    apply(#listOfIdeals, i->( 
         degi := degree listOfIdeals_i;
+	--filename << degi << endl
         deg = deg + degi;
+	degHistogram = append(degHistogram, degi)
 	)
     );
+    --filename << close;
+    --fileHist << values tally degHistogram << endl;
+    --fileHist << tally degHistogram;
+    --fileHist << close;
+    if o.ShowDegreeTally
+    	then print("degree histogram tally",tally degHistogram);
+    print "Average Degree:" expression(sub(1/N*deg, RR));
     sub(1/N*deg, RR)
     )
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
@@ -295,7 +311,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-
+{*
 doc ///
  Key
   avgDeg
@@ -318,6 +334,8 @@ doc ///
    RR[x,y,z]
    L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
    avgDeg L
+*}
+
 ///
   randomGeneratingSet
   (randomGeneratingSet,ZZ,ZZ,RR)
