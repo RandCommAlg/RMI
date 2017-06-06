@@ -124,6 +124,7 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if n<1 then error "n expected to be a positive integer";
     if #p != D then error "p expected to be a list of length D";
+    if not all(p, q->instance(q, ZZ)) and not all(p, q->instance(q,ZZ)) then error "p must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
@@ -143,7 +144,6 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
 	);
-    -- else error "p expected to be a list of all integers or real numbers"
     if B==={} then {0_R} else B
 )
 
