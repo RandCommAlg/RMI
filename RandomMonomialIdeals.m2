@@ -176,7 +176,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-dimStats = method(TypicalValue => RR, Options => {ShowDimensionTally => false,
+dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false,
 	                                        BaseFileName =>"",
 						FileNameExt => ""})
 dimStats List := o-> (listOfIdeals) -> (
@@ -202,10 +202,11 @@ dimStats List := o-> (listOfIdeals) -> (
     fileHist << values tally dimsHistogram << endl; 
     fileHist << tally dimsHistogram;
     fileHist<<close; 
+    ret:= ();
     if o.ShowDimensionTally 
-         then return (ret:=(sub(1/N*dims, RR), tally dimsHistogram));
+         then ret = (sub(1/N*dims, RR), tally dimsHistogram); return ret;
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    ret = (sub(1/N*dims, RR))
+    ret = toSequence{sub(1/N*dims, RR)}
 )
 
 
@@ -563,7 +564,7 @@ doc ///
     a list of @TO monomialIdeal@s
   
  Outputs
-  ret: sequence 
+  ret: Sequence 
    if @TO ShowDimensionTally@ =>false then dimStats returns the average krull dimension, otherwise the average krull dimension and dimension tally are returned
  Description
   Text
