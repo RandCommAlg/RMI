@@ -124,25 +124,25 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if n<1 then error "n expected to be a positive integer";
     if #p != D then error "p expected to be a list of length D";
-    if not all(p, q->instance(q,RR)) and not all(p,q->instance(q,ZZ)) then error "p expected to be a list of all real numbers or integers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
-    if all(p,q->instance(q_(d-1),ZZ))
+    if all(p,q->instance(q,ZZ))
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
         B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), p_(d-1)));
-    else if all(p,q->instance(q_(d-1),RR))
+    else if all(p,q->instance(q,RR))
         if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
             currentRing := R;
             apply(D, d->(
                 chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
                 B = flatten append(B, chosen/(i->sub(i, R)));
-                currentRing = currentRing/promote(ideal(chosen), currentRing);
+                currentRing = currentRing/promote(ideal(chosen), currentRing)
             )))
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
-        if B==={} then {0_R} else B
+    else error "p expected to be a list of all real numbers or integers";
+    if B==={} then {0_R} else B
 )
 
 
