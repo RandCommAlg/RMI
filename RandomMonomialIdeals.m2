@@ -142,7 +142,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
             ))))
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
-    else error "p expected to be a list of all real numbers or integers";
+    else error "p expected to be a list of all integers or real numbers"
     if B==={} then {0_R} else B
 )
 
