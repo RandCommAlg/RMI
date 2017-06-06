@@ -351,7 +351,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
   Text
-   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomGeneratingSet creates a list of monomials, were $M_d$ monomials are of degree $d$.
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomGeneratingSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
   Example
    M={1,1,1};
    randomGeneratingSet(2,3,M)
