@@ -632,7 +632,7 @@ TEST ///
   -- check the number of ideals
   n=5; D=5; p=.6; N=3;
   B = flatten randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false);
-  assert ((N+1)===#B)
+  assert ((N)===#B-1+last(B)) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
   C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
   assert (N===#C)
 ///
