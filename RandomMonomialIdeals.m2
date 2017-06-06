@@ -511,6 +511,7 @@ TEST ///
     assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
+    assert(D==max(apply(randomGeneratingSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
 ///
 
 TEST ///
@@ -528,6 +529,7 @@ TEST ///
     n=10; D=5;
     assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply(randomGeneratingSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
 ///
 
 end
