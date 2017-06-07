@@ -571,29 +571,13 @@ doc ///
    dimStats finds the average krull dimension for a list of monomialIdeals 
    Has optional inputs of ShowDimensionTally  
   Example
-   n=2; D=3; p=0.2; N=10;
-   randomMonomialIdeals(n,D,p,N)
-   randomMonomialIdeals(5,3,0.4,4)
+    L=randomGeneratingSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    dimStats(listOfIdeals)
   Text
    note that this function can be run with a list of any objects to which dim can be applied
-  Example
-   randomMonomialIdeals(3,2,1.0,1)
-  Text 
-   If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
-   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the ideal from this set.
-  Example
-   n=8; D=4; M=7; N=3;
-   randomMonomialIdeals(n,D,M,N)
-  Text
-   Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
-  Text 
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
-   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
-  Example
-   p={0.0, 1.0, 1.0}; 
-   randomMonomialIdeals(2,3,p,1)
-  Text
-   Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
+  
  SeeAlso
    ShowDimensionTally
 ///
