@@ -146,7 +146,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
-degStats = method(TypicalValue =>Sequence, Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
+degStats = method(TypicalValue =>RR,Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100));
@@ -166,11 +166,10 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << values tally degHistogram << endl;
     --fileHist << tally degHistogram;
     --fileHist << close;
-    ret:=();
     if o.ShowDegreeTally
-    	then ret = ret=(sub(1/N*deg, RR),tally degHistogram); return ret;
+    	then print("degree histogram tally",tally degHistogram);
     print "Average Degree:" expression(sub(1/N*deg, RR));
-    ret = toSequence{sub(1/N*deg, RR)}
+    sub(1/N*deg, RR)
     )
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
@@ -312,7 +311,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-{*
+
 doc ///
  Key
   degStats
@@ -324,7 +323,7 @@ doc ///
   listOfIdeals: List
    list of monomial ideals
  Outputs
-  B: Sequence
+  B: RR
    average degree of R/I for a list of monomial ideals
  Description
   Text
@@ -338,7 +337,6 @@ doc ///
   Text
    --add something about the histogram output
 ///
-*}
 
 doc ///
  Key
