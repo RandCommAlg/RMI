@@ -723,15 +723,15 @@ TEST ///
 --************************--
 TEST ///
     --check for p = 0 the average krull dimension is n
-    listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(3,4,0.0,6));
+    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
     assert(3==dimStats(listOfIdeals))
-    listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(7,2,0,3));
+    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
     assert(7==dimStats(listOfIdeals))
     --check for p = 1 the average krull dimension is 0
-     listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(3,4,1.0,6));
+     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
     assert(0==dimStats(listOfIdeals))
     --check for set monomials
-    L=randomGeneratingSet(3,3,1.0);
+    L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
