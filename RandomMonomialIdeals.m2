@@ -233,7 +233,7 @@ doc ///
  Key
   RandomMonomialIdeals
  Headline
-  A package for generating Erdos-Renyi-type random monomial ideals
+  A package for generating Erdos-Renyi-type random monomial ideals and variations.
  Description
   Text
    {\em RandomMonomialIdeals} is a  package that... 
