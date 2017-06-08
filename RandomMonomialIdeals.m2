@@ -273,12 +273,6 @@ doc ///
    random generating sets of monomials
  Description
   Text
-<<<<<<< HEAD
-   randomGeneratingSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
-   It does so by calling @TO randomGeneratingSet@ $N$ times. 
- SeeAlso
-   randomGeneratingSet
-=======
    randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
    If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
@@ -312,7 +306,6 @@ doc ///
    randomMonomialSets(2,3,p,1)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
->>>>>>> refs/remotes/origin/master
 ///
 
 doc ///
@@ -440,14 +433,14 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
   Text
-   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomGeneratingSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
   Example
    M={2,1,1};
-   randomGeneratingSet(2,3,M)
+   randomMonomialSet(2,3,M)
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  SeeAlso
-   randomGeneratingSets
+   randomMonomialSets
 ///
 
 
@@ -556,14 +549,10 @@ TEST ///
     assert (N==#randomMonomialSets(n,D,p,N))
     N=10;
     n=3; D=2; M=10;
-<<<<<<< HEAD
-    assert (N==#randomGeneratingSets(n,D,M,N))
+    assert (N==#randomMonomialSets(n,D,M,N))
     N=7;
     n=4; D=3; M={3,3,3};
-    assert (N==#randomGeneratingSets(n,D,M,N))
-=======
     assert (N==#randomMonomialSets(n,D,M,N))
->>>>>>> refs/remotes/origin/master
 ///
 
 TEST ///
@@ -583,20 +572,13 @@ TEST ///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
-<<<<<<< HEAD
-    assert (0==(randomGeneratingSet(5,5,0.0))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
-    assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
-    assert (0==(randomGeneratingSet(5,4,0))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0)))#0)
-=======
+
     assert (0==(randomMonomialSet(5,5,0.0))#0)
     assert (0==(randomMonomialSet(5,4,toList(4:0.0)))#0)
     assert (0==(randomMonomialSet(5,4,0.0, Strategy=>"Minimal"))#0)
     assert (0==(randomMonomialSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
     assert (0==(randomMonomialSet(5,4,0))#0)
->>>>>>> refs/remotes/origin/master
+    assert (0==(randomMonomialSet(5,4,toList(4:0)))#0)
 ///
 
 TEST ///
@@ -629,14 +611,10 @@ TEST ///
     L=randomMonomialSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
-<<<<<<< HEAD
-    L=randomGeneratingSet(2,3,{2,3,4})
+    L=randoMonomialSet(2,3,{2,3,4})
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
-=======
     L=randomMonomialSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
->>>>>>> refs/remotes/origin/master
     R=ring(L#0);
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
     L=randomMonomialSet(3,3,{0.0,0.0,1.0}, Strategy=>"Minimal");
@@ -656,12 +634,8 @@ TEST ///
     assert(D==max(apply(randomMonomialSet(n,D,1.0),m->first degree m)))
     assert(D==max(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
-<<<<<<< HEAD
-    assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
-    assert(D==max(apply(randomGeneratingSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
-=======
     assert(D==max(apply(randomMonomialSet(n,D,M),m->first degree m)))
->>>>>>> refs/remotes/origin/master
+    assert(D==max(apply(randomMonomialSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
 ///
 
 TEST ///
@@ -677,13 +651,9 @@ TEST ///
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(1==min(apply(randomMonomialSet(n,D,M),m->first degree m)))
     n=10; D=5;
-<<<<<<< HEAD
-    assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
-    assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
-    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1)), m->first degree m)))
-=======
     assert(1==min(apply((randomMonomialSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
 
 --************************--
@@ -697,7 +667,6 @@ TEST ///
   assert (N===(#B-1+last(B))) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
   C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
   assert (N===#C)
->>>>>>> refs/remotes/origin/master
 ///
 
 TEST ///
