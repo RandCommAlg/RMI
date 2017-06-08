@@ -568,7 +568,7 @@ doc ///
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
    dimStats(listOfIdeals)
   Text
-   Note that this function can be run with a list of any objects to which dim can be applied. 
+   Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
   
  SeeAlso
    ShowDimensionTally
