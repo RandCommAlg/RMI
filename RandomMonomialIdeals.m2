@@ -147,7 +147,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
-degStats = method(TypicalValue =>Sequence, Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
+degStats = method(TypicalValue =>Sequence, Options =>{ShowDegreeTally => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     deg := 0;
@@ -338,19 +338,19 @@ doc ///
   degStats(List)
  Inputs
   listOfIdeals: List
-   a list of @TO monomialIdeal@s
+   of @TO monomialIdeal@s
  Outputs
   ret: Sequence
    returns the average degree of R/I for a list of monomialIdeals
  Description
   Text
    degStats finds the average degree of R/I for a list of monomialIdeals.
-   The degree of each monomial ideal is calculated using the @TO degree@ function.
-   Has the optional input of ShowDegreeTally
+   The degree of each ideal is calculated using the @TO degree@ function.
+   It has the optional input of ShowDegreeTally.
   Example
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
-   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)}
+   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
    degStats(listOfIdeals)
   Text
    The following expamples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
@@ -385,7 +385,7 @@ doc ///
   Text
    In the example above, only the average degree is outputted since by default {\tt ShowDegreeTally => false}.
   Text
-   In order to view the Tally of degrees, ShowDegreeTally must be set to true ({\tt ShowDimensionTaly => true}) when the function @TO degStats@ is called:
+   In order to view the Tally of degrees, ShowDegreeTally must be set to true ({\tt ShowDegreeTally => true}) when the function @TO degStats@ is called:
   Example
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
