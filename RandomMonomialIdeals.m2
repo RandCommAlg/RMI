@@ -144,8 +144,7 @@ degStats List :=  o-> (listOfIdeals) -> (
     apply(#listOfIdeals, i->( 
         degi := degree listOfIdeals_i;
 	--filename << degi << endl
-        deg = deg + degi;
-	degHistogram = append(degHistogram, degi)
+        degHistogram = append(degHistogram, degi)
 	)
     );
     --filename << close;
@@ -154,9 +153,9 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << close;
     ret:=();
     if o.ShowDegreeTally
-    	then(ret=(sub(1/N*deg, RR),tally degHistogram); return ret;);
-    print "Average Degree:" expression(sub(1/N*deg, RR));
-    ret = toSequence{sub(1/N*deg, RR)}
+    	then(ret=(sub(1/N*(sum degHistogram), RR),tally degHistogram); return ret;);
+    print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
+    ret = toSequence{sub(1/N*(sum degHistogram), RR)}
 )
 
 
@@ -196,15 +195,14 @@ dimStats List := o-> (listOfIdeals) -> (
     dimsHistogram:={};
     apply(#listOfIdeals,i->( 
         dimi := dim listOfIdeals_i;
-        dims = dims + dimi;
     dimsHistogram = append(dimsHistogram, dimi)
     )
     );
     ret:= ();
     if o.ShowDimensionTally 
-         then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
-    print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    ret = toSequence{sub(1/N*dims, RR)}
+         then(ret = (sub(1/N*(sum dimsHistogram), RR), tally dimsHistogram), return ret;);
+    print "Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR));
+    ret = toSequence{sub(1/N*(sum dimsHistogram), RR)}
 )
 
 
@@ -815,6 +813,7 @@ TEST///
    assert(1.5==(degStats(listOfIdeals))_0)
    --Check average is correct for set monomials
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+--this one fails today (sonja): 
    assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
