@@ -60,8 +60,8 @@ newPackage(
     	)
 
 export {
-    "randomGeneratingSets",
-    "randomGeneratingSet",
+    "randomMonomialSets",
+    "randomMonomialSet",
     "idealsFromGeneratingSets",
     "randomMonomialIdeals",
     "Coefficients",
@@ -78,45 +78,45 @@ export {
 --  Exported methods 	     	     	 --
 --***************************************--
 
-randomGeneratingSets = method(TypicalValue => List, Options => {Coefficients => QQ,
+randomMonomialSets = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                        VariableName => "x",
 								Strategy => "ER"})
-randomGeneratingSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
+randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomGeneratingSets(n,D,toList(D:p),N,
+    randomMonomialSets(n,D,toList(D:p),N,
 	                 Coefficients=>o.Coefficients,
 			 VariableName=>o.VariableName,
 			 Strategy=>o.Strategy)
 )
 
-randomGeneratingSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
+randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomGeneratingSet(n,D,M,
+    apply(N,i-> randomMonomialSet(n,D,M,
 	                            Coefficients=>o.Coefficients,
 				    VariableName=>o.VariableName,
 				    Strategy=>o.Strategy))
 )
 
-randomGeneratingSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomGeneratingSet(n,D,p,
+    apply(N,i-> randomMonomialSet(n,D,p,
 	                            Coefficients=>o.Coefficients,
 				    VariableName=>o.VariableName,
 				    Strategy=>o.Strategy))
 )
 
-randomGeneratingSet = method(TypicalValue => List, Options => {Coefficients => QQ,
+randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                       VariableName => "x",
 							       Strategy => "ER"})
-randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
+randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomGeneratingSet(n,D,toList(D:p),
+    randomMonomialSet(n,D,toList(D:p),
 	                Coefficients=>o.Coefficients,
 			VariableName=>o.VariableName,
 			Strategy=>o.Strategy)
 )
 
-randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
+randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
     if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
     x := toSymbol o.VariableName;
@@ -126,7 +126,7 @@ randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if C==={} then {0_R} else C
 )
 
-randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
+randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
     if n<1 then error "n expected to be a positive integer";
     if #p != D then error "p expected to be a list of length D";
     if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
@@ -201,15 +201,15 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+ 	B:=randomMonomialSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+ 	B:=randomMonomialSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
- 	B:=randomGeneratingSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
+ 	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
@@ -266,16 +266,16 @@ doc ///
 
 doc ///
  Key
-  randomGeneratingSets
-  (randomGeneratingSets,ZZ,ZZ,RR,ZZ)
-  (randomGeneratingSets,ZZ,ZZ,ZZ,ZZ)
-  (randomGeneratingSets,ZZ,ZZ,List,ZZ)
+  randomMonomialSets
+  (randomMonomialSets,ZZ,ZZ,RR,ZZ)
+  (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialSets,ZZ,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials, up to a given degree
  Usage
-  randomGeneratingSets(ZZ,ZZ,RR,ZZ)
-  randomGeneratingSets(ZZ,ZZ,ZZ,ZZ)
-  randomGeneratingSets(ZZ,ZZ,List,ZZ)
+  randomMonomialSets(ZZ,ZZ,RR,ZZ)
+  randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialSets(ZZ,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
@@ -293,37 +293,37 @@ doc ///
    random generating sets of monomials
  Description
   Text
-   randomGeneratingSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
    If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
   Example
    n=2; D=3; p=0.2; N=10;
-   randomGeneratingSets(n,D,p,N)
-   randomGeneratingSets(3,2,0.6,4)
+   randomMonomialSets(n,D,p,N)
+   randomMonomialSets(3,2,0.6,4)
   Text
    Note that this model does not generate the monomial $1$: 
   Example
-   randomGeneratingSets(3,2,1.0,1)
+   randomMonomialSets(3,2,1.0,1)
   Text 
-   If $M$ is an integer, then randomGeneratingSets creates $N$ random sets of monomials of size $M$:
+   If $M$ is an integer, then randomMonomialSets creates $N$ random sets of monomials of size $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
   Example
    n=10; D=5; M=4; N=3;
-   randomGeneratingSets(n,D,M,N)
+   randomMonomialSets(n,D,M,N)
   Text
    Note that each set has $M = 4$ monomials.
   Text
    If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example: 
   Example
-   randomGeneratingSets(2,2,10,1)
+   randomMonomialSets(2,2,10,1)
   Text
    returns 5 monomials in a generating set, and not 10, since there do not exist 10 to choose from.
   Text 
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSets generates the sets utilizing the graded Erdos-Renyi-type model:
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSets generates the sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
    p={0.0, 1.0, 1.0}; 
-   randomGeneratingSets(2,3,p,1)
+   randomMonomialSets(2,3,p,1)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
@@ -331,25 +331,27 @@ doc ///
 doc ///
  Key
   degStats
+  (degStats,List)
  Headline
-  computes average degree of R/I for a list of monomial ideals
+  returns statistics on the degree of R/I for a list of monomialIdeals
  Usage
-  degStats List
+  degStats(List)
  Inputs
   listOfIdeals: List
-   list of monomial ideals
+   a list of @TO monomialIdeal@s
  Outputs
-  B: Sequence
-   average degree of R/I for a list of monomial ideals
+  ret: Sequence
+   returns the average degree of R/I for a list of monomialIdeals
  Description
   Text
-   degStats computes the average degree of R/I for a list of monomial ideals.
-   The degree of each monomial ideal is calculated using the degree function.
-   The degrees of each of the monomial ideals are added together and then divided by the total number of ideals to calculate the average.   
+   degStats finds the average degree of R/I for a list of monomialIdeals.
+   The degree of each monomial ideal is calculated using the @TO degree@ function.
+   Has the optional input of ShowDegreeTally
   Example
-   QQ[x,y,z]
-   L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
-   degStats L
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)}
+   degStats(listOfIdeals)
   Text
    --add something about the histogram output
 ///
@@ -412,22 +414,22 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
  SeeAlso
-   randomGeneratingSets
+   randomMonomialSets
    idealsFromGeneratingSets
 ///
 
 doc ///
  Key
-  randomGeneratingSet
-  (randomGeneratingSet,ZZ,ZZ,RR)
-  (randomGeneratingSet,ZZ,ZZ,ZZ)
-  (randomGeneratingSet,ZZ,ZZ,List)
+  randomMonomialSet
+  (randomMonomialSet,ZZ,ZZ,RR)
+  (randomMonomialSet,ZZ,ZZ,ZZ)
+  (randomMonomialSet,ZZ,ZZ,List)
  Headline
   randomly generates a list of monomials, up to a given degree
  Usage
-  randomGeneratingSet(ZZ,ZZ,RR)
-  randomGeneratingSet(ZZ,ZZ,ZZ)
-  randomGeneratingSet(ZZ,ZZ,List)
+  randomMonomialSet(ZZ,ZZ,RR)
+  randomMonomialSet(ZZ,ZZ,ZZ)
+  randomMonomialSet(ZZ,ZZ,List)
  Inputs
   n: ZZ
     number of variables
@@ -443,37 +445,37 @@ doc ///
    random generating set of monomials
  Description
   Text
-   randomGeneratingSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
    If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model:
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
    n=2; D=3; p=0.2;
-   randomGeneratingSet(n,D,p)
-   randomGeneratingSet(3,2,0.6)
+   randomMonomialSet(n,D,p)
+   randomMonomialSet(3,2,0.6)
   Text
    Note that this model does not generate the monomial $1$:
   Example
-   randomGeneratingSet(3,2,1.0)
+   randomMonomialSet(3,2,1.0)
   Text
-   If $M$ is an integer, then randomGeneratingSet creates a list of monomials of size $M$:
+   If $M$ is an integer, then randomMonomialSet creates a list of monomials of size $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
   Example
    n=10; D=5; M=4;
-   randomGeneratingSet(n,D,M)
+   randomMonomialSet(n,D,M)
   Text
    Note that it returns a set with $M = 4$ monomials.
   Text
    If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
   Example
-   randomGeneratingSet(2,2,10)
+   randomMonomialSet(2,2,10)
   Text
    returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from.
   Text
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomGeneratingSet generates the set utilizing the graded Erdos-Renyi-type model:
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
    p={0.0, 1.0, 1.0};
-   randomGeneratingSet(2,3,p)
+   randomMonomialSet(2,3,p)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
@@ -482,63 +484,63 @@ doc ///
 doc ///
   Key
     Coefficients
-    [randomGeneratingSet, Coefficients]
-    [randomGeneratingSets, Coefficients]
+    [randomMonomialSet, Coefficients]
+    [randomMonomialSets, Coefficients]
     [randomMonomialIdeals, Coefficients]
   Headline
     optional input to choose the coefficients of the ambient polynomial ring
   Description
     Text
       Put {\tt Coefficients => r} for a choice of field r as an argument in
-      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
+      the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
     Example 
       n=2; D=3; p=0.2;
-      randomGeneratingSet(n,D,p)
+      randomMonomialSet(n,D,p)
       ring ideal oo
-      randomGeneratingSet(n,D,p,Coefficients=>ZZ/101)
+      randomMonomialSet(n,D,p,Coefficients=>ZZ/101)
       ring ideal oo
   SeeAlso
-    randomGeneratingSet
-    randomGeneratingSets
+    randomMonomialSet
+    randomMonomialSets
     randomMonomialIdeals
 ///
 
 doc ///
   Key
     VariableName
-    [randomGeneratingSet, VariableName]
-    [randomGeneratingSets, VariableName]
+    [randomMonomialSet, VariableName]
+    [randomMonomialSets, VariableName]
     [randomMonomialIdeals, VariableName]
   Headline
     optional input to choose the variable name for the generated polynomials
   Description
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
-      the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@
+      the function @TO randomMonomialSet@ or @TO randomMonomialSets@
     Example 
       n=2; D=3; p=0.2;
-      randomGeneratingSet(n,D,p)
-      randomGeneratingSet(n,D,p,VariableName => y)
+      randomMonomialSet(n,D,p)
+      randomMonomialSet(n,D,p,VariableName => y)
   SeeAlso
-    randomGeneratingSet
-    randomGeneratingSets
+    randomMonomialSet
+    randomMonomialSets
     randomMonomialIdeals
 ///
 
 doc ///
   Key
     Strategy
-    [randomGeneratingSet, Strategy]
-    [randomGeneratingSets, Strategy]
+    [randomMonomialSet, Strategy]
+    [randomMonomialSets, Strategy]
   Headline
     optional input to choose the strategy for generating the monomial set
   Description
     Text
-      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
+      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
       "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list.
   SeeAlso
-    randomGeneratingSet
-    randomGeneratingSets
+    randomMonomialSet
+    randomMonomialSets
 ///
 
 doc ///
@@ -571,26 +573,26 @@ doc ///
 --******************************************--
 
 --************************--
---  randomGeneratingSets  --
+--  randomMonomialSets  --
 --************************--
 
 TEST ///
     -- Check there are N samples
     N=10;
     n=3; D=2; p=0.5;
-    assert (N==#randomGeneratingSets(n,D,p,N))
+    assert (N==#randomMonomialSets(n,D,p,N))
     N=13;
     n=5; D=3; p={0.5,0.25,0.3};
-    assert (N==#randomGeneratingSets(n,D,p,N))
+    assert (N==#randomMonomialSets(n,D,p,N))
     N=10;
     n=3; D=2; M=10;
-    assert (N==#randomGeneratingSets(n,D,M,N))
+    assert (N==#randomMonomialSets(n,D,M,N))
 ///
 
 TEST ///
     -- Check multiple samples agree
     n=4; D=3;
-    L = randomGeneratingSets(n,D,1.0,3);
+    L = randomMonomialSets(n,D,1.0,3);
     R = ring(L#0#0);
     L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
@@ -599,52 +601,52 @@ TEST ///
 ///
 
 --***********************--
---  randomGeneratingSet  --
+--  randomMonomialSet  --
 --***********************--
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
-    assert (0==(randomGeneratingSet(5,5,0.0))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0.0)))#0)
-    assert (0==(randomGeneratingSet(5,4,0.0, Strategy=>"Minimal"))#0)
-    assert (0==(randomGeneratingSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
-    assert (0==(randomGeneratingSet(5,4,0))#0)
+    assert (0==(randomMonomialSet(5,5,0.0))#0)
+    assert (0==(randomMonomialSet(5,4,toList(4:0.0)))#0)
+    assert (0==(randomMonomialSet(5,4,0.0, Strategy=>"Minimal"))#0)
+    assert (0==(randomMonomialSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
+    assert (0==(randomMonomialSet(5,4,0))#0)
 ///
 
 TEST ///
     -- Check all possible values are outputted with a probability of 1
     n=4; D=3;
-    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,1.0))
-    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,{1.0,1.0,1.0}))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,1.0))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,{1.0,1.0,1.0}))
     n=6; D=2;
-    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,1.0))
-    assert (product(toList((D+1)..D+n))/n!-1==#randomGeneratingSet(n,D,{1.0,1.0}))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,1.0))
+    assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,{1.0,1.0}))
     n=4;D=5;
-    assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"))
-    assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,1.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
-    assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
-    assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,1.0,1.0}, Strategy=>"Minimal"))
-    assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (1, QQ[x_1..x_n])==#randomMonomialSet(n,D,1.0, Strategy=>"Minimal"))
+    assert (# flatten entries basis (2, QQ[x_1..x_n])==#randomMonomialSet(n,D,{0.0,1.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (3, QQ[x_1..x_n])==#randomMonomialSet(n,D,{0.0,0.0,1.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (4, QQ[x_1..x_n])==#randomMonomialSet(n,D,{0.0,0.0,0.0,1.0,1.0}, Strategy=>"Minimal"))
+    assert (# flatten entries basis (5, QQ[x_1..x_n])==#randomMonomialSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"))
 ///
 
 TEST ///
     -- Check every monomial is generated
-    L=randomGeneratingSet(2,3,1.0)
+    L=randomMonomialSet(2,3,1.0)
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=randomGeneratingSet(2,3,9)
+    L=randomMonomialSet(2,3,9)
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
-    L=randomGeneratingSet(3,3,{0.0,1.0,0.0})
+    L=randomMonomialSet(3,3,{0.0,1.0,0.0})
     R=ring(L#0)
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
-    L=randomGeneratingSet(3,3,1.0, Strategy=>"Minimal");
+    L=randomMonomialSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
-    L=randomGeneratingSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
+    L=randomMonomialSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
-    L=randomGeneratingSet(3,3,{0.0,0.0,1.0}, Strategy=>"Minimal");
+    L=randomMonomialSet(3,3,{0.0,0.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^3,R_0^2*R_1,R_0^2*R_2,R_0*R_1*R_2,R_1^3,R_0*R_1^2,R_1^2*R_2,R_0*R_2^2,R_1*R_2^2,R_2^3})
 ///
@@ -652,33 +654,33 @@ TEST ///
 TEST ///
     -- Check max degree of monomial less than or equal to D
     n=10; D=5;
-    assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
-    assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,1.0),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
-    assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
-    assert(D==max(apply((randomGeneratingSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"),m->first degree m))))
+    assert(D==max(apply(randomMonomialSet(n,D,M),m->first degree m)))
+    assert(D==max(apply((randomMonomialSet(n,D,{0.0,0.0,0.0,0.0,1.0}, Strategy=>"Minimal"),m->first degree m))))
     n=4; D=7;
-    assert(D==max(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
-    assert(D==max(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,1.0),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
-    assert(D==max(apply(randomGeneratingSet(n,D,M),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,M),m->first degree m)))
 ///
 
 TEST ///
     -- Check min degree of monomial greater than or equal to 1
     n=8; D=6;
-    assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
-    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,1.0),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
-    assert(1==min(apply(randomGeneratingSet(n,D,M),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,M),m->first degree m)))
     n=3; D=5;
-    assert(1==min(apply(randomGeneratingSet(n,D,1.0),m->first degree m)))
-    assert(1==min(apply(randomGeneratingSet(n,D,toList(D:1.0)),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,1.0),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
-    assert(1==min(apply(randomGeneratingSet(n,D,M),m->first degree m)))
+    assert(1==min(apply(randomMonomialSet(n,D,M),m->first degree m)))
     n=10; D=5;
-    assert(1==min(apply((randomGeneratingSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
-    assert(1==min(apply((randomGeneratingSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply((randomMonomialSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
 ///
 
 --*************************--
@@ -686,7 +688,7 @@ TEST ///
 --*************************--
 TEST///
    
-   L=randomGeneratingSet(3,3,1.0);
+   L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    --Check that average is correctly calculated
    listOfIdeals={monomialIdeal(R_0^3,R_1^4*R_2^2),monomialIdeal(R_0^2),monomialIdeal(R_0^3*R_2^4,R_1^2),monomialIdeal(R_0*R_1^3,R_2^6)};
