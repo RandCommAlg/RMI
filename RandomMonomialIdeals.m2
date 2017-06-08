@@ -331,25 +331,27 @@ doc ///
 doc ///
  Key
   degStats
+  (degStats,List)
  Headline
-  computes average degree of R/I for a list of monomial ideals
+  returns statistics on the degree of R/I for a list of monomialIdeals
  Usage
-  degStats List
+  degStats(List)
  Inputs
   listOfIdeals: List
-   list of monomial ideals
+   a list of @TO monomialIdeal@s
  Outputs
-  B: Sequence
-   average degree of R/I for a list of monomial ideals
+  ret: Sequence
+   returns the average degree of R/I for a list of monomialIdeals
  Description
   Text
-   degStats computes the average degree of R/I for a list of monomial ideals.
-   The degree of each monomial ideal is calculated using the degree function.
-   The degrees of each of the monomial ideals are added together and then divided by the total number of ideals to calculate the average.   
+   degStats finds the average degree of R/I for a list of monomialIdeals.
+   The degree of each monomial ideal is calculated using the @TO degree@ function.
+   Has the optional input of ShowDegreeTally
   Example
-   QQ[x,y,z]
-   L= {monomialIdeal(x^5*y^2,z),monomialIdeal(x,y,z),monomialIdeal(x^3*y^5,y^4*z,x^2*z^3)}
-   degStats L
+   L=randomGeneratingSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)}
+   degStats(listOfIdeals)
   Text
    --add something about the histogram output
 ///
