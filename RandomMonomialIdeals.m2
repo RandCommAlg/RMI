@@ -555,7 +555,7 @@ doc ///
   Text
    dimStats finds the average Krull dimension for a list of monomialIdeals.   
   Example
-    L=randomGeneratingSet(3,3,1.0);
+    L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     dimStats(listOfIdeals)
@@ -595,7 +595,7 @@ doc ///
     In order to view the Tally of Krull dimensions, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called: 
 
    Example
-     L=randomGeneratingSet(3,3,1.0);
+     L=randomMonomialSet(3,3,1.0);
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
      dimStats(listOfIdeals,ShowDimensionTally=>true)
