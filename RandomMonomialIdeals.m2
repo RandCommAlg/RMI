@@ -631,7 +631,7 @@ doc ///
   
  Outputs
   : Sequence 
-   returns the average Krull dimension as a Sequence
+   whose first entry is the average Krull dimension of a list of monomialIdeals, and second entry (if option turned on) is the Krull dimension tally
  Description
   Text
    dimStats finds the average Krull dimension for a list of monomialIdeals.   
