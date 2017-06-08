@@ -66,7 +66,6 @@ export {
     "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
-    "Strategy",
     "dimStats",
     "degStats",
     "ShowDegreeTally",
@@ -83,26 +82,17 @@ randomMonomialSets = method(TypicalValue => List, Options => {Coefficients => QQ
 								Strategy => "ER"})
 randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomMonomialSets(n,D,toList(D:p),N,
-	                 Coefficients=>o.Coefficients,
-			 VariableName=>o.VariableName,
-			 Strategy=>o.Strategy)
+    randomMonomialSets(n,D,toList(D:p),N,o)
 )
 
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,M,
-	                            Coefficients=>o.Coefficients,
-				    VariableName=>o.VariableName,
-				    Strategy=>o.Strategy))
+    apply(N,i-> randomMonomialSet(n,D,M,o))
 )
 
 randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,p,
-	                            Coefficients=>o.Coefficients,
-				    VariableName=>o.VariableName,
-				    Strategy=>o.Strategy))
+    apply(N,i-> randomMonomialSet(n,D,p,o))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -110,10 +100,7 @@ randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
 							       Strategy => "ER"})
 randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    randomMonomialSet(n,D,toList(D:p),
-	                Coefficients=>o.Coefficients,
-			VariableName=>o.VariableName,
-			Strategy=>o.Strategy)
+    randomMonomialSet(n,D,toList(D:p),o)
 )
 
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
@@ -591,7 +578,6 @@ doc ///
 
 doc ///
   Key
-    Strategy
     [randomMonomialSet, Strategy]
     [randomMonomialSets, Strategy]
   Headline
