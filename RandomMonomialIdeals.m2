@@ -376,8 +376,8 @@ doc ///
   optional input to choose if the degree tally is to be returned
  Description
   Text
-   If {\\t ShowDegreeTally => false} (the default value), then only the average degree will be returned.
-   If {\\t ShowDegreeTally => true}, then both the average degree and the degree tally will be returned.
+   If {\tt ShowDegreeTally => false} (the default value), then only the average degree will be returned.
+   If {\tt ShowDegreeTally => true}, then both the average degree and the degree tally will be returned.
   Example
    n=3;D=3;p=0.0;N=3;
    listOfIdeals = randomMonomialIdeals(n,D,p,N);
