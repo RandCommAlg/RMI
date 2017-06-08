@@ -580,11 +580,11 @@ doc ///
    ShowDimensionTally
    [dimStats, ShowDimensionTally]
  Headline
-   optional input to choose whether or not to return a histogram of tallys for the dimensions
+   optional input to choose if the dimension tally is to be returned 
  Description
    Text
-     If {\tt ShowDimensionTally => false} (the default), then only the avarage krull dimension will be returned. 
-     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the tally histogram will be returned. 
+     If {\tt ShowDimensionTally => false} (the default value), then only the average krull dimension will be returned. 
+     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the dimension tally will be returned. 
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N)
@@ -592,7 +592,7 @@ doc ///
    Text
      In the example above, only the average krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
    Text
-     In order to view the Tally Histogram, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called.
+     In order to view the dimension tally, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called.
    Example
      L=randomGeneratingSet(3,3,1.0);
      R=ring(L#0);
