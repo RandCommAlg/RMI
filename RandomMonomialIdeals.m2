@@ -185,24 +185,24 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 )
 
 mingenStats = method()
-mingenStats (List,ZZ) :=   (B,N) -> (
-    num = 0;
-    numgensHist={};
-    m = 0;
-    complexityHist={};
+mingenStats (List) :=   (ideals) -> (
+    num := 0;
+    numgensHist := {};
+    m := 0;
+    complexityHist := {};
     apply(#ideals,i->( 
-        mingensi = gens gb ideals_i;
-        numgensi = numgens source mingensi;
-        mi = max({degrees(mingensi)}#0#1);
-        m = m + mi#0;
-        num = num + numgensi;
-	numgensHist = append(numgensHist, numgensi); 
-	complexityHist = append(complexityHist, mi#0) -- (??) THE DEGREE COMPLEXITY TALLY IS WRONG. All other tallys are correct. so why this one?
+        mingensi := gens gb ideals_i;
+        numgensi := numgens source mingensi;
+        mi := max({degrees(mingensi)}#0#1);
+        m := m + mi#0;
+        num := num + numgensi;
+	numgensHist := append(numgensHist, numgensi); 
+	complexityHist := append(complexityHist, mi#0) -- (??) THE DEGREE COMPLEXITY TALLY IS WRONG. All other tallys are correct. so why this one?
 	)
     );
     print "Average # of min gens:" expression(sub((1/N)*num, RR));
     print "Average degree complexity:" expression(sub(1/N*m, RR));
-    (sub((1/#B)*num, RR), sub(1/#B*m, RR))
+    (sub((1/(#ideals))*num, RR), sub(1/(#ideals)*m, RR))
 )
 --**********************************--
 --  Internal methods	    	    --
