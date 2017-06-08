@@ -275,8 +275,8 @@ doc ///
   Text
    randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
    It does so by calling @TO randomMonomialSet@ $N$ times.
-  SeeAlso
-   randomMonomialSet
+ SeeAlso
+  randomMonomialSet
 ///
 
 doc ///
