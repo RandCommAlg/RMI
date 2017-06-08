@@ -540,7 +540,7 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  returns statistics on the krull dimension of a list of monomialIdeals 
+  returns statistics on the Krull dimension of a list of monomialIdeals 
  Usage
   dimStats(List)
  
@@ -549,12 +549,11 @@ doc ///
     a list of @TO monomialIdeal@s
   
  Outputs
-  ret: Sequence 
-   returns the average krull dimension as a Sequence
+  : Sequence 
+   returns the average Krull dimension as a Sequence
  Description
   Text
-   dimStats finds the average krull dimension for a list of monomialIdeals. 
-   It has an optional input of ShowDimensionTally  
+   dimStats finds the average Krull dimension for a list of monomialIdeals.   
   Example
     L=randomGeneratingSet(3,3,1.0);
     R=ring(L#0);
@@ -569,7 +568,7 @@ doc ///
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
    dimStats(listOfIdeals)
   Text
-   note that this function can be run with a list of any objects to which dim can be applied
+   Note that this function can be run with a list of any objects to which dim can be applied. 
   
  SeeAlso
    ShowDimensionTally
@@ -585,14 +584,16 @@ doc ///
    Text
      If {\tt ShowDimensionTally => false} (the default value), then only the average krull dimension will be returned. 
      If {\tt ShowDimensionTally => true}, then both the average krull dimension and the dimension tally will be returned. 
+
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N)
      dimStats(listOfIdeals) 
    Text
-     In the example above, only the average krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
+     In the example above, only the average Krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
    Text
-     In order to view the dimension tally, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called.
+    In order to view the Tally of Krull dimensions, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called: 
+
    Example
      L=randomGeneratingSet(3,3,1.0);
      R=ring(L#0);
