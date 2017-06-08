@@ -122,28 +122,28 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if C==={} then {0_R} else C
 )
 
-randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
+randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
-    if #p != D then error "p expected to be a list of length D";
-    if not all(p, q->instance(q, ZZ)) and not all(p, q->instance(q,RR)) then error "p must be a list of all integers or all real numbers";
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
-    if all(p,q->instance(q,ZZ)) then (
+    if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
-        B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), p_(d-1)));
+        B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
 	)
-    else if all(p,q->instance(q,RR)) then (
-        if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
+    else if all(pOrM,q->instance(q,RR)) then (
+        if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
             currentRing := R;
             apply(D, d->(
-                chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
+                chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=pOrM_d);
                 B = flatten append(B, chosen/(i->sub(i, R)));
                 currentRing = currentRing/promote(ideal(chosen), currentRing)
             )))
         else
-            B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+            B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
 	);
     if B==={} then {0_R} else B
 )
@@ -371,7 +371,7 @@ doc ///
  Description
   Text
    randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
-   If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model:
+   If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model, that is, based on a Binomial distribution:
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
    n=2; D=3; p=0.2;
@@ -534,7 +534,7 @@ TEST ///
     L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
-    assert (set L#1===set L#2)
+--    assert (set L#1===set L#2) --Propose delete: unneccessary as this is already checked implicitly by the combination of the prior two tests.
 ///
 
 --***********************--
