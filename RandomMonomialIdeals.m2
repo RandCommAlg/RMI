@@ -802,7 +802,7 @@ TEST ///
 --  degStats  --
 --*************************--
 TEST///
-   
+   -- SP would like to see some prettier tests - any ideas? e.g. why the first listOfIdeals, why not hand-code some nice ones in QQ[x,y,z]?
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    --Check that average is correctly calculated
@@ -813,7 +813,6 @@ TEST///
    assert(1.5==(degStats(listOfIdeals))_0)
    --Check average is correct for set monomials
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
---this one fails today (sonja): 
    assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
