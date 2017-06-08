@@ -327,7 +327,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-{*
+
 doc ///
  Key
   degStats
@@ -353,9 +353,50 @@ doc ///
    listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)}
    degStats(listOfIdeals)
   Text
-   --add something about the histogram output
+   The following expamples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+  Example
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   degStats(listOfIdeals)
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
+   degStats(listOfIdeals)
+  Text
+   Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
+   
+ SeeAlso
+  ShowDegreeTally
+
 ///
-*}
+
+doc ///
+ Key
+  ShowDegreeTally
+  [degStats, ShowDegreeTally]
+ Headline
+  optional input to choose if the degree tally is to be returned
+ Description
+  Text
+   If {\tt ShowDegreeTally => false} (the default value), then only the average degree will be returned.
+   If {\tt ShowDegreeTally => true}, then both the average degree and the degree tally will be returned.
+  Example
+   n=3;D=3;p=0.0;N=3;
+   listOfIdeals = randomMonomialIdeals(n,D,p,N);
+   degStats(listOfIdeals)
+  Text
+   In the example above, only the average degree is outputted since by default {\tt ShowDegreeTally => false}.
+  Text
+   In order to view the Tally of degrees, ShowDegreeTally must be set to true ({\tt ShowDimensionTaly => true}) when the function @TO degStats@ is called:
+  Example
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+   degStats(listOfIdeals,ShowDegreeTally=>true)
+   
+ SeeAlso
+  degStats
+
+///
+
 
 doc ///
  Key
