@@ -71,7 +71,7 @@ export {
     "degStats",
     "ShowDegreeTally",
     "ShowDimensionTally",
-    "IncludeZeroIdeals",
+    "IncludeZeroIdeals"
 }
 
 --***************************************--
