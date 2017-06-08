@@ -553,15 +553,15 @@ doc ///
    returns the average krull dimension as a Sequence
  Description
   Text
-   dimStats finds the average krull dimension for a list of monomialIdeals 
-   Has optional inputs of ShowDimensionTally  
+   dimStats finds the average krull dimension for a list of monomialIdeals. 
+   It has an optional input of ShowDimensionTally  
   Example
     L=randomGeneratingSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     dimStats(listOfIdeals)
   Text
-   The following are two more practical examples using @TO randomGeneratingSets@ and @TO idealsFromGeneratingSets@ or a more direct approach with @TO randomMonomialIdeals@:
+   The following examples use the existing functions @TO randomGeneratingSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(4,3,1.0,3));
    dimStats(listOfIdeals)
@@ -589,12 +589,10 @@ doc ///
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N)
      dimStats(listOfIdeals) 
-   Example
-     dimStats(listOfIdeals,ShowDimensionTally=>false)
    Text
-     In the examples above, both output the average krull dimension and do not output the Tally Histogram. The first example uses the default for ShowDimensionTally as false and the second example sets ShowDimensionTally to false, so the output is the same.
+     In the example above, only the average krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
    Text
-     In order to view the Tally Histogram, ShowDimensionTally must be set to true and the function @TO dimStats@ is called.
+     In order to view the Tally Histogram, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called.
    Example
      L=randomGeneratingSet(3,3,1.0);
      R=ring(L#0);
