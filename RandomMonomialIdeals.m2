@@ -176,32 +176,17 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false,
-	                                        BaseFileName =>"",
-						FileNameExt => ""})
+dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
-    --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100),1.0,100,"",IncludeZeroIdeals=>true);
-    --listOfIdeals := apply(ideals, i-> ideal i);
-    --Z := 0;
-    --(listOfIdeals, Z) = extractNonzeroIdeals(listOfIdeals);
-    --dims := (numgens ring listOfIdeals_0)*Z; --since zero ideals fill the space but were not included in ideals
-    --dimsHistogram :=toList(Z:numgens ring listOfIdeals_0);
     dims:=0;
     dimsHistogram:={};
-    filename := o.BaseFileName|"dimension"|o.FileNameExt;
-    fileHist := o.BaseFileName|"dimensionHistogram"|o.FileNameExt;
     apply(#listOfIdeals,i->( 
         dimi := dim listOfIdeals_i;
-    filename << dimi << endl;
         dims = dims + dimi;
     dimsHistogram = append(dimsHistogram, dimi)
     )
     );
-    filename << close;
-    fileHist << values tally dimsHistogram << endl; 
-    fileHist << tally dimsHistogram;
-    fileHist<<close; 
     ret:= ();
     if o.ShowDimensionTally 
          then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
