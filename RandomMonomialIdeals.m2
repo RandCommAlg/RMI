@@ -611,7 +611,7 @@ TEST ///
     L=randomMonomialSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
-    L=randoMonomialSet(2,3,{2,3,4})
+    L=randomMonomialSet(2,3,{2,3,4})
     R=ring(L#0)
     assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
     L=randomMonomialSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
