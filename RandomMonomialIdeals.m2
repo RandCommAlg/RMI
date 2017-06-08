@@ -142,6 +142,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
         )))
     else
         B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+    B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
 
