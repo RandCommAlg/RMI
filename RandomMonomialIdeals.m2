@@ -348,7 +348,7 @@ doc ///
    The degree of each monomial ideal is calculated using the @TO degree@ function.
    Has the optional input of ShowDegreeTally
   Example
-   L=randomGeneratingSet(3,3,1.0);
+   L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)}
    degStats(listOfIdeals)
@@ -688,7 +688,7 @@ TEST ///
 --*************************--
 TEST///
    
-   L=randomGeneratingSet(3,3,1.0);
+   L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    --Check that average is correctly calculated
    listOfIdeals={monomialIdeal(R_0^3,R_1^4*R_2^2),monomialIdeal(R_0^2),monomialIdeal(R_0^3*R_2^4,R_1^2),monomialIdeal(R_0*R_1^3,R_2^6)};
