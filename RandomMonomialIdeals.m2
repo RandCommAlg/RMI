@@ -202,7 +202,7 @@ mingenStats (List) :=   (ideals) -> (
     );
     print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
-    (sub((1/(#ideals))*num, RR), sub(1/(#ideals)*m, RR))
+    (sub((1/(#ideals))*num, RR), sub((1/(#ideals))*m, RR))
 )
 --**********************************--
 --  Internal methods	    	    --
