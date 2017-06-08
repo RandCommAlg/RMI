@@ -146,7 +146,7 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
-degStats = method(TypicalValue =>RR,Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
+degStats = method(TypicalValue =>Sequence, Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100));
@@ -166,10 +166,11 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << values tally degHistogram << endl;
     --fileHist << tally degHistogram;
     --fileHist << close;
+    ret:=();
     if o.ShowDegreeTally
-    	then print("degree histogram tally",tally degHistogram);
+    	then(ret=(sub(1/N*deg, RR),tally degHistogram); return ret;);
     print "Average Degree:" expression(sub(1/N*deg, RR));
-    sub(1/N*deg, RR)
+    ret = toSequence{sub(1/N*deg, RR)}
     )
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
@@ -311,7 +312,7 @@ doc ///
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
-
+{*
 doc ///
  Key
   degStats
@@ -323,7 +324,7 @@ doc ///
   listOfIdeals: List
    list of monomial ideals
  Outputs
-  B: RR
+  B: Sequence
    average degree of R/I for a list of monomial ideals
  Description
   Text
@@ -337,6 +338,7 @@ doc ///
   Text
    --add something about the histogram output
 ///
+*}
 
 doc ///
  Key
@@ -579,17 +581,17 @@ TEST ///
 --*************************--
 TEST///
    -- Check that average is correctly calculated
-   Q=QQ[x,y,z];
-   listOfIdeals={monomialIdeal(x^3,y^4*z^2),monomialIdeal(x^2),monomialIdeal(x^3*z^4,y^2),monomialIdeal(x*y^3,z^6)};
-   assert(14.5==degStats(listOfIdeals))
+--   Q=QQ[x,y,z];
+--   listOfIdeals={monomialIdeal(x^3,y^4*z^2),monomialIdeal(x^2),monomialIdeal(x^3*z^4,y^2),monomialIdeal(x*y^3,z^6)};
+--   assert(14.5==degStats(listOfIdeals))
    -- Check that average works when one ideal is the zero ideal
-   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
-   assert(1.5==degStats(listOfIdeals))
+--   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
+--   assert(1.5==degStats(listOfIdeals))
    ---
    L=randomGeneratingSet(3,3,1.0);
    R=ring(L#0);
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
-   assert(3.5==(degStats(listOfIdeals,ShowDimensionTally=>true))_0)
+   assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
    assert(1.5==(degStats(listOfIdeals, ShowDegreeTally=>true))_0)

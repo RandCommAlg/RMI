@@ -149,12 +149,10 @@ randomGeneratingSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 degStats = method(TypicalValue =>Sequence, Options =>{ShowDegreeTally => false, BaseFileName =>"", FileNameExt => ""})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
-    --ideals=idealsFromGeneratingSets(randomGeneratingSets(3,3,1.0,100));
     deg := 0;
     degHistogram:={};
     --filename := o.BaseFileName|"degree"|o.FileNameExt;
     --fileHist := o.BaseFileName|"degreeHistogram"|o.FileNameExt;
-    
     apply(#listOfIdeals, i->( 
         degi := degree listOfIdeals_i;
 	--filename << degi << endl
@@ -168,10 +166,11 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << close;
     ret:=();
     if o.ShowDegreeTally
-    	then ret = ret=(sub(1/N*deg, RR),tally degHistogram); return ret;
+    	then(ret=(sub(1/N*deg, RR),tally degHistogram); return ret;);
     print "Average Degree:" expression(sub(1/N*deg, RR));
     ret = toSequence{sub(1/N*deg, RR)}
-    )
+)
+
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
 -- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
@@ -581,17 +580,18 @@ TEST ///
 --*************************--
 TEST///
    -- Check that average is correctly calculated
-   Q=QQ[x,y,z];
-   listOfIdeals={monomialIdeal(x^3,y^4*z^2),monomialIdeal(x^2),monomialIdeal(x^3*z^4,y^2),monomialIdeal(x*y^3,z^6)};
+   L=randomGeneratingSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^3,R_1^4*R_2^2),monomialIdeal(R_0^2),monomialIdeal(R_0^3*R_2^4,R_1^2),monomialIdeal(R_0*R_1^3,R_2^6)};
    assert(14.5==degStats(listOfIdeals))
    -- Check that average works when one ideal is the zero ideal
-   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
-   assert(1.5==degStats(listOfIdeals))
-   ---
+--   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
+--   assert(1.5==degStats(listOfIdeals))
+   --Check average is correct for set monomials
    L=randomGeneratingSet(3,3,1.0);
    R=ring(L#0);
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
-   assert(3.5==(degStats(listOfIdeals,ShowDimensionTally=>true))_0)
+   assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
    assert(1.5==(degStats(listOfIdeals, ShowDegreeTally=>true))_0)
