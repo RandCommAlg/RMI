@@ -576,6 +576,14 @@ doc ///
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     dimStats(listOfIdeals)
   Text
+   The following are two more practical examples using @TO randomGeneratingSets@ and @TO idealsFromGeneratingSets@ or a more direct approach with @TO randomMonomialIdeals@:
+  Example
+   listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(4,3,1.0,3));
+   dimStats(listOfIdeals)
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
+   dimStats(listOfIdeals)
+  Text
    note that this function can be run with a list of any objects to which dim can be applied
   
  SeeAlso
@@ -587,7 +595,7 @@ doc ///
    ShowDimensionTally
    [dimStats, ShowDimensionTally]
  Headline
-   optional input to choose whether or not to return a histogram of tallys for the dimesnsions
+   optional input to choose whether or not to return a histogram of tallys for the dimensions
  Description
    Text
      If {\tt ShowDimensionTally => false} (the default), then only the avarage krull dimension will be returned. 
