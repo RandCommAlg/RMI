@@ -560,9 +560,9 @@ doc ///
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     dimStats(listOfIdeals)
   Text
-   The following examples use the existing functions @TO randomGeneratingSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomGeneratingSets(4,3,1.0,3));
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
    dimStats(listOfIdeals)
   Example
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
@@ -724,12 +724,12 @@ TEST ///
 TEST ///
     --check for p = 0 the average krull dimension is n
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
-    assert(3==dimStats(listOfIdeals))
+    assert(3==(dimStats(listOfIdeals))_0)
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
-    assert(7==dimStats(listOfIdeals))
+    assert(7==(dimStats(listOfIdeals))_0)
     --check for p = 1 the average krull dimension is 0
      listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
-    assert(0==dimStats(listOfIdeals))
+    assert(0==(dimStats(listOfIdeals))_0)
     --check for set monomials
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
