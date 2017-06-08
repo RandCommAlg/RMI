@@ -550,7 +550,7 @@ doc ///
   
  Outputs
   ret: Sequence 
-   if @TO ShowDimensionTally@ =>false then dimStats returns the average krull dimension, otherwise the average krull dimension and dimension tally are returned
+   returns the average krull dimension as a Sequence
  Description
   Text
    dimStats finds the average krull dimension for a list of monomialIdeals 
