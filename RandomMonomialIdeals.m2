@@ -610,10 +610,13 @@ doc ///
      dimStats(ideals,ShowDimensionTally=>false)
    Text
      In the example above, it can be seen that setting ShowDimensionTally to false is the same as calling dimStats.
-   Example
-     dimStats(ideals,ShowDimensionTally=>true)
    Text
-     In this last example, ShowDimensionTally is set to true, so both the average Krull Dimension and the Tally Histogram are returned as a sequence. 
+     In order to view the Tally Histogram, ShowDimensionTally must be set to true and the function @TO dimStats@ is called.
+   Example
+     L=randomGeneratingSet(3,3,1.0);
+     R=ring(L#0);
+     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+     dimStats(ideals,ShowDimensionTally=>true)
  SeeAlso
    dimStats
 ///
