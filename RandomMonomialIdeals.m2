@@ -635,7 +635,7 @@ TEST ///
     assert(D==max(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply(randomMonomialSet(n,D,M),m->first degree m)))
-    assert(D==max(apply(randomMonomialSet(n,D,{1,1,1,1,1,1,1}), m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
 
 TEST ///
