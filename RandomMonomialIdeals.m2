@@ -587,7 +587,7 @@ doc ///
 
    Example
      n=3;D=3;p=0.0;N=3;
-     listOfIdeals = randomMonomialIdeals(n,D,p,N)
+     listOfIdeals = randomMonomialIdeals(n,D,p,N);
      dimStats(listOfIdeals) 
    Text
      In the example above, only the average Krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
