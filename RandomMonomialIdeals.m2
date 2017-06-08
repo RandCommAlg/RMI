@@ -584,7 +584,7 @@ doc ///
  Description
    Text
      If {\tt ShowDimensionTally => false} (the default), then only the avarage krull dimension will be returned. 
-     If {\tt ShowDimensionTally => true}, then both the average krull deimension and the tally histogram will be returned. 
+     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the tally histogram will be returned. 
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N)
