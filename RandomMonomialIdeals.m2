@@ -66,7 +66,6 @@ export {
     "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
-    "Strategy",
     "IncludeZeroIdeals",
     "dimStats",
     "ShowDimensionTally",
@@ -497,7 +496,6 @@ doc ///
 
 doc ///
   Key
-    Strategy
     [randomMonomialSet, Strategy]
     [randomMonomialSets, Strategy]
   Headline
