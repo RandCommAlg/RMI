@@ -194,10 +194,10 @@ mingenStats (List) :=   (ideals) -> (
         mingensi := gens gb ideals_i;
         numgensi := numgens source mingensi;
         mi := max({degrees(mingensi)}#0#1);
-        m := m + mi#0;
-        num := num + numgensi;
-	numgensHist := append(numgensHist, numgensi); 
-	complexityHist := append(complexityHist, mi#0) -- (??) THE DEGREE COMPLEXITY TALLY IS WRONG. All other tallys are correct. so why this one?
+        m = m + mi#0;
+        num = num + numgensi;
+	numgensHist = append(numgensHist, numgensi); 
+	complexityHist = append(complexityHist, mi#0) -- (??) THE DEGREE COMPLEXITY TALLY IS WRONG. All other tallys are correct. so why this one?
 	)
     );
     print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
