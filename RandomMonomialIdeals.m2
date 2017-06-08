@@ -603,13 +603,11 @@ doc ///
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N)
-     dimStats(listOfIdeals)
-   Text
-     The Average Krull Dimension is printed and outputted as 3: 
+     dimStats(listOfIdeals) 
    Example
      dimStats(listOfIdeals,ShowDimensionTally=>false)
    Text
-     In the example above, it can be seen that setting ShowDimensionTally to false is the same as calling dimStats.
+     In the examples above, both output the average krull dimension and do not output the Tally Histogram. The first example uses the default for ShowDimensionTally as false and the second example sets ShowDimensionTally to false, so the output is the same.
    Text
      In order to view the Tally Histogram, ShowDimensionTally must be set to true and the function @TO dimStats@ is called.
    Example
