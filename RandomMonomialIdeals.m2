@@ -579,17 +579,16 @@ TEST ///
 --  degStats  --
 --*************************--
 TEST///
-   -- Check that average is correctly calculated
+   
    L=randomGeneratingSet(3,3,1.0);
    R=ring(L#0);
+   --Check that average is correctly calculated
    listOfIdeals={monomialIdeal(R_0^3,R_1^4*R_2^2),monomialIdeal(R_0^2),monomialIdeal(R_0^3*R_2^4,R_1^2),monomialIdeal(R_0*R_1^3,R_2^6)};
-   assert(14.5==degStats(listOfIdeals))
+   assert(14.5==(degStats(listOfIdeals))_0) 
    -- Check that average works when one ideal is the zero ideal
---   listOfIdeals={monomialIdeal(0_Q),monomialIdeal(x^2)};
---   assert(1.5==degStats(listOfIdeals))
+   listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0^2)};
+   assert(1.5==(degStats(listOfIdeals))_0)
    --Check average is correct for set monomials
-   L=randomGeneratingSet(3,3,1.0);
-   R=ring(L#0);
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
    assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
@@ -599,7 +598,6 @@ TEST///
    listOfIdeals={monomialIdeal(R_0),monomialIdeal(R_0^2*R_2),monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
    assert(sub(8/3,RR)==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(3==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_1))
-      
  
 ///
 
