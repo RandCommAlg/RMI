@@ -67,7 +67,11 @@ export {
     "Coefficients",
     "VariableName",
     "Strategy",
-    "IncludeZeroIdeals"
+    "IncludeZeroIdeals",
+    "dimStats",
+    "ShowDimensionTally",
+    "BaseFileName",
+    "FileNameExt"
     }
 
 --***************************************--
@@ -142,6 +146,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
 )
 
 
+
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
 -- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
@@ -167,6 +172,28 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
     print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
+
+--computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
+--prints and returns the avg. Krull dim (real number) 
+--also saves the histogram of dimensions
+dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false})
+dimStats List := o-> (listOfIdeals) -> (
+    N := #listOfIdeals;
+    dims:=0;
+    dimsHistogram:={};
+    apply(#listOfIdeals,i->( 
+        dimi := dim listOfIdeals_i;
+        dims = dims + dimi;
+    dimsHistogram = append(dimsHistogram, dimi)
+    )
+    );
+    ret:= ();
+    if o.ShowDimensionTally 
+         then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
+    print "Average Krull dimension:" expression(sub(1/N*dims, RR));
+    ret = toSequence{sub(1/N*dims, RR)}
+)
+
 
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
@@ -204,7 +231,7 @@ extractNonzeroIdeals = ( ideals ) -> (
     numberOfZeroIdeals := # ideals - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
-    )
+)
 -- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
 -- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
     -- input list of generating sets
@@ -508,6 +535,74 @@ doc ///
  SeeAlso
    randomMonomialIdeals
 ///
+doc ///
+ Key
+  dimStats
+  (dimStats,List)
+ Headline
+  returns statistics on the Krull dimension of a list of monomialIdeals 
+ Usage
+  dimStats(List)
+ 
+ Inputs
+  listOfIdeals: List
+    a list of @TO monomialIdeal@s
+  
+ Outputs
+  : Sequence 
+   returns the average Krull dimension as a Sequence
+ Description
+  Text
+   dimStats finds the average Krull dimension for a list of monomialIdeals.   
+  Example
+    L=randomGeneratingSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    dimStats(listOfIdeals)
+  Text
+   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+  Example
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   dimStats(listOfIdeals)
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
+   dimStats(listOfIdeals)
+  Text
+   Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
+  
+ SeeAlso
+   ShowDimensionTally
+///
+
+doc ///
+ Key
+   ShowDimensionTally
+   [dimStats, ShowDimensionTally]
+ Headline
+   optional input to choose if the dimension tally is to be returned 
+ Description
+   Text
+     If {\tt ShowDimensionTally => false} (the default value), then only the average krull dimension will be returned. 
+     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the dimension tally will be returned. 
+
+   Example
+     n=3;D=3;p=0.0;N=3;
+     listOfIdeals = randomMonomialIdeals(n,D,p,N)
+     dimStats(listOfIdeals) 
+   Text
+     In the example above, only the average Krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
+   Text
+    In order to view the Tally of Krull dimensions, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called: 
+
+   Example
+     L=randomGeneratingSet(3,3,1.0);
+     R=ring(L#0);
+     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+     dimStats(listOfIdeals,ShowDimensionTally=>true)
+ SeeAlso
+   dimStats
+///
+
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
@@ -623,7 +718,31 @@ TEST ///
     assert(1==min(apply((randomMonomialSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
 ///
-
+--************************--
+--  dimStats  --
+--************************--
+TEST ///
+    --check for p = 0 the average krull dimension is n
+    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
+    assert(3==(dimStats(listOfIdeals))_0)
+    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
+    assert(7==(dimStats(listOfIdeals))_0)
+    --check for p = 1 the average krull dimension is 0
+     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
+    assert(0==(dimStats(listOfIdeals))_0)
+    --check for set monomials
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
+    assert(2.5== (dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
+    assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
+    assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+///
 --************************--
 --  randomMonomialIdeals  --
 --************************--
