@@ -343,15 +343,15 @@ doc ///
   degStats
   (degStats,List)
  Headline
-  returns statistics on the degree of R/I for a list of monomialIdeals
+  returns statistics on the degrees of a list of monomialIdeals
  Usage
   degStats(List)
  Inputs
   listOfIdeals: List
    of @TO monomialIdeal@s
  Outputs
-  ret: Sequence
-   returns the average degree of R/I for a list of monomialIdeals
+  : Sequence
+   whose first entry is the average degree of a list of monomialIdeals, and second entry (if option turned on) is the degree tally
  Description
   Text
    degStats finds the average degree of R/I for a list of monomialIdeals.
@@ -400,8 +400,9 @@ doc ///
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
-   degStats(listOfIdeals,ShowDegreeTally=>true)
-   
+   (degAvg,degTally) = degStats(listOfIdeals,ShowDegreeTally=>true);
+   degAvg
+   degTally
  SeeAlso
   degStats
 ///
