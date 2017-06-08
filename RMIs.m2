@@ -1,3 +1,4 @@
+
 -->> THE BASIC METHODS FOR PACKAGE RandomMonomialIdeals.m2 <<-- 
 
 -------------------------------------------------------------------------------------
@@ -20,6 +21,10 @@
 --The invariants computed by this code are: regularity, projective dimension, Krull dimension, degree, number of minimal generators, degree complexity, Cohen-Macaulayness, Borel-fixedness, and Betti numbers
 -------------------------------------------------------------------------------------
 
+-- file updated according to follow-up on action items on piazza:
+-- renaming methods
+
+
 
 -------------------------------------------------------------------------------------
 ------------------------------ Load gens sets, create ideals ------------------------
@@ -30,104 +35,8 @@
 readBs = filename -> lines(get(filename))
 
 
---creates monomialIdeal objects from generating sets
---saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
---see RMIscript.m2 for short script to run this function
---makeRandIdeals = (B,p,D,basefilename) -> ( 
-idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
--- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
-idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
-	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
-	-- i.e., do (p,D,baseFileName) as input. 
-	-- maybe the filename should be optional and make it "temp" for default. 
-    N := # B;
-    n := numgens ring B#0;
-    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
-    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
-    ideals := {};
-    (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
-    for i from 0 to #B-1 do {
-	ideals = B / (b-> monomialIdeal b);
-	filename << toString B#i << endl; 
-    	--if not o.IncludeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals) else numberOfZeroIdeals :=  (extractNonzeroIdeals(B))_1;
-	};
-    filename<<close;
-    print(concatenate("There are ", toString(#B)," ideals in this sample."));
-    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
-    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
-)
 
 
--- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
-
--- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
-    -- input list of ideals 
-    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
--- (not exported, therefore no need to document) 
-extractNonzeroIdeals = ( ideals ) -> (
-    nonzeroIdeals := select(ideals,i->i != 0);
-    numberOfZeroIdeals := # ideals - # nonzeroIdeals;
-    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
-    return(nonzeroIdeals,numberOfZeroIdeals)
-    )
--- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
--- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
-    -- input list of generating sets
-    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
-
-
-
--------------------------------------------------------------------------------------
-------------------------------Combine all of the functions below to one function-----
--------------------------------------------------------------------------------------
-
---This method calls each of the methods defined below and produces all of the associated output
---see RMIscript.m2 for short script to run this function
-randomIdealData =     (ideals,N,Z,p,n,D,basefilename) -> (
---randomIdealData = method()--method can't take more than 4 arguments, what do we do, m2!! 
---randomIdealData (List,ZZ,ZZ,RR,ZZ,ZZ,String) :=     (ideals,N,Z,p,n,D,basefilename) -> (
-        --inputs:
-	--list of ideals
-	--N, total sample size 
-	--Z, number of zero ideals in sample 
-	--p, ER model probability
-	--n, num vars
-	--D, max degree for ER model
-    fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
-    print concatenate("All files stored in filenames with extension that describe parameters as follows: ", fileNameExt,"."); 
-    averageRegularity = avgReg(ideals,N,basefilename,fileNameExt); 
-    averagePdimension = avgPdim(ideals,N,basefilename,fileNameExt); 
-    averageKrullDimension = avgDim(ideals,N,Z,basefilename,fileNameExt); 
-    averageDegree = avgDeg(ideals, N,basefilename,fileNameExt); 
-    (averageNumGens,averageDegreeComplexity) = avgMinGens(ideals,N,basefilename,fileNameExt);
-    percentCM = cohMac(ideals,N,Z);
-    percentBorel = borelFixed(ideals,N,Z);
-    (bAvg, bAvgShape) = bettis(ideals,N,Z,basefilename,fileNameExt);
-    summary(N,averageRegularity,averagePdimension,
-	averageKrullDimension,averageDegree, averageNumGens,
-	averageDegreeComplexity,percentCM,percentBorel,bAvg,
-	bAvgShape,basefilename, fileNameExt)
-    )
-
---This method calls SELECTED ONES of the methods defined below and produces all of the associated output
---see RMIscript.m2 for short script to run this function
-randomIdealDataForPaper =     (ideals,N,Z,p,n,D,basefilename) -> (
---randomIdealData = method()--method can't take more than 4 arguments, what do we do, m2!! 
---randomIdealData (List,ZZ,ZZ,RR,ZZ,ZZ,String) :=     (ideals,N,Z,p,n,D,basefilename) -> (
-        --inputs:
-	--list of ideals
-	--N, total sample size 
-	--Z, number of zero ideals in sample 
-	--p, ER model probability
-	--n, num vars
-	--D, max degree for ER model
-    fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
-    print concatenate("All files stored in filenames with extension that describe parameters as follows: ", fileNameExt,"."); 
-    averageRegularity = avgReg(ideals,N,basefilename,fileNameExt); 
-    averagePdimension = avgPdim(ideals,N,basefilename,fileNameExt); 
-    percentCM = cohMac(ideals,N,Z);
-    summaryForPaper(N,averageRegularity,averagePdimension,percentCM,basefilename, fileNameExt)
-    )
 
 
 
@@ -139,7 +48,8 @@ randomIdealDataForPaper =     (ideals,N,Z,p,n,D,basefilename) -> (
 --computes bettis of each ideal, saves to file `bettis'  - with an extension encoding values of n,p,D,N. 
 --computes avg. betti table, prints and saves to file `avgBetti' - with an extension encoding values of n,p,D,N. 
 --returns avg betti table and avg betti table shape.
-bettis =    (ideals,N,Z,basefilename,fileNameExt) -> (
+bettiStats =    (ideals,N,Z,basefilename,fileNameExt) -> (
+--bettis =    (ideals,N,Z,basefilename,fileNameExt) -> (
     --
     -- NOTE --- THIS (AND OTHERS?) METHOD BREAKS IF THERE ARE NO ZERO IDEALS GENERATED. (!!) 
     -- THIS IS A SIMPLE BUG.
@@ -236,8 +146,10 @@ bettis =    (ideals,N,Z,basefilename,fileNameExt) -> (
 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
-avgReg = method()
-avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
+--avgReg = method()
+--avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
+regStats = method()
+regStats (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
     reg = 0;
     regHistogram={};
     filename = basefilename|"regularity"|fileNameExt;
@@ -274,32 +186,7 @@ regularityHistogram (List,ZZ,String,String) :=   (ideals,N,basefilename,fileName
     print tally reg;
     )
 *}
--------------------------------------------------------------------------------------
-----------------------------------Krull Dimension------------------------------------
--------------------------------------------------------------------------------------
 
---computes Krull dim of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
---prints and returns the avg. Krull dim (real number) 
---also saves the histogram of dimensions
-avgDim =   (ideals,N,Z,basefilename,fileNameExt) -> (
-    dims = (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
-    dimsHistogram=toList(Z:numgens ring ideals_0);
-    filename = basefilename|"dimension"|fileNameExt;
-    fileHist = basefilename|"dimensionHistogram"|fileNameExt;
-    apply(#ideals,i->( 
-        dimi = dim ideals_i;
-	filename << dimi << endl;
-        dims = dims + dimi;
-	dimsHistogram = append(dimsHistogram, dimi)
-	)
-    );
-    filename << close;
-    fileHist << values tally dimsHistogram << endl; 
-    fileHist << tally dimsHistogram;
-    fileHist<<close; 
-    print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    sub(1/N*dims, RR)
-    )
 
 -------------------------------------------------------------------------------------
 -------------------------Minimal Generators/Degree Complexity------------------------
@@ -310,8 +197,10 @@ avgDim =   (ideals,N,Z,basefilename,fileNameExt) -> (
 --computes deg. complexity of each RMI, saves to file `degreecomplexity' - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. deg. complexity
 --also saves the histograms of these invariants.
-avgMinGens = method()
-avgMinGens (List,ZZ,String,String) :=   (B,N,basefilename,fileNameExt) -> (
+--avgMinGens = method()
+--avgMinGens (List,ZZ,String,String) :=   (B,N,basefilename,fileNameExt) -> (
+mingenStats = method()
+mingenStats (List,ZZ,String,String) :=   (B,N,basefilename,fileNameExt) -> (
     num = 0;
     numgensHist={};
     m = 0;
@@ -350,8 +239,8 @@ avgMinGens (List,ZZ,String,String) :=   (B,N,basefilename,fileNameExt) -> (
 -------------------------------------------------------------------------------------
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
-cohMac = method()
-cohMac (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+CMStats = method()
+CMStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     cm = 0;
     for i from 0 to #ideals-1 do (
         if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
@@ -365,8 +254,8 @@ cohMac (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
 
 --checks whether each RMI is Borel-fixed, 
 --prints and returns % of Borel-fixed RMIs in sample (real number) 
-borelFixed = method()
-borelFixed (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+borelFixedStats = method()
+borelFixedStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     bor = 0;
     for i from 0 to #ideals-1 do ( 
         if isBorel(monomialIdeal(ideals_i)) == true then bor = bor + 1 else bor = bor);     
@@ -374,10 +263,6 @@ borelFixed (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     print "Percent Borel-fixed:" expression(sub((bor+Z)/N, RR));
     sub((bor+Z)/N, RR) -- this is the returned value.
     )
-
--------------------------------------------------------------------------------------
--------------------------------------Degree------------------------------------------
--------------------------------------------------------------------------------------
 
 --computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. degree (real number)
@@ -417,8 +302,10 @@ avgDeg (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
 
 --computes proj. dim. of each RMI, saves to file “projdims” - with an extension encoding values of n,p,D,N. 
 --prints and returns avg. proj dim (real number) and their histogram
-avgPdim = method()
-avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
+--avgPdim = method()
+--avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
+pdimStats = method()
+pdimStats (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
     pd = 0;
     pdHist={};
     filename = concatenate(basefilename,"projdims",fileNameExt);
@@ -439,6 +326,8 @@ avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
     print "Average projective dimension:" expression(sub(1/N*pd, RR));
     sub(1/N*pd, RR)
     )
+
+--- FOR LATER USE: 
 
 -------------------------------------------------------------------------------------
 ----------------------------------- Summary -----------------------------------------
@@ -488,3 +377,176 @@ summary = (N,reg,pd,dims,deg,num,m,cm,bor,b,bShape,basefilename, fileNameExt) ->
 	filename << bShape << endl;
 	filename << close
 	)
+    
+    
+
+-------------------------------------------------------------------------------------
+------------------------------Combine all of the functions above to one function-----
+-------------------------------------------------------------------------------------
+ --  JUNE 2017: THIS WON'T WORK BECAUSE WE RENAMED ALL METHODS! -- 
+--This method calls each of the methods defined below and produces all of the associated output
+--see RMIscript.m2 for short script to run this function
+randomIdealData =     (ideals,N,Z,p,n,D,basefilename) -> (
+--randomIdealData = method()--method can't take more than 4 arguments, what do we do, m2!! 
+--randomIdealData (List,ZZ,ZZ,RR,ZZ,ZZ,String) :=     (ideals,N,Z,p,n,D,basefilename) -> (
+        --inputs:
+	--list of ideals
+	--N, total sample size 
+	--Z, number of zero ideals in sample 
+	--p, ER model probability
+	--n, num vars
+	--D, max degree for ER model
+    fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
+    print concatenate("All files stored in filenames with extension that describe parameters as follows: ", fileNameExt,"."); 
+    averageRegularity = avgReg(ideals,N,basefilename,fileNameExt); 
+    averagePdimension = avgPdim(ideals,N,basefilename,fileNameExt); 
+    averageKrullDimension = avgDim(ideals,N,Z,basefilename,fileNameExt); 
+    averageDegree = avgDeg(ideals, N,basefilename,fileNameExt); 
+    (averageNumGens,averageDegreeComplexity) = avgMinGens(ideals,N,basefilename,fileNameExt);
+    percentCM = cohMac(ideals,N,Z);
+    percentBorel = borelFixed(ideals,N,Z);
+    (bAvg, bAvgShape) = bettis(ideals,N,Z,basefilename,fileNameExt);
+    summary(N,averageRegularity,averagePdimension,
+	averageKrullDimension,averageDegree, averageNumGens,
+	averageDegreeComplexity,percentCM,percentBorel,bAvg,
+	bAvgShape,basefilename, fileNameExt)
+    )
+
+
+
+
+--This method calls SELECTED ONES of the methods defined below and produces all of the associated output
+--see RMIscript.m2 for short script to run this function
+randomIdealDataForPaper =     (ideals,N,Z,p,n,D,basefilename) -> (
+--randomIdealData = method()--method can't take more than 4 arguments, what do we do, m2!! 
+--randomIdealData (List,ZZ,ZZ,RR,ZZ,ZZ,String) :=     (ideals,N,Z,p,n,D,basefilename) -> (
+        --inputs:
+	--list of ideals
+	--N, total sample size 
+	--Z, number of zero ideals in sample 
+	--p, ER model probability
+	--n, num vars
+	--D, max degree for ER model
+    fileNameExt = concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
+    print concatenate("All files stored in filenames with extension that describe parameters as follows: ", fileNameExt,"."); 
+    averageRegularity = avgReg(ideals,N,basefilename,fileNameExt); 
+    averagePdimension = avgPdim(ideals,N,basefilename,fileNameExt); 
+    percentCM = cohMac(ideals,N,Z);
+    summaryForPaper(N,averageRegularity,averagePdimension,percentCM,basefilename, fileNameExt)
+    )
+
+    
+-------------------------------------------------------------------------------------
+-- Methods already moved to RandomMonomialIdeals.m2 and therefore not updated here any longer: 
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+----------------------------------Krull Dimension------------------------------------
+-------------------------------------------------------------------------------------
+
+-- will be renamed into dimStats
+
+--computes Krull dim of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
+--prints and returns the avg. Krull dim (real number) 
+--also saves the histogram of dimensions
+avgDim =   (ideals,N,Z,basefilename,fileNameExt) -> (
+    dims = (numgens ring ideals_0)*Z; --since zero ideals fill the space but were not included in ideals
+    dimsHistogram=toList(Z:numgens ring ideals_0);
+    filename = basefilename|"dimension"|fileNameExt;
+    fileHist = basefilename|"dimensionHistogram"|fileNameExt;
+    apply(#ideals,i->( 
+        dimi = dim ideals_i;
+	filename << dimi << endl;
+        dims = dims + dimi;
+	dimsHistogram = append(dimsHistogram, dimi)
+	)
+    );
+    filename << close;
+    fileHist << values tally dimsHistogram << endl; 
+    fileHist << tally dimsHistogram;
+    fileHist<<close; 
+    print "Average Krull dimension:" expression(sub(1/N*dims, RR));
+    sub(1/N*dims, RR)
+    )
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------Degree------------------------------------------
+-------------------------------------------------------------------------------------
+
+-- will be renamed into degStats 
+
+--computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
+--prints and returns avg. degree (real number)
+avgDeg = method()
+avgDeg (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
+    deg = 0;
+    degHist={};
+    filename = concatenate(basefilename,"degree",fileNameExt);
+    fileHist = concatenate(basefilename,"degreeHistogram",fileNameExt);
+    apply(#ideals,i-> ( 
+        degi = degree ideals_i;
+        filename << degi << endl;
+        deg = deg + degi;
+	degHist = append(degHist, degi)
+	)
+    );
+    filename << close;
+    fileHist << values tally degHist << endl; 
+    fileHist << tally degHist;
+    fileHist<<close; 
+    print "Average degree:" expression(sub(1/N*deg, RR));
+    sub(1/N*deg, RR)
+    )
+
+
+--creates monomialIdeal objects from generating sets
+--saves them to file `randomIdeals' - with an extension encoding values of n,p,D,N. 
+--see RMIscript.m2 for short script to run this function
+--makeRandIdeals = (B,p,D,basefilename) -> ( 
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => false})
+-- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
+idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
+	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
+	-- i.e., do (p,D,baseFileName) as input. 
+	-- maybe the filename should be optional and make it "temp" for default. 
+    N := # B;
+    n := numgens ring B#0;
+    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
+    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
+    ideals := {};
+    (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
+    for i from 0 to #B-1 do {
+	ideals = B / (b-> monomialIdeal b);
+	filename << toString B#i << endl; 
+    	--if not o.IncludeZeroIdeals then (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals) else numberOfZeroIdeals :=  (extractNonzeroIdeals(B))_1;
+	};
+    filename<<close;
+    print(concatenate("There are ", toString(#B)," ideals in this sample."));
+    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
+    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+)
+
+
+
+-- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
+
+-- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
+    -- input list of ideals 
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+-- (not exported, therefore no need to document) 
+extractNonzeroIdeals = ( ideals ) -> (
+    nonzeroIdeals := select(ideals,i->i != 0);
+    numberOfZeroIdeals := # ideals - # nonzeroIdeals;
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
+    return(nonzeroIdeals,numberOfZeroIdeals)
+    )
+-- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
+-- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
+    -- input list of generating sets
+    -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
+
+
+
+
+

@@ -63,6 +63,7 @@ export {
     "randomGeneratingSets",
     "randomGeneratingSet",
     "idealsFromGeneratingSets",
+    "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
     "Strategy",
@@ -195,6 +196,21 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
     print(concatenate("There are ", toString(#B)," ideals in this sample."));
     print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+)
+
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
+			
+ randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+)
+ randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
+ 	B:=randomGeneratingSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+)
+ randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
+ 	B:=randomGeneratingSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
+	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
 --**********************************--
@@ -341,6 +357,67 @@ doc ///
 
 doc ///
  Key
+  randomMonomialIdeals
+  (randomMonomialIdeals,ZZ,ZZ,RR,ZZ)
+  (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialIdeals,ZZ,ZZ,List,ZZ)
+ Headline
+  randomly generates monomial ideals, with each monomial up to a given degree
+ Usage
+  randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
+  randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialIdeals(ZZ,ZZ,List,ZZ)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  p: RR
+     or @ofClass List@
+     , probability to select a monomial
+  M: ZZ
+     maximum number of monomials in each generating set for the ideal
+  N: ZZ
+    number of ideals generated
+ Outputs
+  B: List
+   list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
+ Description
+  Text
+   randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   If $p$ is a real number, it generates each of these ideals according to the Erdos-Renyi-type model: 
+   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
+  Example
+   n=2; D=3; p=0.2; N=10;
+   randomMonomialIdeals(n,D,p,N)
+   randomMonomialIdeals(5,3,0.4,4)
+  Text
+   Note that this model does not generate the monomial $1$: 
+  Example
+   randomMonomialIdeals(3,2,1.0,1)
+  Text 
+   If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the ideal from this set.
+  Example
+   n=8; D=4; M=7; N=3;
+   randomMonomialIdeals(n,D,M,N)
+  Text
+   Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
+  Text 
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
+   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
+  Example
+   p={0.0, 1.0, 1.0}; 
+   randomMonomialIdeals(2,3,p,1)
+  Text
+   Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
+ SeeAlso
+   randomGeneratingSets
+   idealsFromGeneratingSets
+///
+
+doc ///
+ Key
   randomGeneratingSet
   (randomGeneratingSet,ZZ,ZZ,RR)
   (randomGeneratingSet,ZZ,ZZ,ZZ)
@@ -407,11 +484,12 @@ doc ///
     Coefficients
     [randomGeneratingSet, Coefficients]
     [randomGeneratingSets, Coefficients]
+    [randomMonomialIdeals, Coefficients]
   Headline
-    optional input to choose the coefficient ring of the generated polynomials
+    optional input to choose the coefficients of the ambient polynomial ring
   Description
     Text
-      Put {\tt Coefficients => r} for a choice of ring r as an argument in
+      Put {\tt Coefficients => r} for a choice of field r as an argument in
       the function @TO randomGeneratingSet@ or @TO randomGeneratingSets@. 
     Example 
       n=2; D=3; p=0.2;
@@ -422,6 +500,7 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -429,6 +508,7 @@ doc ///
     VariableName
     [randomGeneratingSet, VariableName]
     [randomGeneratingSets, VariableName]
+    [randomMonomialIdeals, VariableName]
   Headline
     optional input to choose the variable name for the generated polynomials
   Description
@@ -442,6 +522,7 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -458,6 +539,31 @@ doc ///
   SeeAlso
     randomGeneratingSet
     randomGeneratingSets
+///
+
+doc ///
+ Key
+   IncludeZeroIdeals
+   [randomMonomialIdeals, IncludeZeroIdeals]
+ Headline
+   optional input to choose whether or not zero ideals should be included in the list of ideals
+ Description
+   Text
+     If {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
+     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them. 
+   Example
+     n=2;D=2;p=0.0;N=1;
+     ideals = randomMonomialIdeals(n,D,p,N)
+   Text
+     The 0 listed is the zero ideal: 
+   Example
+     ideals_0
+   Text
+     In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
+   Example
+     randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
+ SeeAlso
+   randomMonomialIdeals
 ///
 
 --******************************************--
@@ -599,6 +705,26 @@ TEST///
    assert(sub(8/3,RR)==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
    assert(3==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_1))
  
+///
+
+--************************--
+--  randomMonomialIdeals  --
+--************************--
+
+TEST ///
+  -- check the number of ideals
+  n=5; D=5; p=.6; N=3;
+  B = flatten randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false);
+  assert (N===(#B-1+last(B))) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
+  C = randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>true);
+  assert (N===#C)
+///
+
+TEST ///
+  -- check the number of monomials in the generating set of the ideal
+  n=4; D=6; M=7; N=1;
+  B = flatten randomMonomialIdeals(n,D,M,N);
+  assert (M>=numgens B_0)
 ///
 
 end
