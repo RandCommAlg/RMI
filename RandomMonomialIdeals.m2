@@ -200,8 +200,8 @@ mingenStats (List) :=   (ideals) -> (
 	complexityHist := append(complexityHist, mi#0) -- (??) THE DEGREE COMPLEXITY TALLY IS WRONG. All other tallys are correct. so why this one?
 	)
     );
-    print "Average # of min gens:" expression(sub((1/N)*num, RR));
-    print "Average degree complexity:" expression(sub(1/N*m, RR));
+    print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
+    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
     (sub((1/(#ideals))*num, RR), sub(1/(#ideals)*m, RR))
 )
 --**********************************--
