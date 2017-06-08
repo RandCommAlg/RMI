@@ -113,7 +113,7 @@ randomGeneratingSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
 
 randomGeneratingSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
+    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
