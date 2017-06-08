@@ -191,7 +191,7 @@ mingenStats (List) :=   (ideals) -> (
     m := 0;
     complexityHist := {};
     apply(#ideals,i->( 
-        mingensi := mingens ideals_i;
+        mingensi := gens gb ideals_i;
         numgensi := numgens source mingensi; 
         mi := max({degrees(mingensi)}#0#1); 
 --        m = m + mi#0;
