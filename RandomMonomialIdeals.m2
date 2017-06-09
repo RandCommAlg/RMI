@@ -263,7 +263,11 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
+     controlling the number of monomials in the generating set of each degree for the graded ER model. ; s
+     Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+     the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+     integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
+     if this number is larger than the maximum possible number of monomials, the method returns all such monomials.
   N: ZZ
     number of sets generated
  Outputs
@@ -359,7 +363,11 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
+     controlling the number of monomials in the generating set of each degree for the graded ER model. ; s
+     Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+     the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+     integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
+     if this number is larger than the maximum possible number of monomials, the method returns all such monomials.
  Outputs
   : List
    random set of monomials
