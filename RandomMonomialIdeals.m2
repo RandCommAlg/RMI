@@ -263,7 +263,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     controlling the number of monomials in the generating set of each degree for the graded ER model. ; s
+     controlling the number of monomials in the generating set of each degree for the graded ER model.
      Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
      the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
      integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
@@ -363,7 +363,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     controlling the number of monomials in the generating set of each degree for the graded ER model. ; s
+     controlling the number of monomials in the generating set of each degree for the graded ER model.
      Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
      the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
      integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
