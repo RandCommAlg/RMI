@@ -260,11 +260,10 @@ doc ///
     maximum degree
   p: RR
      the probability of selecting a monomial, 
-     or @ofClass List@
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
   M: ZZ
      number of monomials in the set, 
-     or @ofClass List@
+  L: List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
      of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
@@ -304,7 +303,7 @@ doc ///
   N: ZZ
     number of ideals generated
  Outputs
-  B: List
+  : List
    list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
  Description
   Text
@@ -331,8 +330,7 @@ doc ///
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   p={0.0, 1.0, 1.0}; 
-   randomMonomialIdeals(2,3,p,1)
+   randomMonomialIdeals(2,3,p,{0.0, 1.0, 1.0})
   Text
    Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
  SeeAlso
@@ -359,14 +357,13 @@ doc ///
     maximum degree
   p: RR
      the probability of selecting a monomial, 
-     or @ofClass List@
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
   M: ZZ
      number of monomials in the set, 
-     or @ofClass List@
+  L: List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
      of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
-  B: List
+  : List
    random set of monomials
  Description
   Text
@@ -399,15 +396,13 @@ doc ///
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   p={0.0, 1.0, 1.0};
-   randomMonomialSet(2,3,p)
+   randomMonomialSet(2,3,{0.0, 1.0, 1.0})
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
   Text
    If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
   Example
-   M={2,1,1};
-   randomMonomialSet(2,3,M)
+   randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  SeeAlso
