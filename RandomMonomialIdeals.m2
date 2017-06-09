@@ -248,7 +248,7 @@ doc ///
   (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
   (randomMonomialSets,ZZ,ZZ,List,ZZ)
  Headline
-  randomly generates lists of monomials, up to a given degree
+  randomly generates lists of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSets(ZZ,ZZ,RR,ZZ)
   randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
@@ -263,11 +263,8 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     controlling the number of monomials in the generating set of each degree for the graded ER model.
-     Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
-     the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
-     integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
-     if this number is larger than the maximum possible number of monomials, the method returns all such monomials.
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
  Outputs
@@ -288,7 +285,7 @@ doc ///
   (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
   (randomMonomialIdeals,ZZ,ZZ,List,ZZ)
  Headline
-  randomly generates monomial ideals, with each monomial up to a given degree
+  randomly generates monomial ideals in fixed number of variables, with each monomial up to a given degree
  Usage
   randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
   randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
@@ -299,8 +296,8 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     or @ofClass List@
-     , probability to select a monomial
+     probability to select a monomial in the ER model, 
+     or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
   M: ZZ
      maximum number of monomials in each generating set for the ideal
   N: ZZ
@@ -348,7 +345,7 @@ doc ///
   (randomMonomialSet,ZZ,ZZ,ZZ)
   (randomMonomialSet,ZZ,ZZ,List)
  Headline
-  randomly generates a list of monomials, up to a given degree
+  randomly generates a list of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSet(ZZ,ZZ,RR)
   randomMonomialSet(ZZ,ZZ,ZZ)
@@ -363,11 +360,8 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     controlling the number of monomials in the generating set of each degree for the graded ER model.
-     Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
-     the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
-     integers whose i-th entry is the number of monomials of each degree to include in the monomial set; 
-     if this number is larger than the maximum possible number of monomials, the method returns all such monomials.
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
   : List
    random set of monomials
@@ -393,12 +387,16 @@ doc ///
   Text
    Note that it returns a set with $M = 4$ monomials.
   Text
-   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
+   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
   Example
    randomMonomialSet(2,2,10)
   Text
-   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from.
-  Text
+   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from. 
+
+   The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
