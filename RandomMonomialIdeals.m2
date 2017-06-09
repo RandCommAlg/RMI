@@ -183,7 +183,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	)
 	else if all(pOrM,q->instance(q,ZZ)) then (
 	B:=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
-	)
+	);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
