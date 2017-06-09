@@ -263,7 +263,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
  Outputs
@@ -359,7 +359,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
   : List
    random set of monomials
