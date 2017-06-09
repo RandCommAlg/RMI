@@ -263,8 +263,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   L: List 
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i
-     of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
  Outputs
@@ -330,7 +329,7 @@ doc ///
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   randomMonomialIdeals(2,3,p,{0.0, 1.0, 1.0})
+   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0},1)
   Text
    Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
  SeeAlso
