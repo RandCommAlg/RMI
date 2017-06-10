@@ -152,10 +152,14 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << tally degHistogram;
     --fileHist << close;
     ret:=();
+    avg:=sub(1/N*(sum degHistogram), RR);
+    Ex2:=sub(sum apply(elements(tally degHistogram), i->i^2), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
     if o.ShowDegreeTally
-    	then(ret=(sub(1/N*(sum degHistogram), RR),tally degHistogram); return ret;);
+    	then(ret=(avg, stdDev,tally degHistogram); return ret;);
     print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
-    ret = toSequence{sub(1/N*(sum degHistogram), RR)}
+    ret = (avg, stdDev)
 )
 
 
@@ -199,10 +203,14 @@ dimStats List := o-> (listOfIdeals) -> (
     )
     );
     ret:= ();
+    avg:=sub(1/N*(sum dimsHistogram), RR);
+    Ex2:=sub(sum apply(elements(tally dimsHistogram), i->i^2), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
     if o.ShowDimensionTally 
-         then(ret = (sub(1/N*(sum dimsHistogram), RR), tally dimsHistogram), return ret;);
+         then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     print "Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR));
-    ret = toSequence{sub(1/N*(sum dimsHistogram), RR)}
+    ret = (avg, stdDev)
 )
 
 
