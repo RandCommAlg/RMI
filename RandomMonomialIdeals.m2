@@ -357,13 +357,13 @@ doc ///
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
  
   
-   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@s, where at most $M_d$ monomials are of degree $d$.
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@, where at most $M_d$ monomials are of degree $d$.
   Example
    randomMonomialIdeal(3,3,{1,1,1})
   Text
    Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  Caveat
-  Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed. So, while all degree-3 monomials are generated, they will not be displayed because all of the degree-2 monomials are generated.
+  Since the method returns a list of @TO MonomialIdeal@, only the minimal generating set will be displayed.
  SeeAlso
    randomMonomialSets
    idealsFromGeneratingSets
