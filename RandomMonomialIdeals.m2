@@ -99,10 +99,12 @@ randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
 
 randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,p,
+    j := apply(N,i-> randomMonomialSet(n,D,p,
 	                            Coefficients=>o.Coefficients,
 				    VariableName=>o.VariableName,
-				    Strategy=>o.Strategy))
+				    Strategy=>o.Strategy));
+   newR := ring(j#0#0);			    
+   j = apply(j,l-> apply(l,m-> sub(m,newR)))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -141,7 +143,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
             currentRing = currentRing/promote(ideal(chosen), currentRing)
         )))
     else
-        B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+        B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1))); 
     B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
@@ -630,8 +632,8 @@ TEST ///
     -- Check multiple samples agree
     n=4; D=3;
     L = randomMonomialSets(n,D,1.0,3);
-    R = ring(L#0#0);
-    L = apply(L,l-> apply(l,m-> sub(m,R)));
+    --R = ring(L#0#0);
+    --L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
     assert (set L#1===set L#2)
