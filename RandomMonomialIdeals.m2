@@ -633,16 +633,31 @@ TEST ///
     -- Check multiple samples agree
     n=4; D=3;
     L = randomMonomialSets(n,D,1.0,3);
-    --R = ring(L#0#0);
-    --L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
---    assert (set L#1===set L#2) --Propose delete: unneccessary as this is already checked implicitly by the combination of the prior two tests.
+    
+///
+
+TEST ///
+    --Check ideals are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSets(n,D,1.0,3);
+    assert(ring(L#0#0)===ring(L#1#0))
+    assert(ring(L#1#1)===ring(L#1#2))
+    assert(ring(L#2#0)===ring(L#1#2))
 ///
 
 --***********************--
 --  randomMonomialSet  --
 --***********************--
+
+TEST ///
+    --Check ideals are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSet(n,D,1.0);
+    assert(ring(L#0)===ring(L#1))
+    assert(ring(L#2)===ring(L#3))
+///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
