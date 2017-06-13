@@ -344,13 +344,27 @@ doc ///
    randomMonomialIdeals(n,D,M,N)
   Text
    Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
-  Text 
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
+  
+   The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0},1)
+   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0})
   Text
-   Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+  Caveat
+   Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed. So, while all degree-3 monomials are generated, they will not be displayed because all of the degree-2 monomials are generated.
+  Text
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@s, where at most $M_d$ monomials are of degree $d$.
+  Example
+   randomMonomialIdeal(3,3,{1,1,1})
+  Text
+   Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+  Caveat
+   As stated previously, only the minimal generating set will be displayed. So it is possible that there will be less monomials listed than specified.
  SeeAlso
    randomMonomialSets
    idealsFromGeneratingSets
