@@ -68,9 +68,7 @@ export {
     "VariableName",
     "IncludeZeroIdeals",
     "dimStats",
-    "ShowDimensionTally",
-    "BaseFileName",
-    "FileNameExt"
+    "ShowDimensionTally"
     }
 
 --***************************************--
@@ -363,7 +361,8 @@ doc ///
   Text
    Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  Caveat
-  Since the method returns a list of @TO MonomialIdeal@, only the minimal generating set will be displayed.
+  Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed. 
+  In contrast, @TO randomMonomialSet@ will display the full (not necessarily minimal) generating set produced by the model.
  SeeAlso
    randomMonomialSets
    idealsFromGeneratingSets
