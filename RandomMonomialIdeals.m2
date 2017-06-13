@@ -352,14 +352,14 @@ doc ///
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0})
+   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0},1)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
  
   
    If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@, where at most $M_d$ monomials are of degree $d$.
   Example
-   randomMonomialIdeals(3,3,{1,1,1})
+   randomMonomialIdeals(3,3,{1,1,1},1)
   Text
    Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  Caveat
