@@ -341,10 +341,10 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   whose first entry is the average degree of a list of monomialIdeals, and second entry (if option turned on) is the degree tally
+   whose first entry is the average degree of a list of monomialIdeals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats finds the average degree of R/I for a list of monomialIdeals.
+   degStats finds the average and the standard deviation of the degree of R/I for a list of monomialIdeals.
    The degree of each ideal is calculated using the @TO degree@ function.
    It has the optional input of ShowDegreeTally.
   Example
@@ -647,10 +647,10 @@ doc ///
   
  Outputs
   : Sequence 
-   whose first entry is the average Krull dimension of a list of monomialIdeals, and second entry (if option turned on) is the Krull dimension tally
+   whose first entry is the average Krull dimension of a list of monomialIdeals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average Krull dimension for a list of monomialIdeals.   
+   dimStats finds the average and standard deviaation of the Krull dimension for a list of monomialIdeals.   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
