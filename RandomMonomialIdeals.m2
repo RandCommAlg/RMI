@@ -68,9 +68,7 @@ export {
     "VariableName",
     "IncludeZeroIdeals",
     "dimStats",
-    "ShowDimensionTally",
-    "BaseFileName",
-    "FileNameExt"
+    "ShowDimensionTally"
     }
 
 --***************************************--
@@ -90,9 +88,9 @@ randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     apply(N,i-> randomMonomialSet(n,D,M,o))
 )
 
-randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
+randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,p,o))
+    apply(N,i-> randomMonomialSet(n,D,pOrM,o))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -105,7 +103,7 @@ randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
 
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
+    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
@@ -113,22 +111,29 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if C==={} then {0_R} else C
 )
 
-randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,p) -> (
+randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
-    if #p != D then error "p expected to be a list of length D";
-    if any(p,q-> q<0.0 or 1.0<q) then error "p expected to be a list of real numbers between 0.0 and 1.0";
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
-    if o.Strategy === "Minimal" then (
-        currentRing := R;
-        apply(D, d->(
-            chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=p_d);
-            B = flatten append(B, chosen/(i->sub(i, R)));
-            currentRing = currentRing/promote(ideal(chosen), currentRing)
-        )))
-    else
-        B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=p_(d-1)));
+    if all(pOrM,q->instance(q,ZZ)) then (
+        if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
+        B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
+	)
+    else if all(pOrM,q->instance(q,RR)) then (
+        if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
+        if o.Strategy === "Minimal" then (
+            currentRing := R;
+            apply(D, d->(
+                chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=pOrM_d);
+                B = flatten append(B, chosen/(i->sub(i, R)));
+                currentRing = currentRing/promote(ideal(chosen), currentRing)
+            )))
+        else
+            B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
+	);
     if B==={} then {0_R} else B
 )
 
@@ -184,8 +189,12 @@ dimStats List := o-> (listOfIdeals) -> (
 
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
- randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomMonomialSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+ randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+        B:={};
+        if all(pOrM,q->instance(q,RR)) then 
+	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal")
+	else if all(pOrM,q->instance(q,ZZ)) then 
+	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
@@ -240,7 +249,7 @@ doc ///
  Key
   RandomMonomialIdeals
  Headline
-  A package for generating Erdos-Renyi-type random monomial ideals
+  A package for generating Erdos-Renyi-type random monomial ideals and variations.
  Description
   Text
    {\em RandomMonomialIdeals} is a  package that... 
@@ -255,7 +264,7 @@ doc ///
   (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
   (randomMonomialSets,ZZ,ZZ,List,ZZ)
  Headline
-  randomly generates lists of monomials, up to a given degree
+  randomly generates lists of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSets(ZZ,ZZ,RR,ZZ)
   randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
@@ -266,10 +275,12 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     or @ofClass List@
-     , probability to select a monomial
+     the probability of selecting a monomial, 
   M: ZZ
-     number of monomials in each generating set
+     number of monomials in the set, 
+  : List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
  Outputs
@@ -278,38 +289,9 @@ doc ///
  Description
   Text
    randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
-   If $p$ is a real number, it generates each of these sets according to the Erdos-Renyi-type model: 
-   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
-  Example
-   n=2; D=3; p=0.2; N=10;
-   randomMonomialSets(n,D,p,N)
-   randomMonomialSets(3,2,0.6,4)
-  Text
-   Note that this model does not generate the monomial $1$: 
-  Example
-   randomMonomialSets(3,2,1.0,1)
-  Text 
-   If $M$ is an integer, then randomMonomialSets creates $N$ random sets of monomials of size $M$:
-   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
-  Example
-   n=10; D=5; M=4; N=3;
-   randomMonomialSets(n,D,M,N)
-  Text
-   Note that each set has $M = 4$ monomials.
-  Text
-   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example: 
-  Example
-   randomMonomialSets(2,2,10,1)
-  Text
-   returns 5 monomials in a generating set, and not 10, since there do not exist 10 to choose from.
-  Text 
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSets generates the sets utilizing the graded Erdos-Renyi-type model:
-   select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
-  Example
-   p={0.0, 1.0, 1.0}; 
-   randomMonomialSets(2,3,p,1)
-  Text
-   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+   It does so by calling @TO randomMonomialSet@ $N$ times.
+ SeeAlso
+  randomMonomialSet
 ///
 
 doc ///
@@ -319,7 +301,7 @@ doc ///
   (randomMonomialIdeals,ZZ,ZZ,ZZ,ZZ)
   (randomMonomialIdeals,ZZ,ZZ,List,ZZ)
  Headline
-  randomly generates monomial ideals, with each monomial up to a given degree
+  randomly generates monomial ideals in fixed number of variables, with each monomial up to a given degree
  Usage
   randomMonomialIdeals(ZZ,ZZ,RR,ZZ)
   randomMonomialIdeals(ZZ,ZZ,ZZ,ZZ)
@@ -330,14 +312,14 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     or @ofClass List@
-     , probability to select a monomial
+     probability to select a monomial in the ER model, 
+     or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
   M: ZZ
      maximum number of monomials in each generating set for the ideal
   N: ZZ
     number of ideals generated
  Outputs
-  B: List
+  : List
    list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
  Description
   Text
@@ -360,14 +342,27 @@ doc ///
    randomMonomialIdeals(n,D,M,N)
   Text
    Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
-  Text 
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialIdeals generates the generating sets utilizing the graded Erdos-Renyi-type model:
+  
+   The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   p={0.0, 1.0, 1.0}; 
-   randomMonomialIdeals(2,3,p,1)
+   randomMonomialIdeals(2,3,{0.0, 1.0, 1.0},1)
   Text
-   Note that the degree-1 monomials were not generated to be in the ideal, since the first probability vector entry is 0.
+   Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+ 
+  
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@, where at most $M_d$ monomials are of degree $d$.
+  Example
+   randomMonomialIdeals(3,3,{1,1,1},1)
+  Text
+   Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+ Caveat
+  Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed. 
+  In contrast, @TO randomMonomialSet@ will display the full (not necessarily minimal) generating set produced by the model.
  SeeAlso
    randomMonomialSets
    idealsFromGeneratingSets
@@ -380,7 +375,7 @@ doc ///
   (randomMonomialSet,ZZ,ZZ,ZZ)
   (randomMonomialSet,ZZ,ZZ,List)
  Headline
-  randomly generates a list of monomials, up to a given degree
+  randomly generates a list of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSet(ZZ,ZZ,RR)
   randomMonomialSet(ZZ,ZZ,ZZ)
@@ -391,17 +386,19 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     or @ofClass List@
-     , probability to select a monomial
+     the probability of selecting a monomial, 
   M: ZZ
-     number of monomials in each generating set
+     number of monomials in the set, 
+  : List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
-  B: List
-   random generating set of monomials
+  : List
+   random set of monomials
  Description
   Text
    randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
-   If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model:
+   If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model, that is, based on a Binomial distribution:
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
    n=2; D=3; p=0.2;
@@ -420,19 +417,30 @@ doc ///
   Text
    Note that it returns a set with $M = 4$ monomials.
   Text
-   If $M$ is bigger than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
+   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
   Example
    randomMonomialSet(2,2,10)
   Text
-   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from.
-  Text
+   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from. 
+
+   The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
-   p={0.0, 1.0, 1.0};
-   randomMonomialSet(2,3,p)
+   randomMonomialSet(2,3,{0.0, 1.0, 1.0})
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
+  Text
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialSet creates a list of monomials, where $M_d$ monomials are of degree $d$.
+  Example
+   randomMonomialSet(2,3,{2,1,1})
+  Text
+   Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+ SeeAlso
+   randomMonomialSets
 ///
 
 
@@ -609,6 +617,9 @@ TEST ///
     N=10;
     n=3; D=2; M=10;
     assert (N==#randomMonomialSets(n,D,M,N))
+    N=7;
+    n=4; D=3; M={3,3,3};
+    assert (N==#randomMonomialSets(n,D,M,N))
 ///
 
 TEST ///
@@ -619,7 +630,7 @@ TEST ///
     L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
-    assert (set L#1===set L#2)
+--    assert (set L#1===set L#2) --Propose delete: unneccessary as this is already checked implicitly by the combination of the prior two tests.
 ///
 
 --***********************--
@@ -628,11 +639,13 @@ TEST ///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
+
     assert (0==(randomMonomialSet(5,5,0.0))#0)
     assert (0==(randomMonomialSet(5,4,toList(4:0.0)))#0)
     assert (0==(randomMonomialSet(5,4,0.0, Strategy=>"Minimal"))#0)
     assert (0==(randomMonomialSet(5,4,toList(4:0.0), Strategy=>"Minimal"))#0)
     assert (0==(randomMonomialSet(5,4,0))#0)
+    assert (0==(randomMonomialSet(5,4,toList(4:0)))#0)
 ///
 
 TEST ///
@@ -665,6 +678,9 @@ TEST ///
     L=randomMonomialSet(3,3,1.0, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0, R_1, R_2})
+    L=randomMonomialSet(2,3,{2,3,4})
+    R=ring(L#0)
+    assert(set L===set {R_0,R_1,R_0^2,R_0*R_1,R_1^2,R_0^3,R_0^2*R_1,R_0*R_1^2,R_1^3})
     L=randomMonomialSet(3,3,{0.0,1.0,1.0}, Strategy=>"Minimal");
     R=ring(L#0);
     assert(set L===set {R_0^2,R_0*R_1,R_1^2,R_0*R_2,R_1*R_2,R_2^2})
@@ -686,6 +702,7 @@ TEST ///
     assert(D==max(apply(randomMonomialSet(n,D,toList(D:1.0)),m->first degree m)))
     M=lift(product(toList((D+1)..(D+n)))/n!-1,ZZ);
     assert(D==max(apply(randomMonomialSet(n,D,M),m->first degree m)))
+    assert(D==max(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
 
 TEST ///
@@ -703,6 +720,7 @@ TEST ///
     n=10; D=5;
     assert(1==min(apply((randomMonomialSet(n,D,1.0, Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
+    assert(1==min(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
 --************************--
 --  dimStats  --
