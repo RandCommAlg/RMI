@@ -186,8 +186,29 @@ dimStats List := o-> (listOfIdeals) -> (
     ret = toSequence{sub(1/N*dims, RR)}
 )
 
+--computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
+-- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
+--avgReg = method()
+--avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
+regStats = method(TypicalValue => Sequence)
+regStats List :=   (ideals) -> (
+    N:=#ideals;
+    reg = 0;
+    regHistogram={};
+    apply(#ideals,i->( 
+        regi = regularity ideals_i;
+        regHistogram = append( regHistogram, regi);
+	)
+    );
+    avg:=sub(1/N*(sum regHistogram, RR);
+    Ex2:=sub(sum apply(elements(tally degHistogram), i->i^2),RR);
+    var:=Ex2-avg^2;
+    stdDev:=var^(1/2);
+    ret:=();
+    ret=(avg,stdDev)
+)
 
- randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
+randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
         B:={};
