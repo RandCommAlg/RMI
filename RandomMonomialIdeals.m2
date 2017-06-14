@@ -68,7 +68,9 @@ export {
     "VariableName",
     "IncludeZeroIdeals",
     "dimStats",
-    "ShowDimensionTally"
+    "ShowDimensionTally",
+    "regStats",
+    "ShowRegularityTally"
     }
 
 --***************************************--
@@ -190,25 +192,34 @@ dimStats List := o-> (listOfIdeals) -> (
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
-regStats = method(TypicalValue => Sequence)
-regStats List :=   (ideals) -> (
+regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
+regStats List := o-> (ideals) -> (
     N:=#ideals;
-    reg = 0;
-    regHistogram={};
+    reg := 0;
+    regHistogram:={};
+    --filename := o.BaseFileName|"regularity"|o.FileNameExt;
+    --fileHist := o.BaseFileName|"regHistogram"|o.FileNameExt;
     apply(#ideals,i->( 
-        regi = regularity ideals_i;
-        regHistogram = append( regHistogram, regi);
+        regi := regularity ideals_i;
+	--filename << regi << endl
+        regHistogram = append(regHistogram, regi)
 	)
     );
-    avg:=sub(1/N*(sum regHistogram, RR);
-    Ex2:=sub(sum apply(elements(tally degHistogram), i->i^2),RR);
-    var:=Ex2-avg^2;
-    stdDev:=var^(1/2);
-    ret:=();
-    ret=(avg,stdDev)
+    --filename << close;
+    --fileHist << values tally regHistogram << endl;
+    --fileHist << tally regHistogram;
+    --fileHist << close;
+    avg := sub(1/N*(sum regHistogram), RR);
+    Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
+    var := Ex2-avg^2;
+    stdDev := var^(1/2);
+    if o.ShowRegularityTally
+    	then(ret=(avg, stdDev,tally regHistogram); return ret;);
+    ret := ();
+    ret = (avg, stdDev)
 )
 
-randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
 			
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
         B:={};
