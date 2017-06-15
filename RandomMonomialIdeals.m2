@@ -472,7 +472,7 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  returns the average number of minimum generators and average degree complexity of list of monomial ideals
+  returns the average number of minimum generators and average degree complexity of list of monomialIdeals
  Usage
   mingenStats(List)
  Inputs
