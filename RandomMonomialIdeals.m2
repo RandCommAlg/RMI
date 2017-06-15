@@ -69,7 +69,7 @@ export {
     "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
-    "ShowDimensionTally",
+    "ShowTally",
     "BaseFileName",
     "FileNameExt"
     }
@@ -164,7 +164,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false})
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     dims:=0;
@@ -176,7 +176,7 @@ dimStats List := o-> (listOfIdeals) -> (
     )
     );
     ret:= ();
-    if o.ShowDimensionTally 
+    if o.ShowTally 
          then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
     print "Average Krull dimension:" expression(sub(1/N*dims, RR));
     ret = toSequence{sub(1/N*dims, RR)}
@@ -198,7 +198,7 @@ dimStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
-mingenStats = method()--typical value Sequence -- see dimStats for example
+mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false}
 mingenStats (List) :=   (ideals) -> (
     num := 0;
     numgensHist := {};
@@ -216,10 +216,10 @@ mingenStats (List) :=   (ideals) -> (
     );
  --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    print tally numgensHist; -- works fine (don't print, but return if option showMingensTally=>true or someting like that)
+    if o.ShowTally then print tally numgensHist; 
 --    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
     print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
-    print tally complexityHist; -- as above
+    if o.ShowTally then print tally complexityHist; 
 --    (sub((1/(#ideals))*num, RR), sub((1/(#ideals))*m, RR))
     (sub((1/(#ideals))*(sum numgensHist), RR), sub((1/(#ideals))*(sum complexityHist), RR))
 )
@@ -476,7 +476,7 @@ doc ///
  Usage
   mingenStats(List)
  Inputs
-  B: List
+  ideals: List
     a list of @TO monomialIdeal@s
  Outputs
   : Sequence
@@ -611,24 +611,26 @@ doc ///
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
   
  SeeAlso
-   ShowDimensionTally
+   ShowTally
 ///
 
 doc ///
  Key
-   ShowDimensionTally
-   [dimStats, ShowDimensionTally]
+   ShowTally
+   [dimStats, ShowTally]
+   [mingenStats, ShowTally]
  Headline
-   optional input to choose if the dimension tally is to be returned 
+   optional input to choose if the tally is to be returned 
  Description
    Text
-     If {\tt ShowDimensionTally => false} (the default value), then only the average krull dimension will be returned. 
-     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the dimension tally will be returned. 
+     If {\tt ShowTally => false} (the default value), then only the average krull dimension will be returned. 
+     If {\tt ShowTally => true}, then both the average krull dimension and the dimension tally will be returned. 
 
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N);
-     dimStats(listOfIdeals) 
+     dimStats(listOfIdeals)
+     mingenStats(listofIdeals)
    Text
      In the example above, only the average Krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
    Text
@@ -638,9 +640,11 @@ doc ///
      L=randomMonomialSet(3,3,1.0);
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-     dimStats(listOfIdeals,ShowDimensionTally=>true)
+     dimStats(listOfIdeals,ShowTally=>true)
+     mingenStats(listofIdeals,ShowTally=>true)
  SeeAlso
    dimStats
+   mingenStats
 ///
 
 
