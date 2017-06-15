@@ -215,9 +215,9 @@ mingenStats (List) :=  o -> (ideals) -> (
 --        m = m + mi#0;
 --        num = num + numgensi;
 	    numgensHist = append(numgensHist, numgensi); 
-	    complexityHist = append(complexityHist, mi#0) 
+	    complexityHist = append(complexityHist, mi#0)
 	    )
-        )
+        );
  --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
     if o.ShowTally then print tally numgensHist; 
