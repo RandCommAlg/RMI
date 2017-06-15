@@ -218,7 +218,6 @@ mingenStats (List) :=  o -> (ideals) -> (
 	    complexityHist = append(complexityHist, mi#0) 
 	    )
         )
-    );
  --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
     if o.ShowTally then print tally numgensHist; 
@@ -228,6 +227,7 @@ mingenStats (List) :=  o -> (ideals) -> (
 --    (sub((1/(#ideals))*num, RR), sub((1/(#ideals))*m, RR))
     if o.ShowTally then (sub((1/(#ideals))*(sum numgensHist), RR), tally numgensHist, sub((1/(#ideals))*(sum complexityHist), RR), tally complexityHist)
     else (sub((1/(#ideals))*(sum numgensHist), RR), sub((1/(#ideals))*(sum complexityHist), RR))
+    )
 )
 -- example to run this^^ right now: 
 -- L=randomMonomialIdeals(3,4,0.5,2)
@@ -489,10 +489,15 @@ doc ///
     the average number of minimum generators and the average degree complexity
  Description
   Text
-   mingenStats calculates the average number of minimum generators of a list of nonzero monomials, as well as the average degree complexity of that list.
+   mingenStats removes zero ideals from the list of ideals, then calculates the average number of minimum generators of a list of nonzero ideals, as well as the average degree complexity of that list.
   Example
    n=4; D=3; p={0.0,1.0,0.0}; N=3;
    B=randomMonomialIdeals(n,D,p,N);
+   mingenStats(B)
+  Text
+   If the list given is a list of zero ideals, mingenStats returns that the list is all zero ideals.
+  Example
+   B=randomMonomialIdeals(3,3,0.0,1);
    mingenStats(B)
  Caveat
   mingenStats removes zero ideals from the list of ideals before computing the two values.
