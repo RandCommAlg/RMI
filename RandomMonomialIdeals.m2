@@ -70,12 +70,78 @@ export {
     "dimStats",
     "ShowDimensionTally",
     "BaseFileName",
-    "FileNameExt"
+    "FileNameExt",
+    -- Sample
+    "sample",
+    "Model", "Parameters", "SampleSize", "getData",
+    "writeSample",
+    "statistics",
+    "Average"
     }
+
+
+needsPackage "Serialization"
 
 --***************************************--
 --  Exported methods 	     	     	 --
 --***************************************--
+
+-- Write sample
+
+Sample = new Type of MutableHashTable
+
+Data = local Data
+
+sample = method(TypicalValue => Sample)
+sample (ZZ,ZZ,RR,ZZ) := (n,D,p,N) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    s := new Sample from {Model=>"ER",
+	                  Parameters=>{n,D,p},
+		          SampleSize=>N};
+    s.Data = randomMonomialSets(n,D,toList(D:p),N);
+    s
+)
+
+sample String := filename -> (
+    if not isDirectory filename then error "expected a directory";
+    modelFile := realpath filename | "Model.txt";
+    model := lines read openIn modelFile; -- catch errors
+    s := new Sample from {Model=>model#0,
+	                  Parameters=>value model#1,
+			  SampleSize=>value model#2};
+    dataFile := realpath filename | "Data.txt";
+    s.Data = value read openIn dataFile;
+    s
+)
+
+getData = method()
+getData Sample := s -> (s.Data)
+
+writeSample = method()
+writeSample (Sample, String) := (s, filename) -> (
+    if fileExists filename then ( -- Should we warn?
+        if not isDirectory filename then (
+	    removeFile filename;
+	    mkdir filename;
+	);
+    ) else (
+        mkdir filename;
+    );
+    realpath filename | "Model.txt" <<
+	s.Model << endl <<
+	s.Parameters << endl <<
+	s.SampleSize << close;
+    realpath filename | "Data.txt" << serialize s.Data << close;
+)
+
+
+--File << Sample := (file, s) -> () Can't check if File is directory or not
+
+statistics = method(TypicalValue => HashTable)
+statistics (Sample, Function) := (s,f) -> (
+    return {Average =>(sum apply(s.Data,f))/s.SampleSize}
+)
+
 
 randomMonomialSets = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                        VariableName => "x",
