@@ -656,8 +656,8 @@ doc ///
    --another one
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
-  SeeAlso
-   ShowRegularityTally
+ SeeAlso
+  ShowRegularityTally
  ///
  
  doc ///
@@ -678,7 +678,7 @@ doc ///
    Example
     --another example
   SeeAlso
-   degStats
+   regStats
 ///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
