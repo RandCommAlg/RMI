@@ -222,8 +222,10 @@ mingenStats (List) :=  o -> (ideals) -> (
     print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
     if o.ShowTally then print tally complexityHist; 
 --    (sub((1/(#ideals))*num, RR), sub((1/(#ideals))*m, RR))
-    if o.ShowTally then (sub((1/(#ideals))*(sum numgensHist), RR), tally numgensHist, sub((1/(#ideals))*(sum complexityHist), RR), complexityHist)
-    else (sub((1/#ideals))*(sum numgensHist), RR(, sub((1/#ideals))*(sum complexityHist, RR)
+    if o.ShowTally then 
+    	ret =(sub((1/(#ideals))*(sum numgensHist), RR), tally numgensHist, sub((1/(#ideals))*(sum complexityHist), RR), complexityHist)
+    else ret =(sub((1/#ideals))*(sum numgensHist), RR(, sub((1/#ideals))*(sum complexityHist, RR));
+    return ret
 )
 -- example to run this^^ right now: 
 -- L=randomMonomialIdeals(3,4,0.5,2)
