@@ -71,8 +71,7 @@ export {
     "dimStats",
     "ShowTally",
     "BaseFileName",
-    "FileNameExt",
-    "extractNonzeroIdeals"
+    "FileNameExt"
     }
 
 --***************************************--
@@ -249,7 +248,6 @@ toSymbol = (p) -> (
     -- input list of ideals 
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
 -- (not exported, therefore no need to document) 
-extractNonzeroIdeals = method();
 extractNonzeroIdeals = ( ideals ) -> (
     nonzeroIdeals := select(ideals,i->i != 0);
     numberOfZeroIdeals := # ideals - # nonzeroIdeals;
