@@ -160,7 +160,7 @@ degStats List :=  o-> (listOfIdeals) -> (
     --fileHist << close;
     ret:=();
     avg:=sub(1/N*(sum degHistogram), RR);
-    Ex2:=sub(sum apply(elements(tally degHistogram), i->i^2), RR);
+    Ex2:=sub(1/N*(sum apply(elements(tally degHistogram), i->i^2)), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
     if o.ShowDegreeTally
@@ -211,7 +211,7 @@ dimStats List := o-> (listOfIdeals) -> (
     );
     ret:= ();
     avg:=sub(1/N*(sum dimsHistogram), RR);
-    Ex2:=sub(sum apply(elements(tally dimsHistogram), i->i^2), RR);
+    Ex2:=sub(1/N*(sum apply(elements(tally dimsHistogram), i->i^2)), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
     if o.ShowDimensionTally 
@@ -835,20 +835,25 @@ TEST///
    R=ring(L#0);
    --Check that average is correctly calculated
    listOfIdeals={monomialIdeal(R_0^3,R_1^4*R_2^2),monomialIdeal(R_0^2),monomialIdeal(R_0^3*R_2^4,R_1^2),monomialIdeal(R_0*R_1^3,R_2^6)};
-   assert(14.5==(degStats(listOfIdeals))_0) 
+   assert(14.5==(degStats(listOfIdeals))_0)
+   assert((275-210.25)^(1/2)==(degStats(listOfIdeals))_1) 
    -- Check that average works when one ideal is the zero ideal
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0^2)};
    assert(1.5==(degStats(listOfIdeals))_0)
+   assert(0.5==(degStats(listOfIdeals))_1)
    --Check average is correct for set monomials
    listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
    assert(3.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
-   assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_1))
+   assert(2.5==(degStats(listOfIdeals,ShowDegreeTally=>true))_1)
+   assert(2==sum(values(degStats(listOfIdeals, ShowDegreeTally=>true))_2))
    listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
    assert(1.5==(degStats(listOfIdeals, ShowDegreeTally=>true))_0)
-   assert(2==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_1))
+    assert(0.5==(degStats(listOfIdeals, ShowDegreeTally=>true))_1)
+   assert(2==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_2))
    listOfIdeals={monomialIdeal(R_0),monomialIdeal(R_0^2*R_2),monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
    assert(sub(8/3,RR)==(degStats(listOfIdeals,ShowDegreeTally=>true))_0)
-   assert(3==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_1))
+   assert((sub(14/9,RR))^(1/2)==(degStats(listOfIdeals,ShowDegreeTally=>true))_1)
+   assert(3==sum(values(degStats(listOfIdeals,ShowDegreeTally=>true))_2))
  
 ///
 
@@ -859,23 +864,29 @@ TEST ///
     --check for p = 0 the average krull dimension is n
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
     assert(3==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
     assert(7==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     --check for p = 1 the average krull dimension is 0
      listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
     assert(0==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     --check for set monomials
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
-    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_1)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
     listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
     assert(2.5== (dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
-    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_1)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
     listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
     assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
-    assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    assert((3-(sub(5/3,RR))^2)^(1/2)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_1)
+    assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
 ///
 
 --************************--
