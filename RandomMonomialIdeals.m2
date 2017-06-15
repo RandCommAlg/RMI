@@ -76,7 +76,7 @@ export {
     "Model", "Parameters", "SampleSize", "getData",
     "writeSample",
     "statistics",
-    "Average"
+    "WriteWithName", "Average", "StdDev", "Histogram"
     }
 
 
@@ -137,9 +137,15 @@ writeSample (Sample, String) := (s, filename) -> (
 
 --File << Sample := (file, s) -> () Can't check if File is directory or not
 
-statistics = method(TypicalValue => HashTable)
-statistics (Sample, Function) := (s,f) -> (
-    return {Average =>(sum apply(s.Data,f))/s.SampleSize}
+statistics = method(TypicalValue => HashTable, Options => {WriteWithName=>""})
+statistics (Sample, Function) := HashTable => o -> (s,f) -> (
+    fData := apply(s.Data,f);
+    avg := (sum fData)/s.SampleSize;
+    ret := {Average=>avg,
+	    StdDev=>sqrt sum apply(fData, x-> (avg-x)^2),
+	    Histogram=>tally fData};
+    if #o.WriteWithName != 0 then s#(toSymbol o.WriteWithName) = ret;
+    ret
 )
 
 
