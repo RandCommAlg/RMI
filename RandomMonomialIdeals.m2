@@ -209,13 +209,13 @@ regStats List := o-> (listOfIdeals) -> (
     --fileHist << values tally regHistogram << endl;
     --fileHist << tally regHistogram;
     --fileHist << close;
+    ret := ();
     avg := sub(1/N*(sum regHistogram), RR);
     Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
     var := Ex2-avg^2;
     stdDev := var^(1/2);
     if o.ShowRegularityTally
     	then(ret=(avg, stdDev,tally regHistogram); return ret;);
-    ret := ();
     ret = (avg, stdDev)
 )
 
@@ -646,13 +646,13 @@ doc ///
  Description
   Text
    --description text
-  Example
+  --Example
    --put a few examples here
   Text
    --explain example
-  Example
+  --Example
    --another one
-  Example
+  --Example
    --another one
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
@@ -665,17 +665,17 @@ doc ///
    ShowRegularityTally
    [regStats, ShowRegularityTally]
   Headline
-   --optional input to choose if regularity tally is to be returned
+   optional input to choose if regularity tally is to be returned
   Description
    Text
     --Show optional values of ShowRegularityTally
-   Example
+   --Example
     --Give example of ShowRegularityTally being used
    Text
     --explain example default value
    Text
     --explain example other value
-   Example
+   --Example
     --another example
   SeeAlso
    regStats
