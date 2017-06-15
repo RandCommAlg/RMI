@@ -199,7 +199,7 @@ dimStats List := o-> (listOfIdeals) -> (
 )
 
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-mingenStats (List) :=   (ideals) -> (
+mingenStats (List) :=  o -> (ideals) -> (
     num := 0;
     numgensHist := {};
     m := 0;
