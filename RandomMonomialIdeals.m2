@@ -193,14 +193,14 @@ dimStats List := o-> (listOfIdeals) -> (
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
-regStats List := o-> (ideals) -> (
-    N:=#ideals;
+regStats List := o-> (listOfIdeals) -> (
+    N:=#listOfIdeals;
     reg := 0;
     regHistogram:={};
     --filename := o.BaseFileName|"regularity"|o.FileNameExt;
     --fileHist := o.BaseFileName|"regHistogram"|o.FileNameExt;
-    apply(#ideals,i->( 
-        regi := regularity ideals_i;
+    apply(#listOfIdeals,i->( 
+        regi := regularity listOfIdeals_i;
 	--filename << regi << endl
         regHistogram = append(regHistogram, regi)
 	)
@@ -629,7 +629,57 @@ doc ///
    dimStats
 ///
 
-
+doc ///
+ Key
+  regStats
+  (regStats, List)
+ Headline
+  returns statistics on the regularities of a list of monomialIdeals
+ Usage
+  regStats(List)
+ Inputs
+  listOfIdeals: List
+   of @TO monomialIdeal@s
+ Outputs
+  : Sequence
+   whose first entry is the average regularity of a list of monomialIdeals, and second entry is the standard deviation of the regularities
+ Description
+  Text
+   --description text
+  Example
+   --put a few examples here
+  Text
+   --explain example
+  Example
+   --another one
+  Example
+   --another one
+  Text
+   Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
+  SeeAlso
+   ShowRegularityTally
+ ///
+ 
+ doc ///
+  Key
+   ShowRegularityTally
+   [regStats, ShowRegularityTally]
+  Headline
+   --optional input to choose if regularity tally is to be returned
+  Description
+   Text
+    --Show optional values of ShowRegularityTally
+   Example
+    --Give example of ShowRegularityTally being used
+   Text
+    --explain example default value
+   Text
+    --explain example other value
+   Example
+    --another example
+  SeeAlso
+   degStats
+///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
