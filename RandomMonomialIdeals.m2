@@ -696,7 +696,11 @@ doc ///
      L=randomMonomialSet(3,3,1.0);
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-     dimStats(listOfIdeals,ShowDimensionTally=>true)
+     (dimAvg, dimStDev, dimTally)=dimStats(listOfIdeals,ShowDimensionTally=>true);
+     dimAvg
+     dimStDev
+     dimTally
+     
  SeeAlso
    dimStats
 ///
