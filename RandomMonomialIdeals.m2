@@ -886,11 +886,11 @@ TEST ///
     assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
     assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_1)
     assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
-    listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
+    listOfIdeals = {monomialIdeal (0_R), monomialIdeal (R_2^2)};
     assert(2.5== (dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
     assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_1)
     assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
-    listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
+    listOfIdeals = {monomialIdeal (R_0), monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
     assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
     assert((3-(sub(5/3,RR))^2)^(1/2)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_1)
     assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_2))
