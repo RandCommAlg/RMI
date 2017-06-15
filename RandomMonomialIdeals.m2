@@ -641,7 +641,7 @@ doc ///
      R=ring(L#0);
      listOfIdeals = {monomialIdeal({R_0^3,R_1,R_2^2}), monomialIdeal({R_0^3, R_1, R_0*R_2})};
      dimStats(listOfIdeals,ShowTally=>true)
-     mingenStats(listofIdeals,ShowTally=>true)
+     mingenStats(listOfIdeals,ShowTally=>true)
  SeeAlso
    dimStats
    mingenStats
