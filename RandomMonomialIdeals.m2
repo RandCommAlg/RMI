@@ -198,7 +198,7 @@ dimStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
-mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false}
+mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=   (ideals) -> (
     num := 0;
     numgensHist := {};
