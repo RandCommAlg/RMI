@@ -200,7 +200,7 @@ dimStats List := o-> (listOfIdeals) -> (
 
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
-    ideals = extractNonzeroIdeals(ideals)_0;
+    ideals = extractNonzeroIdeals(ideals);
     num := 0;
     numgensHist := {};
     m := 0;
