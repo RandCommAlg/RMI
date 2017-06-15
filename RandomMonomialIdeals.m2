@@ -475,10 +475,10 @@ doc ///
   returns the average number of minimum generators and average degree complexity of list of monomial ideals
  Usage
   mingenStats(List)
- Inputs:
+ Inputs
   B: List
     a list of @TO monomialIdeal@s
- Outputs:
+ Outputs
   : Sequence
     the average number of minimum generators and the average degree complexity
  Description
