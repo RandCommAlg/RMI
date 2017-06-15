@@ -202,20 +202,22 @@ mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
-    if set {} === set ideals then error "All ideals were the zero ideal";
-    num := 0;
-    numgensHist := {};
-    m := 0;
-    complexityHist := {};
-    apply(#ideals,i->( 
-        mingensi := gens gb ideals_i;
-        numgensi := numgens source mingensi; 
-        mi := max({degrees(mingensi)}#0#1); 
+    if set {} === set ideals then print "All ideals were the zero ideal"
+    else (
+        num := 0;
+        numgensHist := {};
+        m := 0;
+        complexityHist := {};
+        apply(#ideals,i->( 
+            mingensi := gens gb ideals_i;
+            numgensi := numgens source mingensi; 
+            mi := max({degrees(mingensi)}#0#1); 
 --        m = m + mi#0;
 --        num = num + numgensi;
-	numgensHist = append(numgensHist, numgensi); 
-	complexityHist = append(complexityHist, mi#0) 
-	)
+	    numgensHist = append(numgensHist, numgensi); 
+	    complexityHist = append(complexityHist, mi#0) 
+	    )
+        )
     );
  --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
