@@ -66,7 +66,7 @@ export {
     "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
-    "mingenStats"
+    "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
     "ShowDimensionTally",
@@ -467,6 +467,28 @@ doc ///
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
 ///
 
+doc ///
+ Key
+  mingenStats
+  (mingenStats, List)
+ Headline
+  returns the average number of minimum generators and average degree complexity of list of monomial ideals
+ Usage
+  mingenStats(List)
+ Inputs:
+  B: List
+    a list of @TO monomialIdeal@s
+ Outputs:
+  : Sequence
+    the average number of minimum generators and the average degree complexity
+ Description
+  Text
+   mingenStats calculates the average number of minimum generators of a list of monomials, as well as the average degree complexity of that list.
+  Example
+   n=4; D=3; p={0.0,1.0,0.0}; N=3;
+   B=randomMonomialIdeals(n,D,p,N);
+   mingenStats(B)
+///
 
 doc ///
   Key
