@@ -93,7 +93,6 @@ randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
    j :=apply(N,i-> randomMonomialSet(n,D,pOrM,o));
    newR := ring(j#0#0);			    
    j = apply(j,l-> apply(l,m-> sub(m,newR)))
-
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -121,9 +120,6 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     B := {};
-
-   
-
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
         B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
