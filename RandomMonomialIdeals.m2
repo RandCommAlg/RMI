@@ -202,7 +202,7 @@ mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
-    if set {} === set ideals then print "All ideals were the zero ideal"
+    if set {} === set ideals then print "All ideals given are the zero ideal."
     else (
         num := 0;
         numgensHist := {};
