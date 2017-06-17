@@ -240,6 +240,37 @@ dimStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
+-------------------------------------------------------------------------------------
+---------------------------------Cohen-Macaulayness----------------------------------
+-------------------------------------------------------------------------------------
+
+--checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
+CMStats = method(TypicalValue => RR)
+CMStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+    cm := 0;
+    R := ring(ideals#0);
+    for i from 0 to #ideals-1 do ();
+       -- if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
+     --what is isCM i cannot find i dont think it exists yet
+     print "Percent Cohen-Macaulay:" expression(sub((cm+Z)/N, RR));
+   sub((cm+Z)/N, RR)
+)
+-------------------------------------------------------------------------------------
+---------------------------------Borel-Fixedness-------------------------------------
+-------------------------------------------------------------------------------------
+
+--checks whether each RMI is Borel-fixed, 
+--prints and returns % of Borel-fixed RMIs in sample (real number) 
+borelFixedStats = method()
+borelFixedStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+    bor := 0;
+    for i from 0 to #ideals-1 do ( 
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
+    print "Percent Borel-fixed:" expression(sub((bor+Z)/N, RR));
+    sub((bor+Z)/N, RR)
+)
+
+
 --**********************************--
 --  Internal methods	    	    --
 --**********************************--
