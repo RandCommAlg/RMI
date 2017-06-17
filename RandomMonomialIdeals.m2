@@ -1,6 +1,7 @@
 --**************************--
 -- -*- coding: utf-8 -*-
 newPackage(
+    	needsPackage "Depth";
 	"RandomMonomialIdeals",
     	Version => "1.0", 
     	Date => "May 5, 2017",
@@ -72,7 +73,8 @@ export {
     "ShowDimensionTally",
     "IncludeZeroIdeals",
     "CMStats",
-    "borelFixedStats"
+    "borelFixedStats",
+    "isCM"
 }
 
 --***************************************--
@@ -248,7 +250,6 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
-needsPackage "Depth";
 CMStats (List,ZZ,ZZ) :=  (listOfIdeals,N,Z) -> (
     cm := 0;
     R := ring(listOfIdeals#0);
