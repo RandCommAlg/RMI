@@ -56,7 +56,7 @@ newPackage(
 	},
     	Headline => "A package for generating Erdos-Renyi-type random monomial ideals",
     	DebuggingMode => false,
-	Reload => true 
+	Reload => true
     	)
 
 export {
@@ -248,12 +248,12 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
+needsPackage "Depth";
 CMStats (List,ZZ,ZZ) :=  (listOfIdeals,N,Z) -> (
     cm := 0;
     R := ring(listOfIdeals#0);
-    for i from 0 to #listOfIdeals-1 do ();
-       -- if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
-     --what is isCM i cannot find i dont think it exists yet
+    for i from 0 to #listOfIdeals-1 do (
+       if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
      print "Percent Cohen-Macaulay:" expression(sub((cm+Z)/N, RR));
    sub((cm+Z)/N, RR)
 )
