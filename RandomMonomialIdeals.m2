@@ -70,7 +70,9 @@ export {
     "degStats",
     "ShowDegreeTally",
     "ShowDimensionTally",
-    "IncludeZeroIdeals"
+    "IncludeZeroIdeals",
+    "CMStats",
+    "borelFixedStats"
 }
 
 --***************************************--
@@ -246,10 +248,10 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
-CMStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+CMStats (List,ZZ,ZZ) :=  (listOfIdeals,N,Z) -> (
     cm := 0;
-    R := ring(ideals#0);
-    for i from 0 to #ideals-1 do ();
+    R := ring(listOfIdeals#0);
+    for i from 0 to #listOfIdeals-1 do ();
        -- if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
      --what is isCM i cannot find i dont think it exists yet
      print "Percent Cohen-Macaulay:" expression(sub((cm+Z)/N, RR));
@@ -264,6 +266,7 @@ CMStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
 borelFixedStats = method()
 borelFixedStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     bor := 0;
+    --is N #ideals? and what is Z
     for i from 0 to #ideals-1 do ( 
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
     print "Percent Borel-fixed:" expression(sub((bor+Z)/N, RR));
@@ -735,7 +738,62 @@ doc ///
  SeeAlso
    dimStats
 ///
-
+doc ///
+ Key
+  CMStats
+  (CMStats,List,ZZ,ZZ)
+ Headline
+  returns the percent of Cohen-Macaulay ideals in the list of monomialIdeals as a real number 
+ Usage
+  CMStats(List,ZZ)
+ 
+ Inputs
+  listOfIdeals: List
+    a list of @TO monomialIdeal@s
+  Z: ZZ
+   an integer ***** i dont know what its for
+  N: ZZ
+   an integer  ***** i dont know what its for
+ Outputs
+  : RR
+   a real number percentage of Cohen-Macaulay ideals in the list of monomialIdeals
+ Description
+  Text
+   CMStats takes a list of monomialIdeals and two integers and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    CMStats(listOfIdeals,3,2)
+///
+doc ///
+ Key
+  borelFixedStats
+  (borelFixedStats ,List,ZZ,ZZ)
+ Headline
+  returns the percent of Borel-fixed monomialIdeals in the list of monomialIdeals as a real number 
+ Usage
+  borelFixedStats(List,ZZ,ZZ)
+ 
+ Inputs
+  listOfIdeals: List
+    a list of @TO monomialIdeal@s
+  Z: ZZ
+   an integer ***** i dont know what its for
+  N: ZZ
+   an integer  ***** i dont know what its for
+ Outputs
+  : RR
+   a real number percentage of Borel-fixed monomialIdeals in the list of monomialIdeals
+ Description
+  Text
+   borelFixedStats takes a list of monomialIdeals and two integers and returns the percentage of Borel-fixed ideals out of the inputted list of monomialIdeals   
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    borelFixedStats(listOfIdeals,3,2)
+///
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
