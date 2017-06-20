@@ -83,16 +83,32 @@ randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     randomMonomialSets(n,D,toList(D:p),N,o)
 )
 
+randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSets(R,D,toList(D:p),N,o)
+)
+
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     apply(N,i-> randomMonomialSet(n,D,M,o))
 )
 
-randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-   j :=apply(N,i-> randomMonomialSet(n,D,pOrM,o));
-   newR := ring(j#0#0);			    
-   j = apply(j,l-> apply(l,m-> sub(m,newR)))
+    apply(N,i-> randomMonomialSet(R,D,M,o))
+)
+
+randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    x := toSymbol o.VariableName;
+    R := o.Coefficients[x_1..x_n];
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
+)
+
+randomMonomialSets (PolynomialRing,ZZ,List,ZZ) := List => o -> (R,D,pOrM,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -103,11 +119,21 @@ randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     randomMonomialSet(n,D,toList(D:p),o)
 )
 
+randomMonomialSet (PolynomialRing,ZZ,RR) := List => o -> (R,D,p) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSet(R,D,toList(D:p),o)
+)
+
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
-    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
+    if n<1 then error "n expected to be a positive integer";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,M)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,ZZ) := List => o -> (R,D,M) -> (
+    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
+    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     C := take(random(allMonomials), M);
     if C==={} then {0_R} else C
@@ -115,15 +141,19 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 
 randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
-    if #pOrM != D then error "pOrM expected to be a list of length D";
-    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,pOrM,o)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
         B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
-	)
+    )
     else if all(pOrM,q->instance(q,RR)) then (
         if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
@@ -139,7 +169,6 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
-
 
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
