@@ -664,7 +664,7 @@ TEST ///
 ///
 
 TEST ///
-    --Check ideals are in the same ring
+    --Check monomials are in the same ring
     n = 4; D = 3;
     L = randomMonomialSets(n,D,1.0,3);
     assert(ring(L#0#0)===ring(L#1#0))
@@ -677,7 +677,7 @@ TEST ///
 --***********************--
 
 TEST ///
-    --Check ideals are in the same ring
+    --Check monomials are in the same ring
     n = 4; D = 3;
     L = randomMonomialSet(n,D,1.0);
     assert(ring(L#0)===ring(L#1))
