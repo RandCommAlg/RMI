@@ -389,7 +389,7 @@ doc ///
   degStats
   (degStats,List)
  Headline
-  returns statistics on the degrees of a list of monomialIdeals
+  statistics on the degrees of a list of monomialIdeals
  Usage
   degStats(List)
  Inputs
@@ -578,27 +578,30 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  returns the average number of minimum generators, the average degree complexity of a list of nonzero monomialIdeals, and the respective standard deviations
+  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
  Usage
   mingenStats(List)
  Inputs
   ideals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
  Outputs
   : Sequence
-    the average number of minimum generators, the standard deviation of the minimium generators, the average degree complexity, and the stadard deviation of the degree complexity.
+    with the following entries: the average number of minimal generators, the standard deviation of the number of minimial generators, the average degree complexity, and the stadard deviation of the degree complexity. 
+    If ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation. 
  Description
   Text
-   mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for the number of minimum generators and degree complexity of the list of nonzero ideals.
+   mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for the number of minimal generators and degree complexity of the list of nonzero ideals.
   Example
    n=4; D=3; p={0.0,1.0,0.0}; N=3;
    B=randomMonomialIdeals(n,D,p,N);
    mingenStats(B)
   Text
-   If the list given is a list of zero ideals, mingenStats returns that the list is all zero ideals.
+   If the list given is a list of all zero ideals, mingenStats returns -infinity for the mean number of minimal generators and mean degree complexity.
   Example
    B=randomMonomialIdeals(3,3,0.0,1);
    mingenStats(B)
+  Text
+   Note that this function can be called on a list of @TO Ideal@ objects instead.
  Caveat
   mingenStats removes zero ideals from the list of ideals before computing the two values.
 ///
@@ -693,13 +696,13 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  returns statistics on the Krull dimension of a list of monomialIdeals 
+  statistics on the Krull dimension of a list of monomialIdeals 
  Usage
   dimStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
   
  Outputs
   : Sequence 
