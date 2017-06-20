@@ -85,14 +85,32 @@ randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     randomMonomialSets(n,D,toList(D:p),N,o)
 )
 
+randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSets(R,D,toList(D:p),N,o)
+)
+
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     apply(N,i-> randomMonomialSet(n,D,M,o))
 )
 
-randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,pOrM,o))
+    apply(N,i-> randomMonomialSet(R,D,M,o))
+)
+
+randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    x := toSymbol o.VariableName;
+    R := o.Coefficients[x_1..x_n];
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
+)
+
+randomMonomialSets (PolynomialRing,ZZ,List,ZZ) := List => o -> (R,D,pOrM,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -103,11 +121,21 @@ randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     randomMonomialSet(n,D,toList(D:p),o)
 )
 
+randomMonomialSet (PolynomialRing,ZZ,RR) := List => o -> (R,D,p) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSet(R,D,toList(D:p),o)
+)
+
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
-    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
+    if n<1 then error "n expected to be a positive integer";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,M)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,ZZ) := List => o -> (R,D,M) -> (
+    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
+    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     C := take(random(allMonomials), M);
     if C==={} then {0_R} else C
@@ -115,15 +143,19 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 
 randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
-    if #pOrM != D then error "pOrM expected to be a list of length D";
-    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,pOrM,o)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
         B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
-	)
+    )
     else if all(pOrM,q->instance(q,RR)) then (
         if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
@@ -136,6 +168,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
 	);
+    B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
 
@@ -168,7 +201,6 @@ degStats List :=  o-> (listOfIdeals) -> (
     print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
     ret = (avg, stdDev)
 )
-
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
@@ -295,17 +327,25 @@ doc ///
  Key
   randomMonomialSets
   (randomMonomialSets,ZZ,ZZ,RR,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,RR,ZZ)
   (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,ZZ,ZZ)
   (randomMonomialSets,ZZ,ZZ,List,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSets(ZZ,ZZ,RR,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,RR,ZZ)
   randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,ZZ,ZZ)
   randomMonomialSets(ZZ,ZZ,List,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -477,17 +517,25 @@ doc ///
  Key
   randomMonomialSet
   (randomMonomialSet,ZZ,ZZ,RR)
+  (randomMonomialSet,PolynomialRing,ZZ,RR)
   (randomMonomialSet,ZZ,ZZ,ZZ)
+  (randomMonomialSet,PolynomialRing,ZZ,ZZ)
   (randomMonomialSet,ZZ,ZZ,List)
+  (randomMonomialSet,PolynomialRing,ZZ,List)
  Headline
   randomly generates a list of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSet(ZZ,ZZ,RR)
+  randomMonomialSet(PolynomialRing,ZZ,RR)
   randomMonomialSet(ZZ,ZZ,ZZ)
+  randomMonomialSet(PolynomialRing,ZZ,ZZ)
   randomMonomialSet(ZZ,ZZ,List)
+  randomMonomialSet(PolynomialRing,ZZ,List)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -544,6 +592,12 @@ doc ///
    randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+   
+   Sometimes we are already working in a specific ring and would like the random sets of monomials to live in the same ring:
+  Example
+   D=3;p=.5; R=ZZ/101[a,b,c];
+   randomMonomialSet(R,D,p)
+   ring oo_0
  SeeAlso
    randomMonomialSets
 ///
@@ -734,16 +788,31 @@ TEST ///
     -- Check multiple samples agree
     n=4; D=3;
     L = randomMonomialSets(n,D,1.0,3);
-    R = ring(L#0#0);
-    L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
---    assert (set L#1===set L#2) --Propose delete: unneccessary as this is already checked implicitly by the combination of the prior two tests.
+    
+///
+
+TEST ///
+    --Check monomials are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSets(n,D,1.0,3);
+    assert(ring(L#0#0)===ring(L#1#0))
+    assert(ring(L#1#1)===ring(L#1#2))
+    assert(ring(L#2#0)===ring(L#1#2))
 ///
 
 --***********************--
 --  randomMonomialSet  --
 --***********************--
+
+TEST ///
+    --Check monomials are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSet(n,D,1.0);
+    assert(ring(L#0)===ring(L#1))
+    assert(ring(L#2)===ring(L#3))
+///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
