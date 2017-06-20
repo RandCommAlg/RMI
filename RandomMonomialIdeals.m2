@@ -250,6 +250,7 @@ mingenStats (List) :=  o -> (ideals) -> (
     numgensHist := {};
     m := 0;
     complexityHist := {};
+    ret:=();
     if set {} === set ideals then (
         numgensHist = #ideals:-infinity;
 	complexityHist = #ideals:-infinity;
@@ -271,7 +272,6 @@ mingenStats (List) :=  o -> (ideals) -> (
 	    complexityHist = append(complexityHist, mi#0)
 	    )
         );
-    ret:=();
     numAvg:=sub((1/(#ideals))*(sum numgensHist), RR);
     comAvg:=sub((1/(#ideals))*(sum complexityHist), RR);
     numEx2:=sub((1/(#ideals))*(sum apply(elements(tally numgensHist), i->i^2)), RR);
