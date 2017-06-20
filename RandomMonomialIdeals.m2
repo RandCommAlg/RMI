@@ -485,7 +485,7 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  returns the average number of minimum generators and average degree complexity of list of nonzero monomialIdeals
+  returns the average number of minimum generators, the average degree complexity of a list of nonzero monomialIdeals, and the respective standard deviations
  Usage
   mingenStats(List)
  Inputs
@@ -493,10 +493,10 @@ doc ///
     a list of @TO monomialIdeal@s
  Outputs
   : Sequence
-    the average number of minimum generators and the average degree complexity
+    the average number of minimum generators, the standard deviation of the minimium generators, the average degree complexity, and the stadard deviation of the degree complexity.
  Description
   Text
-   mingenStats removes zero ideals from the list of ideals, then calculates the average number of minimum generators of a list of nonzero ideals, as well as the average degree complexity of that list.
+   mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for the number of minimum generators and degree complexity of the list of nonzero ideals.
   Example
    n=4; D=3; p={0.0,1.0,0.0}; N=3;
    B=randomMonomialIdeals(n,D,p,N);
@@ -836,10 +836,12 @@ TEST ///
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
   assert (sub(n,RR)===C_0)
+  assert (sub(0,RR)===C_1)
   p={0.0,1.0,0.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
   assert (sub(10,RR)===E_0)
+  assert (sub(0,RR)===E_1)
 ///
 
 TEST ///
@@ -847,11 +849,26 @@ TEST ///
   n=3; D=5; p=1.0; N=5;
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
-  assert(sub(1,RR)===C_1)
+  assert(sub(1,RR)===C_2)
+  assert(sub(0,RR)===C_3)
   p={0.0,0.0,0.0,0.0,1.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
-  assert(sub(5,RR)===E_1)
+  assert(sub(5,RR)===E_2)
+  assert(sub(0,RR)===E_3)
+///
+
+TEST ///
+  L=randomMonomialSet(3,3,1.0);
+  R=ring(L#0);
+  listOfIdeals={monomialIdeal(R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+  A = mingenStats(listOfIdeals, ShowTally=>true);
+  assert(2.5===A_0)
+  assert(0.5===A_1)
+  assert(2==sum(values(A_2)))
+  assert(2.5===A_3)
+  assert(0.5===A_4)
+  assert(2==sum(values(A_5)))
 ///
 
 end
