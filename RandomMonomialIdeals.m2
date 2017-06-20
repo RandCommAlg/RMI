@@ -218,15 +218,22 @@ mingenStats (List) :=  o -> (ideals) -> (
 	    complexityHist = append(complexityHist, mi#0)
 	    )
         );
- --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
+    ret:=();
+    numAvg:=sub((1/(#ideals))*(sum numgensHist), RR);
+    comAvg:=sub((1/(#ideals))*(sum complexityHist), RR);
+    numEx2:=sub((1/(#ideals))*(sum apply(elements(tally numgensHist), i->i^2)), RR);
+    comEx2:=sub((1/(#ideals))*(sum apply(elements(tally complexityHist), i->i^2)), RR);
+    numVar:= numEx2 - numAvg^2;
+    comVar:= comEx2 - comAvg^2;
+    numStdDev:= numVar^(1/2);
+    comStdDev:= comVar^(1/2);
+    if o.ShowTally 
+       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
+    --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    if o.ShowTally then print tally numgensHist; 
---    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
+    --    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
     print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
-    if o.ShowTally then print tally complexityHist; 
---    (sub((1/(#ideals))*num, RR), sub((1/(#ideals))*m, RR))
-    if o.ShowTally then (sub((1/(#ideals))*(sum numgensHist), RR), tally numgensHist, sub((1/(#ideals))*(sum complexityHist), RR), tally complexityHist)
-    else (sub((1/(#ideals))*(sum numgensHist), RR), sub((1/(#ideals))*(sum complexityHist), RR))
+    ret = (numAvg, numStdDev, comAvg, comStdDev)
     )
 )
 -- example to run this^^ right now: 
