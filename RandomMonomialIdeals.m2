@@ -627,7 +627,7 @@ doc ///
   regStats
   (regStats, List)
  Headline
-  returns statistics on the regularities of a list of monomialIdeals
+  statistics on the regularities of a list of monomialIdeals
  Usage
   regStats(List)
  Inputs
@@ -635,7 +635,7 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   whose first entry is the average regularity of a list of monomialIdeals, and second entry is the standard deviation of the regularities
+   whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if the option is turned on) the tally of regularities.
  Description
   Text
    --description text
@@ -648,7 +648,7 @@ doc ///
   --Example
    --another one
   Text
-   Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
+   Note that this function can be run with a list of any objects to which @TO regularity@ can be applied.
  SeeAlso
   ShowRegularityTally
  ///
@@ -661,6 +661,7 @@ doc ///
    optional input to choose if regularity tally is to be returned
   Description
    Text
+    will be subsumed within "ShowTally" doc node, with just a couple of extra lines. 
     --Show optional values of ShowRegularityTally
    --Example
     --Give example of ShowRegularityTally being used
