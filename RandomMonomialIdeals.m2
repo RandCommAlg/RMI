@@ -246,12 +246,20 @@ mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
-    if set {} === set ideals then print "All ideals given are the zero ideal."
+    num := 0;
+    numgensHist := {};
+    m := 0;
+    complexityHist := {};
+    if set {} === set ideals then (
+        numgensHist = #ideals:-infinity;
+	complexityHist = #ideals:-infinity;
+	numStdDev := 0;
+	comStdDev := 0;
+	if o.ShowTally then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+	print "Average # of min gens:" expression(-infinity);
+	print "Average degree complexity:" expression(-infinity);
+    )
     else (
-        num := 0;
-        numgensHist := {};
-        m := 0;
-        complexityHist := {};
         apply(#ideals,i->( 
             mingensi := gens gb ideals_i;
             numgensi := numgens source mingensi; 
@@ -269,8 +277,8 @@ mingenStats (List) :=  o -> (ideals) -> (
     comEx2:=sub((1/(#ideals))*(sum apply(elements(tally complexityHist), i->i^2)), RR);
     numVar:= numEx2 - numAvg^2;
     comVar:= comEx2 - comAvg^2;
-    numStdDev:= numVar^(1/2);
-    comStdDev:= comVar^(1/2);
+    numStdDev= numVar^(1/2);
+    comStdDev= comVar^(1/2);
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
     --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
