@@ -73,10 +73,13 @@ export {
     "FileNameExt",
     -- Sample
     "sample",
-    "Model", "Parameters", "SampleSize", "getData",
+    "Parameters", "SampleSize", "getData",
     "writeSample",
+    "Model",
+    "Generate",
+    "GradedER",
     "statistics",
-    "WriteWithName", "Average", "StdDev", "Histogram"
+    "WriteWithName", "Mean", "StdDev", "Histogram", "Statistics"
     }
 
 
@@ -89,17 +92,26 @@ needsPackage "Serialization"
 -- Write sample
 
 Sample = new Type of MutableHashTable
+Model = new Type of HashTable
 
 Data = local Data
 
-sample = method(TypicalValue => Sample)
-sample (ZZ,ZZ,RR,ZZ) := (n,D,p,N) -> (
+GradedER = method(TypicalValue => Model)
+GradedER (ZZ,ZZ,RR) := (n,D,p) -> (
+    -- Error checks
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    s := new Sample from {Model=>"ER",
-	                  Parameters=>{n,D,p},
-		          SampleSize=>N};
-    s.Data = randomMonomialSets(n,D,toList(D:p),N);
-    s
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    new Model from {Name => "GradedER",
+	            Parameters=>(n,D,p),
+		    Generate=>()->randomMonomialSet(R,D,p)}
+)
+
+sample = method(TypicalValue => Sample)
+sample (Model, ZZ) := (M,N) -> (
+    new Sample from {Model=>M,
+		     SampleSize=>N,
+		     Data=>apply(N,i->M.Generate())}
 )
 
 sample String := filename -> (
@@ -134,15 +146,15 @@ writeSample (Sample, String) := (s, filename) -> (
     realpath filename | "Data.txt" << serialize s.Data << close;
 )
 
-
 --File << Sample := (file, s) -> () Can't check if File is directory or not
 
-statistics = method(TypicalValue => HashTable, Options => {WriteWithName=>""})
+statistics = method(TypicalValue => HashTable, Options => {Statistics=>{Mean,StdDev,Histogram},
+	                                                               WriteWithName=>""})
 statistics (Sample, Function) := HashTable => o -> (s,f) -> (
     fData := apply(s.Data,f);
-    avg := (sum fData)/s.SampleSize;
-    ret := {Average=>avg,
-	    StdDev=>sqrt sum apply(fData, x-> (avg-x)^2),
+    mean := (sum fData)/s.SampleSize;
+    ret := {Mean=>mean,
+	    StdDev=>sqrt sum apply(fData, x-> (mean-x)^2),
 	    Histogram=>tally fData};
     if #o.WriteWithName != 0 then s#(toSymbol o.WriteWithName) = ret;
     ret
