@@ -293,17 +293,25 @@ doc ///
  Key
   randomMonomialSets
   (randomMonomialSets,ZZ,ZZ,RR,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,RR,ZZ)
   (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,ZZ,ZZ)
   (randomMonomialSets,ZZ,ZZ,List,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSets(ZZ,ZZ,RR,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,RR,ZZ)
   randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,ZZ,ZZ)
   randomMonomialSets(ZZ,ZZ,List,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -404,17 +412,25 @@ doc ///
  Key
   randomMonomialSet
   (randomMonomialSet,ZZ,ZZ,RR)
+  (randomMonomialSet,PolynomialRing,ZZ,RR)
   (randomMonomialSet,ZZ,ZZ,ZZ)
+  (randomMonomialSet,PolynomialRing,ZZ,ZZ)
   (randomMonomialSet,ZZ,ZZ,List)
+  (randomMonomialSet,PolynomialRing,ZZ,List)
  Headline
   randomly generates a list of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSet(ZZ,ZZ,RR)
+  randomMonomialSet(PolynomialRing,ZZ,RR)
   randomMonomialSet(ZZ,ZZ,ZZ)
+  randomMonomialSet(PolynomialRing,ZZ,ZZ)
   randomMonomialSet(ZZ,ZZ,List)
+  randomMonomialSet(PolynomialRing,ZZ,List)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -471,6 +487,12 @@ doc ///
    randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+   
+   Sometimes we are already working in a specific ring and would like the random sets of monomials to live in the same ring:
+  Example
+   D=3;p=.5; R=ZZ/101[a,b,c];
+   randomMonomialSet(R,D,p)
+   ring oo_0
  SeeAlso
    randomMonomialSets
 ///
