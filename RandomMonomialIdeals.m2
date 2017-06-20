@@ -828,11 +828,11 @@ TEST ///
   n=4; D=3; p=1.0; N=3;
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
-  assert (n===C_0)
+  assert (sub(n,RR)===C_0)
   p={0.0,1.0,0.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
-  assert (10===E_0)
+  assert (sub(10,RR)===E_0)
 ///
 
 TEST ///
@@ -840,11 +840,11 @@ TEST ///
   n=3; D=5; p=1.0; N=5;
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
-  assert(1===C_1)
+  assert(sub(1,RR)===C_1)
   p={0.0,0.0,0.0,0.0,1.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
-  assert(5===E_1)
+  assert(sub(5,RR)===E_1)
 ///
 
 end
