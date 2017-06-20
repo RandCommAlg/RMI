@@ -1,7 +1,6 @@
 --**************************--
 -- -*- coding: utf-8 -*-
 newPackage(
-    	needsPackage "Depth";
 	"RandomMonomialIdeals",
     	Version => "1.0", 
     	Date => "May 5, 2017",
@@ -59,6 +58,7 @@ newPackage(
     	DebuggingMode => false,
 	Reload => true
     	)
+needsPackage "Depth";
 
 export {
     "randomMonomialSets",
@@ -250,7 +250,6 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
-needsPackage "Depth";
 CMStats (List) :=  (listOfIdeals) -> (
     cm := 0;
     N:= #listOfIdeals;
