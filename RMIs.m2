@@ -149,25 +149,20 @@ bettiStats =    (ideals,N,Z,basefilename,fileNameExt) -> (
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method()
-regStats (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
+regStats (List) :=   (ideals) -> (
+    N:=#ideals;
     reg = 0;
     regHistogram={};
-    filename = basefilename|"regularity"|fileNameExt;
-    fileHist = basefilename|"regularityHistogram"|fileNameExt;
     apply(#ideals,i->( 
         regi = regularity ideals_i;
-        reg = reg + regi;
         regHistogram = append( regHistogram, regi);
-        filename << regi << endl
 	)
     );
-    filename << close;
-    fileHist << values tally regHistogram << endl; 
-    fileHist << tally regHistogram;
-    fileHist<<close; 
-    print "Average regularity (of non-0 ideals):" expression(sub((1/#ideals)*reg, RR));
-    sub((1/#ideals)*reg, RR)
+    print "Average regularity (of non-0 ideals):" expression(sub((1/#ideals)*(sum regHistogram), RR));
+    sub((1/#ideals)**(sum regHistogram), RR)
     )
+
+-- some old comments, not sure if needed: 
 {*
 -- HEY HOW ABOUT MORE THAN JUST AVERAGES? 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
@@ -264,7 +259,37 @@ borelFixedStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
     sub((bor+Z)/N, RR) -- this is the returned value.
     )
 
-
+--computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
+--prints and returns avg. degree (real number)
+avgDeg = method()
+avgDeg List :=  ideals -> (
+    deg = 0;
+    apply(#ideals,i-> ( 
+        degi = degree ideals_i;
+        deg = deg + degi;
+	)
+    );
+    sub(1/#ideals*deg, RR)
+    )
+avgDeg (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
+    deg = 0;
+    degHist={};
+    filename = concatenate(basefilename,"degree",fileNameExt);
+    fileHist = concatenate(basefilename,"degreeHistogram",fileNameExt);
+    apply(#ideals,i-> ( 
+        degi = degree ideals_i;
+        filename << degi << endl;
+        deg = deg + degi;
+	degHist = append(degHist, degi)
+	)
+    );
+    filename << close;
+    fileHist << values tally degHist << endl; 
+    fileHist << tally degHist;
+    fileHist<<close; 
+    print "Average degree:" expression(sub(1/N*deg, RR));
+    sub(1/N*deg, RR)
+    )
 
 -------------------------------------------------------------------------------------
 ------------------------------Projective Dimension-----------------------------------
