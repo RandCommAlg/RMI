@@ -253,8 +253,8 @@ mingenStats (List) :=  o -> (ideals) -> (
     complexityHist := {};
     ret:=();
     if set {} === set ideals then (
-        numgensHist = #ideals:-infinity;
-	complexityHist = #ideals:-infinity;
+        numgensHist = N:-infinity;
+	complexityHist = N:-infinity;
 	numStdDev := 0;
 	comStdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
