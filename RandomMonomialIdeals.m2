@@ -244,6 +244,7 @@ dimStats List := o-> (listOfIdeals) -> (
 
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
+    N:=#ideals;
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
     num := 0;
