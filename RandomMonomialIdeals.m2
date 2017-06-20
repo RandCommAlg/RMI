@@ -745,7 +745,7 @@ doc ///
   CMStats
   (CMStats,List)
  Headline
-  returns the percent of Cohen-Macaulay monomialIdeals in the list of monomialIdeals as a real number 
+  returns the percentage of Cohen-Macaulay monomialIdeals in the list of monomialIdeals as a real number 
  Usage
   CMStats(List)
  
