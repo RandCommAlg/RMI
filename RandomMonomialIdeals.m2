@@ -70,7 +70,7 @@ export {
     "dimStats",
     "ShowDimensionTally",
     "regStats",
-    "ShowRegularityTally"
+    "ShowTally"
     }
 
 --***************************************--
@@ -192,7 +192,7 @@ dimStats List := o-> (listOfIdeals) -> (
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
-regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
+regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     reg := 0;
@@ -214,7 +214,7 @@ regStats List := o-> (listOfIdeals) -> (
     Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
     var := Ex2-avg^2;
     stdDev := var^(1/2);
-    if o.ShowRegularityTally
+    if o.ShowTally
     	then(ret=(avg, stdDev,tally regHistogram); return ret;);
     ret = (avg, stdDev)
 )
@@ -642,44 +642,30 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   whose first entry is the average regularity of a list of monomialIdeals, and second entry is the standard deviation of the regularities
+   whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
  Description
   Text
-   --description text
-  --Example
-   --put a few examples here
+   regStats find the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
+   The regularity of each ideal is calculated using the @TO regularity@ function.
+   It has the optional input of ShowTally.
+  Example
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
+   regStats(listOfIdeals)
   Text
-   --explain example
-  --Example
-   --another one
-  --Example
-   --another one
+   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals:
+  Example
+   listOfIdeals = idealsFromGeneratingSets(4,3,1.0,3));
+   regStats(listOfIdeals)
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
   Text
-   Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
+   Note that this function can be run with a list of any objects to which @TO regularity@ can be applied.
  SeeAlso
-  ShowRegularityTally
+  ShowTally
  ///
  
- doc ///
-  Key
-   ShowRegularityTally
-   [regStats, ShowRegularityTally]
-  Headline
-   optional input to choose if regularity tally is to be returned
-  Description
-   Text
-    --Show optional values of ShowRegularityTally
-   --Example
-    --Give example of ShowRegularityTally being used
-   Text
-    --explain example default value
-   Text
-    --explain example other value
-   --Example
-    --another example
-  SeeAlso
-   regStats
-///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
@@ -847,6 +833,12 @@ TEST ///
   n=4; D=6; M=7; N=1;
   B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
+///
+--************--
+--  regStats  --
+--************--
+TEST ///
+  assert(true);
 ///
 end
 
