@@ -745,16 +745,16 @@ doc ///
   CMStats
   (CMStats,List)
  Headline
-  returns the percentage of Cohen-Macaulay monomialIdeals in the list of monomialIdeals as a real number 
+  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
  Outputs
   : RR
-   the percentage of Cohen-Macaulay ideals in the list of monomialIdeals
+   the percentage of Cohen-Macaulay ideals in the list
  Description
   Text
    CMStats takes a list of monomialIdeals and returns the percentage of Cohen-Macaulay ideals in the list of monomialIdeals   
@@ -763,22 +763,24 @@ doc ///
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     CMStats(listOfIdeals)
+  Text
+    Note that the method can be run on a list of @TO Ideal@s, too.
 ///
 doc ///
  Key
   borelFixedStats
   (borelFixedStats ,List)
  Headline
-  returns the percentage of Borel-fixed monomialIdeals in the list of monomialIdeals as a real number 
+  percentage of Borel-fixed monomialIdeals in the given list
  Usage
   borelFixedStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
  Outputs
   : RR
-   the percentage of Borel-fixed monomialIdeals in the list of monomialIdeals
+   the percentage of Borel-fixed monomialIdeals in the list
  Description
   Text
    borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals   
