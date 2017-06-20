@@ -190,25 +190,18 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
---avgReg = method()
---avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
+-- Hey Tanner, Dan has streamlined all of the Tallies -- check out branch TASK21 -- you can just write "ShowTally" and document it within that already existing node. 
+-- In fact I wonder if this is already in the master? :) 
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     reg := 0;
     regHistogram:={};
-    --filename := o.BaseFileName|"regularity"|o.FileNameExt;
-    --fileHist := o.BaseFileName|"regHistogram"|o.FileNameExt;
     apply(#listOfIdeals,i->( 
         regi := regularity listOfIdeals_i;
-	--filename << regi << endl
         regHistogram = append(regHistogram, regi)
 	)
     );
-    --filename << close;
-    --fileHist << values tally regHistogram << endl;
-    --fileHist << tally regHistogram;
-    --fileHist << close;
     ret := ();
     avg := sub(1/N*(sum regHistogram), RR);
     Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
