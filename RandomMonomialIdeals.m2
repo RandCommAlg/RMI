@@ -255,9 +255,10 @@ mingenStats (List) :=  o -> (ideals) -> (
 	complexityHist = #ideals:-infinity;
 	numStdDev := 0;
 	comStdDev := 0;
-	if o.ShowTally then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
 	print "Average # of min gens:" expression(-infinity);
 	print "Average degree complexity:" expression(-infinity);
+	ret = (-infinity, 0, -infinity, 0)
     )
     else (
         apply(#ideals,i->( 
