@@ -1002,6 +1002,14 @@ TEST ///
 
 TEST ///
 --for CMStats
+ L=randomMonomialSet(3,3,1.0); R=ring(L#0);
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(0_R)};
+ assert(1==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+ assert(.5==CMStats(listOfIdeals))
+ 
+ 
+
 ///
 TEST ///
 --for borrel fixed stats
