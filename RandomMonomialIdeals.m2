@@ -818,6 +818,35 @@ TEST ///
   B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
 ///
+
+--***************--
+--  mingenStats  --
+--***************--
+
+TEST ///
+  -- check average number of minimum generators
+  n=4; D=3; p=1.0; N=3;
+  B = randomMonomialIdeals(n,D,p,N);
+  C = mingenStats(B);
+  assert (n===C_0)
+  p={0.0,1.0,0.0};
+  D = randomMonomialIdeals(n,D,p,N);
+  E = mingenStats(D);
+  assert (10===E_0)
+///
+
+TEST ///
+  -- check average degree complexity
+  n=3; D=5; p=1.0; N=5;
+  B = randomMonomialIdeals(n,D,p,N);
+  C = mingenStats(B);
+  assert(1===C_1)
+  p={0.0,0.0,0.0,0.0,1.0};
+  D = randomMonomialIdeals(n,D,p,N);
+  E = mingenStats(D);
+  assert(5===E_1)
+///
+
 end
 
 You can write anything you want down here.  I like to keep examples
