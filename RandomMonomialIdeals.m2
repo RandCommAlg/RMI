@@ -73,8 +73,8 @@ export {
     "ShowDimensionTally",
     "IncludeZeroIdeals",
     "CMStats",
-    "borelFixedStats",
-    "isCM"
+    "borelFixedStats"
+    
 }
 
 --***************************************--
@@ -250,13 +250,15 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
-CMStats (List,ZZ,ZZ) :=  (listOfIdeals,N,Z) -> (
+needsPackage "Depth";
+CMStats (List) :=  (listOfIdeals) -> (
     cm := 0;
+    N:= #listOfIdeals;
     R := ring(listOfIdeals#0);
     for i from 0 to #listOfIdeals-1 do (
        if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
-     print "Percent Cohen-Macaulay:" expression(sub((cm+Z)/N, RR));
-   sub((cm+Z)/N, RR)
+     print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
+   sub((cm)/N, RR)
 )
 -------------------------------------------------------------------------------------
 ---------------------------------Borel-Fixedness-------------------------------------
@@ -265,13 +267,13 @@ CMStats (List,ZZ,ZZ) :=  (listOfIdeals,N,Z) -> (
 --checks whether each RMI is Borel-fixed, 
 --prints and returns % of Borel-fixed RMIs in sample (real number) 
 borelFixedStats = method()
-borelFixedStats (List,ZZ,ZZ) :=  (ideals,N,Z) -> (
+borelFixedStats (List) :=  (ideals) -> (
     bor := 0;
-    --is N #ideals? and what is Z
+    N:=#ideals;
     for i from 0 to #ideals-1 do ( 
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
-    print "Percent Borel-fixed:" expression(sub((bor+Z)/N, RR));
-    sub((bor+Z)/N, RR)
+    print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
+    sub((bor)/N, RR)
 )
 
 
@@ -742,58 +744,50 @@ doc ///
 doc ///
  Key
   CMStats
-  (CMStats,List,ZZ,ZZ)
+  (CMStats,List)
  Headline
   returns the percent of Cohen-Macaulay ideals in the list of monomialIdeals as a real number 
  Usage
-  CMStats(List,ZZ)
+  CMStats(List)
  
  Inputs
   listOfIdeals: List
     a list of @TO monomialIdeal@s
-  Z: ZZ
-   an integer ***** i dont know what its for
-  N: ZZ
-   an integer  ***** i dont know what its for
  Outputs
   : RR
    a real number percentage of Cohen-Macaulay ideals in the list of monomialIdeals
  Description
   Text
-   CMStats takes a list of monomialIdeals and two integers and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
+   CMStats takes a list of monomialIdeals and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    CMStats(listOfIdeals,3,2)
+    CMStats(listOfIdeals)
 ///
 doc ///
  Key
   borelFixedStats
-  (borelFixedStats ,List,ZZ,ZZ)
+  (borelFixedStats ,List)
  Headline
   returns the percent of Borel-fixed monomialIdeals in the list of monomialIdeals as a real number 
  Usage
-  borelFixedStats(List,ZZ,ZZ)
+  borelFixedStats(List)
  
  Inputs
   listOfIdeals: List
     a list of @TO monomialIdeal@s
-  Z: ZZ
-   an integer ***** i dont know what its for
-  N: ZZ
-   an integer  ***** i dont know what its for
  Outputs
   : RR
    a real number percentage of Borel-fixed monomialIdeals in the list of monomialIdeals
  Description
   Text
-   borelFixedStats takes a list of monomialIdeals and two integers and returns the percentage of Borel-fixed ideals out of the inputted list of monomialIdeals   
+   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals out of the inputted list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    borelFixedStats(listOfIdeals,3,2)
+    borelFixedStats(listOfIdeals)
 ///
 
 --******************************************--
@@ -1006,6 +1000,12 @@ TEST ///
   assert (M>=numgens B_0)
 ///
 
+TEST ///
+--for CMStats
+///
+TEST ///
+--for borrel fixed stats
+///
 end
 
 You can write anything you want down here.  I like to keep examples
