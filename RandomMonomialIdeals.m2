@@ -749,8 +749,7 @@ doc ///
    the percentage of Cohen-Macaulay ideals in the list
  Description
   Text
-    --check if each R/ideal is a CM ideal...
-   CMStats takes a list of monomialIdeals and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
+   CMStats checks each monomialIdeal and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
@@ -776,7 +775,7 @@ doc ///
    the percentage of Borel-fixed monomialIdeals in the list
  Description
   Text
-   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals   
+   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
