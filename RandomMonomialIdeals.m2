@@ -174,25 +174,16 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
---computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
---prints and returns avg. degree (real number)
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     deg := 0;
     degHistogram:={};
-    --filename := o.BaseFileName|"degree"|o.FileNameExt;
-    --fileHist := o.BaseFileName|"degreeHistogram"|o.FileNameExt;
     apply(#listOfIdeals, i->( 
         degi := degree listOfIdeals_i;
-	--filename << degi << endl
         degHistogram = append(degHistogram, degi)
 	)
     );
-    --filename << close;
-    --fileHist << values tally degHistogram << endl;
-    --fileHist << tally degHistogram;
-    --fileHist << close;
     ret:=();
     avg:=sub(1/N*(sum degHistogram), RR);
     Ex2:=sub(1/N*(sum apply(elements(tally degHistogram), i->i^2)), RR);
@@ -206,33 +197,19 @@ degStats List :=  o-> (listOfIdeals) -> (
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
--- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
--- see branch @25 for this fix. 
 idealsFromGeneratingSets(List):= o -> (B) -> (
---idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
-	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
-	-- i.e., do (p,D,baseFileName) as input. 
-	-- maybe the filename should be optional and make it "temp" for default. 
     N := # B;
     n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
-    -- see branch @25 for the file writing: 
-    --    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
-    --    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
     ideals := {};
     for i from 0 to #B-1 do {
 	ideals = B / (b-> monomialIdeal b);
-	--	filename << toString B#i << endl; 
 	};
-    --    filename<<close;
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     print(concatenate("There are ", toString(#B)," ideals in this sample."));
     print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
---computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
---prints and returns the avg. Krull dim (real number) 
---also saves the histogram of dimensions
 dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
@@ -299,8 +276,6 @@ mingenStats (List) :=  o -> (ideals) -> (
             mingensi := gens gb ideals_i;
             numgensi := numgens source mingensi; 
             mi := max({degrees(mingensi)}#0#1); 
---        m = m + mi#0;
---        num = num + numgensi;
 	    numgensHist = append(numgensHist, numgensi); 
 	    complexityHist = append(complexityHist, mi#0)
 	    )
@@ -315,9 +290,7 @@ mingenStats (List) :=  o -> (ideals) -> (
     comStdDev= comVar^(1/2);
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
-    --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    --    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
     print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
     ret = (numAvg, numStdDev, comAvg, comStdDev)
     )
