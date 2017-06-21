@@ -1,7 +1,6 @@
 --**************************--
 -- -*- coding: utf-8 -*-
 newPackage(
-    	needsPackage "Depth";
 	"RandomMonomialIdeals",
     	Version => "1.0", 
     	Date => "May 5, 2017",
@@ -59,6 +58,7 @@ newPackage(
     	DebuggingMode => false,
 	Reload => true
     	)
+needsPackage "Depth";
 
 export {
     "randomMonomialSets",
@@ -250,7 +250,6 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
-needsPackage "Depth";
 CMStats (List) :=  (listOfIdeals) -> (
     cm := 0;
     N:= #listOfIdeals;
@@ -746,44 +745,46 @@ doc ///
   CMStats
   (CMStats,List)
  Headline
-  returns the percent of Cohen-Macaulay ideals in the list of monomialIdeals as a real number 
+  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
  Outputs
   : RR
-   a real number percentage of Cohen-Macaulay ideals in the list of monomialIdeals
+   the percentage of Cohen-Macaulay ideals in the list
  Description
   Text
-   --check if each R/ideal is a CM ideal...
+    --check if each R/ideal is a CM ideal...
    CMStats takes a list of monomialIdeals and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     CMStats(listOfIdeals)
+  Text
+    Note that the method can be run on a list of @TO Ideal@s, too.
 ///
 doc ///
  Key
   borelFixedStats
   (borelFixedStats ,List)
  Headline
-  returns the percent of Borel-fixed monomialIdeals in the list of monomialIdeals as a real number 
+  percentage of Borel-fixed monomialIdeals in the given list
  Usage
   borelFixedStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
  Outputs
   : RR
-   a real number percentage of Borel-fixed monomialIdeals in the list of monomialIdeals
+   the percentage of Borel-fixed monomialIdeals in the list
  Description
   Text
-   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals out of the inputted list of monomialIdeals   
+   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
