@@ -190,25 +190,24 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
+<<<<<<< HEAD
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+=======
+regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
+-- Hey Tanner, Dan has streamlined all of the Tallies -- check out branch TASK21 -- you can just write "ShowTally" and document it within that already existing node. 
+-- In fact I wonder if this is already in the master? :) 
+>>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     reg := 0;
     regHistogram:={};
-    --filename := o.BaseFileName|"regularity"|o.FileNameExt;
-    --fileHist := o.BaseFileName|"regHistogram"|o.FileNameExt;
     apply(#listOfIdeals,i->( 
         regi := regularity listOfIdeals_i;
-	--filename << regi << endl
         regHistogram = append(regHistogram, regi)
 	)
     );
-    --filename << close;
-    --fileHist << values tally regHistogram << endl;
-    --fileHist << tally regHistogram;
-    --fileHist << close;
     ret := ();
     avg := sub(1/N*(sum regHistogram), RR);
     Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
@@ -634,7 +633,7 @@ doc ///
   regStats
   (regStats, List)
  Headline
-  returns statistics on the regularities of a list of monomialIdeals
+  statistics on the regularities of a list of monomialIdeals
  Usage
   regStats(List)
  Inputs
@@ -642,7 +641,11 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
+<<<<<<< HEAD
    whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
+=======
+   whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if the option is turned on) the tally of regularities.
+>>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
  Description
   Text
    regStats find the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
@@ -666,6 +669,30 @@ doc ///
   ShowTally
  ///
  
+<<<<<<< HEAD
+=======
+ doc ///
+  Key
+   ShowRegularityTally
+   [regStats, ShowRegularityTally]
+  Headline
+   optional input to choose if regularity tally is to be returned
+  Description
+   Text
+    will be subsumed within "ShowTally" doc node, with just a couple of extra lines. 
+    --Show optional values of ShowRegularityTally
+   --Example
+    --Give example of ShowRegularityTally being used
+   Text
+    --explain example default value
+   Text
+    --explain example other value
+   --Example
+    --another example
+  SeeAlso
+   regStats
+///
+>>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
