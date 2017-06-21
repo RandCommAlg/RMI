@@ -1005,8 +1005,10 @@ TEST ///
 TEST ///
 --for CMStats
  L=randomMonomialSet(5,1,1.0); R=ring(L#0);
- listOfIdeals = {monomialIdeal(0_R), monomialIdeal(0_R)};
+ listOfIdeals = {monomialIdeal(0_R)};
  assert(1==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(R_0*R_1, R_2*R_0)};
+ assert(0==CMStats(listOfIdeals))
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
  assert(.5==CMStats(listOfIdeals))
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
@@ -1018,6 +1020,13 @@ TEST ///
 ///
 TEST ///
 --for borrel fixed stats
+L=randomMonomialSet(5,1,1.0); R=ring(L#0);
+listOfIdeals = {monomialIdeal(0_R)};
+assert(1==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0*R_1)};
+assert(0==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
+assert(.5==borelFixedStats(listOfIdeals))
 ///
 end
 
