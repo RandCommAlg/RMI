@@ -758,6 +758,7 @@ doc ///
    a real number percentage of Cohen-Macaulay ideals in the list of monomialIdeals
  Description
   Text
+   --check if each R/ideal is a CM ideal...
    CMStats takes a list of monomialIdeals and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
   Example
     L=randomMonomialSet(3,3,1.0);
@@ -1002,11 +1003,14 @@ TEST ///
 
 TEST ///
 --for CMStats
- L=randomMonomialSet(3,3,1.0); R=ring(L#0);
+ L=randomMonomialSet(5,1,1.0); R=ring(L#0);
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(0_R)};
  assert(1==CMStats(listOfIdeals))
- listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
  assert(.5==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+ assert(sub(2/3,RR)==CMStats(listOfIdeals))
+
  
  
 
