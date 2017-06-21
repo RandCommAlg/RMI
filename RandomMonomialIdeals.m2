@@ -69,18 +69,12 @@ export {
     "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
-<<<<<<< HEAD
-    "ShowDimensionTally",
     "regStats",
-    "ShowTally"
-    }
-=======
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
     "degStats"
 }
->>>>>>> refs/remotes/origin/master
 
 --***************************************--
 --  Exported methods 	     	     	 --
@@ -822,6 +816,7 @@ doc ///
    [dimStats, ShowTally]
    [mingenStats, ShowTally]
    [degStats, ShowTally]
+   [regStats, ShowTally]
  Headline
    optional input to choose if the tally is to be returned 
  Description
@@ -851,6 +846,7 @@ doc ///
    dimStats
    mingenStats
    degStats
+   regStats
 ///
 
 doc ///
@@ -1114,14 +1110,13 @@ TEST ///
   B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
 ///
-<<<<<<< HEAD
+
 --************--
 --  regStats  --
 --************--
 TEST ///
   assert(true);
 ///
-=======
 
 --***************--
 --  mingenStats  --
@@ -1168,7 +1163,6 @@ TEST ///
   assert(2==sum(values(A_5)))
 ///
 
->>>>>>> refs/remotes/origin/master
 end
 
 You can write anything you want down here.  I like to keep examples
