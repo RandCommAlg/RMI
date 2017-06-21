@@ -244,10 +244,6 @@ dimStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
--------------------------------------------------------------------------------------
----------------------------------Cohen-Macaulayness----------------------------------
--------------------------------------------------------------------------------------
-
 --checks whether each RMI is CM, prints and returns (real number) % of CM RMIs in sample
 CMStats = method(TypicalValue => RR)
 CMStats (List) :=  (listOfIdeals) -> (
@@ -259,9 +255,6 @@ CMStats (List) :=  (listOfIdeals) -> (
      print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
    sub((cm)/N, RR)
 )
--------------------------------------------------------------------------------------
----------------------------------Borel-Fixedness-------------------------------------
--------------------------------------------------------------------------------------
 
 --checks whether each RMI is Borel-fixed, 
 --prints and returns % of Borel-fixed RMIs in sample (real number) 
@@ -274,7 +267,6 @@ borelFixedStats (List) :=  (ideals) -> (
     print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
     sub((bor)/N, RR)
 )
-
 
 --**********************************--
 --  Internal methods	    	    --
