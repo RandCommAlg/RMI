@@ -643,7 +643,7 @@ doc ///
     of @TO monomialIdeal@s
  Description
   Text
-   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal.
+   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal. It counts how many sets are given, and how many sets are converted to the zero ideal.
   Example
    n=5; D=2; p=1.0; N=4;
    B=randomMonomialSets(n,D,p,N);
