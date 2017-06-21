@@ -1101,7 +1101,7 @@ TEST///
   n=5; D=5; p=.6; N=3;
   B = flatten idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>false);
   assert (N===(#B-1+last(B))) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
-  C = idealsFromGeneratingSets(randomMonomialSets(n,D,p,N,IncludeZeroIdeals=>true));
+  C = idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>true);
   assert (N===#C)
 ///
 
