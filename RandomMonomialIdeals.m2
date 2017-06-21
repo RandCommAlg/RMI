@@ -66,12 +66,21 @@ export {
     "randomMonomialIdeals",
     "Coefficients",
     "VariableName",
+    "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
+<<<<<<< HEAD
     "ShowDimensionTally",
     "regStats",
     "ShowTally"
     }
+=======
+    "ShowTally",
+    "BaseFileName",
+    "FileNameExt",
+    "degStats"
+}
+>>>>>>> refs/remotes/origin/master
 
 --***************************************--
 --  Exported methods 	     	     	 --
@@ -85,14 +94,32 @@ randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     randomMonomialSets(n,D,toList(D:p),N,o)
 )
 
+randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSets(R,D,toList(D:p),N,o)
+)
+
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     apply(N,i-> randomMonomialSet(n,D,M,o))
 )
 
-randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,pOrM,o))
+    apply(N,i-> randomMonomialSet(R,D,M,o))
+)
+
+randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    x := toSymbol o.VariableName;
+    R := o.Coefficients[x_1..x_n];
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
+)
+
+randomMonomialSets (PolynomialRing,ZZ,List,ZZ) := List => o -> (R,D,pOrM,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    apply(N,i-> randomMonomialSet(R,D,pOrM,o))
 )
 
 randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
@@ -103,11 +130,21 @@ randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     randomMonomialSet(n,D,toList(D:p),o)
 )
 
+randomMonomialSet (PolynomialRing,ZZ,RR) := List => o -> (R,D,p) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    randomMonomialSet(R,D,toList(D:p),o)
+)
+
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
-    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
+    if n<1 then error "n expected to be a positive integer";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,M)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,ZZ) := List => o -> (R,D,M) -> (
+    if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
+    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     C := take(random(allMonomials), M);
     if C==={} then {0_R} else C
@@ -115,15 +152,19 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 
 randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
-    if #pOrM != D then error "pOrM expected to be a list of length D";
-    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
+    randomMonomialSet(R,D,pOrM,o)
+)
+
+randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
         B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
-	)
+    )
     else if all(pOrM,q->instance(q,RR)) then (
         if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
@@ -136,10 +177,39 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
         else
             B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
 	);
+    B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
 
-
+--computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
+--prints and returns avg. degree (real number)
+degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
+degStats List :=  o-> (listOfIdeals) -> (
+    N := #listOfIdeals;
+    deg := 0;
+    degHistogram:={};
+    --filename := o.BaseFileName|"degree"|o.FileNameExt;
+    --fileHist := o.BaseFileName|"degreeHistogram"|o.FileNameExt;
+    apply(#listOfIdeals, i->( 
+        degi := degree listOfIdeals_i;
+	--filename << degi << endl
+        degHistogram = append(degHistogram, degi)
+	)
+    );
+    --filename << close;
+    --fileHist << values tally degHistogram << endl;
+    --fileHist << tally degHistogram;
+    --fileHist << close;
+    ret:=();
+    avg:=sub(1/N*(sum degHistogram), RR);
+    Ex2:=sub(1/N*(sum apply(elements(tally degHistogram), i->i^2)), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
+    if o.ShowTally
+    	then(ret=(avg, stdDev,tally degHistogram); return ret;);
+    print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
+    ret = (avg, stdDev)
+)
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
@@ -170,22 +240,25 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 --computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
 --prints and returns the avg. Krull dim (real number) 
 --also saves the histogram of dimensions
-dimStats = method(TypicalValue => Sequence, Options => {ShowDimensionTally => false})
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     dims:=0;
     dimsHistogram:={};
     apply(#listOfIdeals,i->( 
         dimi := dim listOfIdeals_i;
-        dims = dims + dimi;
     dimsHistogram = append(dimsHistogram, dimi)
     )
     );
     ret:= ();
-    if o.ShowDimensionTally 
-         then(ret = (sub(1/N*dims, RR), tally dimsHistogram), return ret;);
-    print "Average Krull dimension:" expression(sub(1/N*dims, RR));
-    ret = toSequence{sub(1/N*dims, RR)}
+    avg:=sub(1/N*(sum dimsHistogram), RR);
+    Ex2:=sub(1/N*(sum apply(elements(tally dimsHistogram), i->i^2)), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
+    if o.ShowTally 
+         then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
+    print "Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR));
+    ret = (avg, stdDev)
 )
 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
@@ -232,6 +305,60 @@ regStats List := o-> (listOfIdeals) -> (
  	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
+
+mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+mingenStats (List) :=  o -> (ideals) -> (
+    N:=#ideals;
+    ideals = extractNonzeroIdeals(ideals);
+    ideals = ideals_0;
+    num := 0;
+    numgensHist := {};
+    m := 0;
+    complexityHist := {};
+    ret:=();
+    if set {} === set ideals then (
+        numgensHist = N:-infinity;
+	complexityHist = N:-infinity;
+	numStdDev := 0;
+	comStdDev := 0;
+	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
+	print "Average # of min gens:" expression(-infinity);
+	print "Average degree complexity:" expression(-infinity);
+	ret = (-infinity, 0, -infinity, 0)
+    )
+    else (
+        apply(#ideals,i->( 
+            mingensi := gens gb ideals_i;
+            numgensi := numgens source mingensi; 
+            mi := max({degrees(mingensi)}#0#1); 
+--        m = m + mi#0;
+--        num = num + numgensi;
+	    numgensHist = append(numgensHist, numgensi); 
+	    complexityHist = append(complexityHist, mi#0)
+	    )
+        );
+    numAvg:=sub((1/(#ideals))*(sum numgensHist), RR);
+    comAvg:=sub((1/(#ideals))*(sum complexityHist), RR);
+    numEx2:=sub((1/(#ideals))*(sum apply(elements(tally numgensHist), i->i^2)), RR);
+    comEx2:=sub((1/(#ideals))*(sum apply(elements(tally complexityHist), i->i^2)), RR);
+    numVar:= numEx2 - numAvg^2;
+    comVar:= comEx2 - comAvg^2;
+    numStdDev= numVar^(1/2);
+    comStdDev= comVar^(1/2);
+    if o.ShowTally 
+       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
+    --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
+    print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
+    --    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
+    print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
+    ret = (numAvg, numStdDev, comAvg, comStdDev)
+    )
+)
+-- example to run this^^ right now: 
+-- L=randomMonomialIdeals(3,4,0.5,2)
+-- (mu,reg) = mingenStats(L);
+-- mu
+-- reg
 
 --**********************************--
 --  Internal methods	    	    --
@@ -288,17 +415,25 @@ doc ///
  Key
   randomMonomialSets
   (randomMonomialSets,ZZ,ZZ,RR,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,RR,ZZ)
   (randomMonomialSets,ZZ,ZZ,ZZ,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,ZZ,ZZ)
   (randomMonomialSets,ZZ,ZZ,List,ZZ)
+  (randomMonomialSets,PolynomialRing,ZZ,List,ZZ)
  Headline
   randomly generates lists of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSets(ZZ,ZZ,RR,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,RR,ZZ)
   randomMonomialSets(ZZ,ZZ,ZZ,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,ZZ,ZZ)
   randomMonomialSets(ZZ,ZZ,List,ZZ)
+  randomMonomialSets(PolynomialRing,ZZ,List,ZZ)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -319,6 +454,46 @@ doc ///
    It does so by calling @TO randomMonomialSet@ $N$ times.
  SeeAlso
   randomMonomialSet
+///
+
+doc ///
+ Key
+  degStats
+  (degStats,List)
+ Headline
+  statistics on the degrees of a list of monomialIdeals
+ Usage
+  degStats(List)
+ Inputs
+  listOfIdeals: List
+   of @TO monomialIdeal@s
+ Outputs
+  : Sequence
+   whose first entry is the average degree of a list of monomialIdeals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
+ Description
+  Text
+   degStats finds the average and the standard deviation of the degree of R/I for a list of monomialIdeals.
+   The degree of each ideal is calculated using the @TO degree@ function.
+   It has the optional input of ShowTally.
+  Example
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
+   degStats(listOfIdeals)
+  Text
+   The following expamples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+  Example
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   degStats(listOfIdeals)
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
+   degStats(listOfIdeals)
+  Text
+   Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
+   
+ SeeAlso
+  ShowTally
+
 ///
 
 doc ///
@@ -399,17 +574,25 @@ doc ///
  Key
   randomMonomialSet
   (randomMonomialSet,ZZ,ZZ,RR)
+  (randomMonomialSet,PolynomialRing,ZZ,RR)
   (randomMonomialSet,ZZ,ZZ,ZZ)
+  (randomMonomialSet,PolynomialRing,ZZ,ZZ)
   (randomMonomialSet,ZZ,ZZ,List)
+  (randomMonomialSet,PolynomialRing,ZZ,List)
  Headline
   randomly generates a list of monomials in fixed number of variables up to a given degree
  Usage
   randomMonomialSet(ZZ,ZZ,RR)
+  randomMonomialSet(PolynomialRing,ZZ,RR)
   randomMonomialSet(ZZ,ZZ,ZZ)
+  randomMonomialSet(PolynomialRing,ZZ,ZZ)
   randomMonomialSet(ZZ,ZZ,List)
+  randomMonomialSet(PolynomialRing,ZZ,List)
  Inputs
   n: ZZ
     number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
@@ -466,10 +649,48 @@ doc ///
    randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
+   
+   Sometimes we are already working in a specific ring and would like the random sets of monomials to live in the same ring:
+  Example
+   D=3;p=.5; R=ZZ/101[a,b,c];
+   randomMonomialSet(R,D,p)
+   ring oo_0
  SeeAlso
    randomMonomialSets
 ///
 
+doc ///
+ Key
+  mingenStats
+  (mingenStats, List)
+ Headline
+  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
+ Usage
+  mingenStats(List)
+ Inputs
+  ideals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : Sequence
+    with the following entries: the average number of minimal generators, the standard deviation of the number of minimial generators, the average degree complexity, and the stadard deviation of the degree complexity. 
+    If ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation. 
+ Description
+  Text
+   mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for the number of minimal generators and degree complexity of the list of nonzero ideals.
+  Example
+   n=4; D=3; p={0.0,1.0,0.0}; N=3;
+   B=randomMonomialIdeals(n,D,p,N);
+   mingenStats(B)
+  Text
+   If the list given is a list of all zero ideals, mingenStats returns -infinity for the mean number of minimal generators and mean degree complexity.
+  Example
+   B=randomMonomialIdeals(3,3,0.0,1);
+   mingenStats(B)
+  Text
+   Note that this function can be called on a list of @TO Ideal@ objects instead.
+ Caveat
+  mingenStats removes zero ideals from the list of ideals before computing the two values.
+///
 
 doc ///
   Key
@@ -561,20 +782,20 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  returns statistics on the Krull dimension of a list of monomialIdeals 
+  statistics on the Krull dimension of a list of monomialIdeals 
  Usage
   dimStats(List)
  
  Inputs
   listOfIdeals: List
-    a list of @TO monomialIdeal@s
+    of @TO monomialIdeal@s
   
  Outputs
   : Sequence 
-   returns the average Krull dimension as a Sequence
+   whose first entry is the average Krull dimension of a list of monomialIdeals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average Krull dimension for a list of monomialIdeals.   
+   dimStats finds the average and standard deviaation of the Krull dimension for a list of monomialIdeals.   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
@@ -592,36 +813,44 @@ doc ///
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
   
  SeeAlso
-   ShowDimensionTally
+   ShowTally
 ///
 
 doc ///
  Key
-   ShowDimensionTally
-   [dimStats, ShowDimensionTally]
+   ShowTally
+   [dimStats, ShowTally]
+   [mingenStats, ShowTally]
+   [degStats, ShowTally]
  Headline
-   optional input to choose if the dimension tally is to be returned 
+   optional input to choose if the tally is to be returned 
  Description
    Text
-     If {\tt ShowDimensionTally => false} (the default value), then only the average krull dimension will be returned. 
-     If {\tt ShowDimensionTally => true}, then both the average krull dimension and the dimension tally will be returned. 
+     If {\tt ShowTally => false} (the default value), then only the statistics of the function will be returned. 
+     If {\tt ShowTally => true}, then both the statistics and the dimension tally will be returned. 
 
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N);
-     dimStats(listOfIdeals) 
+     dimStats(listOfIdeals)
+     mingenStats(listOfIdeals)
+     degStats(listOfIdeals)
    Text
-     In the example above, only the average Krull dimension is outputted since by default {\tt ShowDimenshionTally => false}. 
+     In the example above, only the statistics are outputted since by default {\tt ShowTally => false}. 
    Text
-    In order to view the Tally of Krull dimensions, ShowDimensionTally must be set to true ({\tt ShowDimensionTally => true}) when the function @TO dimStats@ is called: 
-
+    In order to view the tally, ShowTally must be set to true ({\tt ShowTally => true}) when the function is called: 
    Example
      L=randomMonomialSet(3,3,1.0);
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-     dimStats(listOfIdeals,ShowDimensionTally=>true)
+     dimStats(listOfIdeals,ShowTally=>true)
+     mingenStats(listOfIdeals,ShowTally=>true)
+     degStats(listOfIdeals,ShowTally=>true)
+     
  SeeAlso
    dimStats
+   mingenStats
+   degStats
 ///
 
 doc ///
@@ -689,16 +918,31 @@ TEST ///
     -- Check multiple samples agree
     n=4; D=3;
     L = randomMonomialSets(n,D,1.0,3);
-    R = ring(L#0#0);
-    L = apply(L,l-> apply(l,m-> sub(m,R)));
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
---    assert (set L#1===set L#2) --Propose delete: unneccessary as this is already checked implicitly by the combination of the prior two tests.
+    
+///
+
+TEST ///
+    --Check monomials are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSets(n,D,1.0,3);
+    assert(ring(L#0#0)===ring(L#1#0))
+    assert(ring(L#1#1)===ring(L#1#2))
+    assert(ring(L#2#0)===ring(L#1#2))
 ///
 
 --***********************--
 --  randomMonomialSet  --
 --***********************--
+
+TEST ///
+    --Check monomials are in the same ring
+    n = 4; D = 3;
+    L = randomMonomialSet(n,D,1.0);
+    assert(ring(L#0)===ring(L#1))
+    assert(ring(L#2)===ring(L#3))
+///
 
 TEST ///
     -- Check no terms are chosen for a probability of 0
@@ -785,6 +1029,40 @@ TEST ///
     assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
+
+--*************************--
+--  degStats  --
+--*************************--
+TEST///
+   --check for p = 0 the average degree should be 1
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
+   assert(1==(degStats(listOfIdeals))_0)
+   assert(0==(degStats(listOfIdeals))_1)
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
+   assert(1==(degStats(listOfIdeals))_0)
+   assert(0==(degStats(listOfIdeals))_1)
+   --check for p = 1 the average degree is 1
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
+   assert(1==(degStats(listOfIdeals))_0)
+   assert(0==(degStats(listOfIdeals))_1)
+   --Check average is correct for set monomials
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   listOfIdeals={monomialIdeal(R_0^3,R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+   assert(3.5==(degStats(listOfIdeals,ShowTally=>true))_0)
+   assert(2.5==(degStats(listOfIdeals,ShowTally=>true))_1)
+   assert(2==sum(values(degStats(listOfIdeals, ShowTally=>true))_2))
+   listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_2^2)};
+   assert(1.5==(degStats(listOfIdeals, ShowTally=>true))_0)
+   assert(0.5==(degStats(listOfIdeals, ShowTally=>true))_1)
+   assert(2==sum(values(degStats(listOfIdeals,ShowTally=>true))_2))
+   listOfIdeals={monomialIdeal(R_0),monomialIdeal(R_0^2*R_2),monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
+   assert(sub(8/3,RR)==(degStats(listOfIdeals,ShowTally=>true))_0)
+   assert((sub(14/9,RR))^(1/2)==(degStats(listOfIdeals,ShowTally=>true))_1)
+   assert(3==sum(values(degStats(listOfIdeals,ShowTally=>true))_2))
+ 
+///
+
 --************************--
 --  dimStats  --
 --************************--
@@ -792,24 +1070,31 @@ TEST ///
     --check for p = 0 the average krull dimension is n
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,0.0,6));
     assert(3==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(7,2,0,3));
     assert(7==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     --check for p = 1 the average krull dimension is 0
-     listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
+    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,6));
     assert(0==(dimStats(listOfIdeals))_0)
+    assert(0==(dimStats(listOfIdeals))_1)
     --check for set monomials
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    assert(.5==(dimStats(listOfIdeals, ShowDimensionTally=>true))_0)
-    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
-    listOfIdeals = {monomialIdeal 0_R, monomialIdeal R_2^2};
-    assert(2.5== (dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
-    assert(2==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
-    listOfIdeals = {monomialIdeal R_0, monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
-    assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowDimensionTally=>true))_0)
-    assert(3==sum( values (dimStats(listOfIdeals, ShowDimensionTally=>true))_1))
+    assert(.5==(dimStats(listOfIdeals, ShowTally=>true))_0)
+    assert(.5==(dimStats(listOfIdeals, ShowTally=>true))_1)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowTally=>true))_2))
+    listOfIdeals = {monomialIdeal (0_R), monomialIdeal (R_2^2)};
+    assert(2.5== (dimStats(listOfIdeals,ShowTally=>true))_0)
+    assert(.5==(dimStats(listOfIdeals, ShowTally=>true))_1)
+    assert(2==sum( values (dimStats(listOfIdeals, ShowTally=>true))_2))
+    listOfIdeals = {monomialIdeal (R_0), monomialIdeal (R_0^2*R_2), monomialIdeal(R_0*R_1^2,R_1^3,R_1*R_2,R_0*R_2^2)};
+    assert(sub(5/3,RR)==(dimStats(listOfIdeals,ShowTally=>true))_0)
+    assert((3-(sub(5/3,RR))^2)^(1/2)==(dimStats(listOfIdeals,ShowTally=>true))_1)
+    assert(3==sum( values (dimStats(listOfIdeals, ShowTally=>true))_2))
 ///
+
 --************************--
 --  randomMonomialIdeals  --
 --************************--
@@ -829,12 +1114,61 @@ TEST ///
   B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
 ///
+<<<<<<< HEAD
 --************--
 --  regStats  --
 --************--
 TEST ///
   assert(true);
 ///
+=======
+
+--***************--
+--  mingenStats  --
+--***************--
+
+TEST ///
+  -- check average number of minimum generators
+  n=4; D=3; p=1.0; N=3;
+  B = randomMonomialIdeals(n,D,p,N);
+  C = mingenStats(B);
+  assert (sub(n,RR)===C_0)
+  assert (sub(0,RR)===C_1)
+  p={0.0,1.0,0.0};
+  D = randomMonomialIdeals(n,D,p,N);
+  E = mingenStats(D);
+  assert (sub(10,RR)===E_0)
+  assert (sub(0,RR)===E_1)
+///
+
+TEST ///
+  -- check average degree complexity
+  n=3; D=5; p=1.0; N=5;
+  B = randomMonomialIdeals(n,D,p,N);
+  C = mingenStats(B);
+  assert(sub(1,RR)===C_2)
+  assert(sub(0,RR)===C_3)
+  p={0.0,0.0,0.0,0.0,1.0};
+  D = randomMonomialIdeals(n,D,p,N);
+  E = mingenStats(D);
+  assert(sub(5,RR)===E_2)
+  assert(sub(0,RR)===E_3)
+///
+
+TEST ///
+  L=randomMonomialSet(3,3,1.0);
+  R=ring(L#0);
+  listOfIdeals={monomialIdeal(R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+  A = mingenStats(listOfIdeals, ShowTally=>true);
+  assert(2.5===A_0)
+  assert(0.5===A_1)
+  assert(2==sum(values(A_2)))
+  assert(2.5===A_3)
+  assert(0.5===A_4)
+  assert(2==sum(values(A_5)))
+///
+
+>>>>>>> refs/remotes/origin/master
 end
 
 You can write anything you want down here.  I like to keep examples
