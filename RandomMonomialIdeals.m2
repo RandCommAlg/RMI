@@ -71,7 +71,7 @@ export {
     "IncludeZeroIdeals",
     "dimStats",
     "CMStats",
-    "borelFixedStats"
+    "borelFixedStats",
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
@@ -325,7 +325,6 @@ mingenStats (List) :=  o -> (ideals) -> (
 -- (mu,reg) = mingenStats(L);
 -- mu
 -- reg
->>>>>>> master
 
 --**********************************--
 --  Internal methods	    	    --
@@ -359,7 +358,7 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
-    )
+)
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
