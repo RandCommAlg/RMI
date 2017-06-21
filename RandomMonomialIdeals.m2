@@ -629,6 +629,31 @@ doc ///
 
 doc ///
  Key
+  idealsFromGeneratingSets
+  (idealsFromGeneratingSets, List)
+ Headline
+  creates ideals from lists of monomials
+ Usage
+  idealsFromGeneratingSets(List)
+ Inputs
+  B: List
+    of lists of monomials
+ Outputs
+  ideals: List
+    of @TO monomialIdeal@s
+ Description
+  Text
+   idealsFromGeneratingSets takes a list of lists of monomials and converts each list of monomials into a monomial ideal.
+  Example
+   n=5; D=2; p=1.0; N=4;
+   B=randomMonomialSets(n,D,p,N);
+   idealsFromGeneratingSets(n,D,p,N)
+ SeeAlso
+  randomMonomialIdeals
+///
+
+doc ///
+ Key
   mingenStats
   (mingenStats, List)
  Headline
@@ -724,6 +749,7 @@ doc ///
 doc ///
  Key
    IncludeZeroIdeals
+   [idealsFromGeneratingSets, IncludeZeroIdeals]
    [randomMonomialIdeals, IncludeZeroIdeals]
  Headline
    optional input to choose whether or not zero ideals should be included in the list of ideals
@@ -743,6 +769,7 @@ doc ///
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
  SeeAlso
+   idealsFromGeneratingSets
    randomMonomialIdeals
 ///
 doc ///
@@ -1110,6 +1137,8 @@ TEST ///
   n=3;D=3;p=1.0;N=5;
   B=idealsFromGeneratingSets(randomMonomialSets(n,D,p,N));
   assert (all(B,b->instance(b,MonomialIdeal)))
+  C=idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>false);
+  assert (all(C#0,c->instance(c,MonomialIdeal)))
 ///
 
 end
