@@ -190,15 +190,11 @@ dimStats List := o-> (listOfIdeals) -> (
 
 --computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
 -- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
-<<<<<<< HEAD
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-=======
-regStats = method(TypicalValue => Sequence, Options => {ShowRegularityTally => false})
 -- Hey Tanner, Dan has streamlined all of the Tallies -- check out branch TASK21 -- you can just write "ShowTally" and document it within that already existing node. 
 -- In fact I wonder if this is already in the master? :) 
->>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     reg := 0;
@@ -641,11 +637,7 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-<<<<<<< HEAD
    whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
-=======
-   whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if the option is turned on) the tally of regularities.
->>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
  Description
   Text
    regStats find the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
@@ -669,30 +661,6 @@ doc ///
   ShowTally
  ///
  
-<<<<<<< HEAD
-=======
- doc ///
-  Key
-   ShowRegularityTally
-   [regStats, ShowRegularityTally]
-  Headline
-   optional input to choose if regularity tally is to be returned
-  Description
-   Text
-    will be subsumed within "ShowTally" doc node, with just a couple of extra lines. 
-    --Show optional values of ShowRegularityTally
-   --Example
-    --Give example of ShowRegularityTally being used
-   Text
-    --explain example default value
-   Text
-    --explain example other value
-   --Example
-    --another example
-  SeeAlso
-   regStats
-///
->>>>>>> eadf13e24aff54b18b2750c0846ffeb813c5597e
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
