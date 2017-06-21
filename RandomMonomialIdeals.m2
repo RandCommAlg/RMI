@@ -1092,6 +1092,26 @@ TEST ///
   assert(2==sum(values(A_5)))
 ///
 
+--****************************--
+--  idealsFromGeneratingSets  --
+--****************************--
+
+TEST///
+  -- check the number of ideals
+  n=5; D=5; p=.6; N=3;
+  B = flatten idealsFromGeneratingSets(randomMonomialSets(n,D,p,N,IncludeZeroIdeals=>false));
+  assert (N===(#B-1+last(B))) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
+  C = idealsFromGeneratingSets(randomMonomialSets(n,D,p,N,IncludeZeroIdeals=>true));
+  assert (N===#C)
+///
+
+TEST ///
+  --check that all elements are MonomialIdeal
+  n=3;D=3;p=1.0;N=5;
+  B=idealsFromGeneratingSets(randomMonomialSets(n,D,p,N);
+  assert (all(B,b->instance(b,MonomialIdeal)))
+///
+
 end
 
 You can write anything you want down here.  I like to keep examples
