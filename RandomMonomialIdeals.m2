@@ -314,6 +314,7 @@ pdimStats (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
     pdHist:={};
     filename := concatenate(basefilename,"projdims",fileNameExt);
     fileHist := concatenate(basefilename,"projdimsHistogram",fileNameExt);
+    R:=ring(ideals_0);
 --    for i from 0 to #B-1 do ( -- wrong index set for i. #B\neq #ideals. 
     apply(#ideals,i-> 
 	(
