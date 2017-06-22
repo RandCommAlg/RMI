@@ -1,0 +1,24 @@
+SUM OF BETTI TABLES (not including Betti tabls of any zero ideals generated)
+       0 1 2
+total: 2 3 1
+    0: 2 . .
+    1: . 3 .
+    2: . . 1
+SUM OF BETTI TABLES (with zero ideals)
+       0 1 2
+total: 3 3 1
+    0: 3 . .
+    1: . 3 .
+    2: . . 1
+AVERAGE BETTI NUMBERS (without zero ideals)
+       0   1  2
+total: 1 1.5 .5
+    0: 1   .  .
+    1: . 1.5  .
+    2: .   . .5
+AVERAGE BETTI NUMBERS (with zero ideals)
+       0 1       2
+total: 1 1 .333333
+    0: 1 .       .
+    1: . 1       .
+    2: . . .333333
