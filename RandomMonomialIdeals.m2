@@ -179,7 +179,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 bettiStats = method(TypicalValue =>Sequence, Options =>{SaveBettis => false})
 bettiStats List :=  o-> (listOfIdeals) -> ( 
     if o.SaveBettis then (
-	basefilename:="DELETEme"; fileNameExt:="getridofthis";
+	basefilename:="DELETEme"; fileNameExt:="GetRidOfThis";
 	filename1 := concatenate(basefilename,"bettis",fileNameExt)
 	);
     -- sum of the betti tables and betti shapes: 
@@ -494,6 +494,42 @@ doc ///
    It does so by calling @TO randomMonomialSet@ $N$ times.
  SeeAlso
   randomMonomialSet
+///
+
+doc ///
+ Key
+  bettiStats
+  (bettiStats,List)
+ Headline
+  statistics on Betti tables of a sample of monomial ideals
+ Usage
+  bettiStats(List)
+ Inputs
+  ideals: List
+   of @TO monomialIdeal@s
+ Outputs
+  : Sequence
+   of BettyTallies, representing the mean Betti table and the average Betti shape of the ideals in the list {\tt ideals}. If {\tt ideals} contains zero ideals, additional two elements are reported: the same statistics of the non-zero ideals only. 
+ Description
+  Text
+   For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
+   Namely, it computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample), 
+   and it also computes the average shape of the Betti tables (where it only records a 1 if there was a non-zero Betti number). 
+   
+   For sample size $N$, the average Betti table is to be interpreted as follows: 
+   entry $(i,j)$ in average Betti table encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$.
+   
+   For sample size $N$, the average Betti table {\em shape} is to be interpreted as follows:
+   entry (i,j) in average Betti table SHAPE encodes the following sum of indicators: 
+   $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
+   the proportion of ideals with a nonzero beta_{ij}.
+  Example
+   R=QQ[a,b,c];
+   L={monomialIdeal (a^2*b), monomialIdeal(a*b,b*c^3)}
+   bettiStats L
+   bettiStats (L,SaveBettis=>true) -- saves 3 files (for now). 
+   L=append(L,monomialIdeal 0_R);
+   bettiStats L
 ///
 
 doc ///
