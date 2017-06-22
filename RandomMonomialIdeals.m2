@@ -281,7 +281,7 @@ regStats List := o-> (listOfIdeals) -> (
 	     ))
          );
     avg := sub(1/#ideals*(sum regHistogram), RR);
-    Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
+    Ex2 := sub((1/(#ideals))*(sum apply(elements(tally regHistogram), i->i^2)), RR);
     var := Ex2-avg^2;
     stdDev = var^(1/2);
     if o.ShowTally
