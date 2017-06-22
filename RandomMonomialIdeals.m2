@@ -278,15 +278,16 @@ regStats List := o-> (listOfIdeals) -> (
 	apply(#ideals,i->( 
               regi := regularity ideals_i;
               regHistogram = append(regHistogram, regi)
-	     ))
-         );
-    avg := sub(1/#ideals*(sum regHistogram), RR);
-    Ex2 := sub((1/(#ideals))*(sum apply(elements(tally regHistogram), i->i^2)), RR);
-    var := Ex2-avg^2;
-    stdDev = var^(1/2);
-    if o.ShowTally
-    	then(ret=(avg, stdDev,tally regHistogram); return ret;);
-    ret = (avg, stdDev)
+	     ));
+             avg := sub(1/#ideals*(sum regHistogram), RR);
+    	     Ex2 := sub((1/(#ideals))*(sum apply(elements(tally regHistogram), i->i^2)), RR);
+    	     var := Ex2-avg^2;
+    	     stdDev = var^(1/2);
+    	     if o.ShowTally
+    	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
+    	     ret = (avg, stdDev)
+         )
+    
 )
 
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
