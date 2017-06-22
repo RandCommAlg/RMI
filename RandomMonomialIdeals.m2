@@ -99,7 +99,7 @@ randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
-    apply(N,i-> randomMonomialSet(n,D,M,o))
+    apply(N,i-> randomMonomialSet(R,D,M,o))
 )
 
 randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
