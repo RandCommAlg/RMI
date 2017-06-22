@@ -1127,6 +1127,22 @@ TEST ///
   assert(2==sum(values(A_5)))
 ///
 
+--***************--
+--  mingenStats  --
+--***************--
+
+TEST ///
+  L=randomMonomialSet(3,3,1.0);
+  R=ring(L#0);
+  listOfIdeals={monomialIdeal(0_R)};
+  assert(sub(0,RR)==pdimStats(listOfIdeals))
+  listOfIdeals={monomialIdeal(R_0,R_1,R_2)};
+  assert(sub(3,RR)==pdimStats(listOfIdeals))
+  listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0*R_1^2,R_1^3,R_2)};
+  assert(sub(1.5,RR)==pdimStats(listOfIdeals))
+  listOfIdeals={monomialIdeal(R_0^2*R_1,R_2)};
+  assert(sub(2,RR)==pdimStats(listOfIdeals))
+///
 end
 
 You can write anything you want down here.  I like to keep examples
