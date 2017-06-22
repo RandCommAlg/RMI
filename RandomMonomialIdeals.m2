@@ -875,24 +875,20 @@ doc ///
    whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
  Description
   Text
-   regStats finds the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
-   The regularity of each ideal is calculated using the @TO regularity@ function.
-   It has the optional input of ShowTally.
+   regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
   Example
-   L=randomMonomialSet(3,3,1.0);
-   R=ring(L#0);
-   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
-   regStats(listOfIdeals)
+   n=4; D=3; p={0.0,1.0,0.0}; N=3;
+   B=randomMonomialIdeals(n,D,p,N);
+   regStats(B)
   Text
-   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals:
+   If the list given is a list of all zero ideals, regStats returns -infinity for the mean regularity.
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   regStats(listOfIdeals)
-  Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   regStats(listOfIdeals)
+   B=randomMonomialIdeals(3,3,0.0,1);
+   regStats(B)
   Text
-   Note that this function can be run with a list of any objects to which @TO regularity@ can be applied.
+   Note that this function can be called on a list of @TO Ideal@ objects instead.
+ Caveat
+  regStats removes zero ideals from the list of ideals before computing the two values.
  SeeAlso
   ShowTally
  ///
@@ -1126,12 +1122,37 @@ TEST ///
 --  regStats  --
 --************--
 TEST ///
-  --check for p = 1 the average regularity is 1
-  listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,5));
-  assert(1==(regStats(listOfIdeals))_0)
-  assert(2==(regStats(listOfIdeals))_1)
+  -- check average regularity
+  n=3; D=5; N=4; p=1.0;
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((1,0)==regStats(B))
+  p={0,1,0,0,0};
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((2,0)==regStats(B))
+  p={0,0,1,0,0};
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((3,0)==regStats(B))
+  p={0,0,0,1,0};
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((4,0)==regStats(B))
+  p={0,0,0,0,1};
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((5,0)==regStats(B))
+  p=0;
+  B=randomMonomialIdeals(n,D,p,N);
+  assert((-infinity,0)==regStats(B))
 ///
 
+TEST ///
+  -- check all stats
+  L=randomMonomialSet(3,3,1.0);
+  R=ring(L#0);
+  listOfIdeals={monomialIdeal(R_1,R_2^2),monomialIdeal(R_0^3,R_1,R_0*R_2)};
+  A = regStats(listOfIdeals, ShowTally=>true);
+  assert(2.5===A_0)
+  assert(0.5===A_1)
+  assert(2==sum(values(A_2)))
+///
 --***************--
 --  mingenStats  --
 --***************--
