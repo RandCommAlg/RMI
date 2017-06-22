@@ -260,19 +260,27 @@ dimStats List := o-> (listOfIdeals) -> (
 --avgReg = method()
 --avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
--- Hey Tanner, Dan has streamlined all of the Tallies -- check out branch TASK21 -- you can just write "ShowTally" and document it within that already existing node. 
--- In fact I wonder if this is already in the master? :) 
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
+    ideals := extractNonzeroIdeals(listOfIdeals);
+    ideals := ideals_0;
     reg := 0;
-    regHistogram:={};
-    apply(#listOfIdeals,i->( 
-        regi := regularity listOfIdeals_i;
-        regHistogram = append(regHistogram, regi)
-	)
-    );
     ret := ();
-    avg := sub(1/N*(sum regHistogram), RR);
+    regHistogram:={};
+    if set {} === set ideals then (
+	regHistogram = N:-infinity;
+	stdDev := 0;
+	if o.ShowTally then(ret=(-infinity, 0, tally regHistogram); return ret;);
+	print "Average regularity:" expression(-infinity);
+	ret = (-infinity, 0)
+    )
+    else (
+	apply(#ideals,i->( 
+              regi := regularity ideals_i;
+              regHistogram = append(regHistogram, regi)
+	     ))
+         );
+    avg := sub(1/#ideals*(sum regHistogram), RR);
     Ex2 := sub(sum apply(elements(tally regHistogram), i->i^2),RR);
     var := Ex2-avg^2;
     stdDev := var^(1/2);
@@ -841,6 +849,7 @@ doc ///
      dimStats(listOfIdeals,ShowTally=>true)
      mingenStats(listOfIdeals,ShowTally=>true)
      degStats(listOfIdeals,ShowTally=>true)
+     regStats(listOfIdeals,ShowTally=>true)
      
  SeeAlso
    dimStats
@@ -865,7 +874,7 @@ doc ///
    whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
  Description
   Text
-   regStats find the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
+   regStats finds the average and standard deviation of the regularity of R/I for a list of monomialIdeals.
    The regularity of each ideal is calculated using the @TO regularity@ function.
    It has the optional input of ShowTally.
   Example
@@ -876,10 +885,11 @@ doc ///
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals:
   Example
-   listOfIdeals = idealsFromGeneratingSets(4,3,1.0,3));
+   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
    regStats(listOfIdeals)
   Example
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
+   regStats(listOfIdeals)
   Text
    Note that this function can be run with a list of any objects to which @TO regularity@ can be applied.
  SeeAlso
@@ -1115,7 +1125,10 @@ TEST ///
 --  regStats  --
 --************--
 TEST ///
-  assert(true);
+  --check for p = 1 the average regularity is 1
+  listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(3,4,1.0,5));
+  assert(1==(regStats(listOfIdeals))_0)
+  assert(2==(regStats(listOfIdeals))_1)
 ///
 
 --***************--
