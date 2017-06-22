@@ -310,14 +310,14 @@ mingenStats (List) :=  o -> (ideals) -> (
 --avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
 pdimStats = method()
 pdimStats (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
-    pd = 0;
-    pdHist={};
-    filename = concatenate(basefilename,"projdims",fileNameExt);
-    fileHist = concatenate(basefilename,"projdimsHistogram",fileNameExt);
+    pd := 0;
+    pdHist:={};
+    filename := concatenate(basefilename,"projdims",fileNameExt);
+    fileHist := concatenate(basefilename,"projdimsHistogram",fileNameExt);
 --    for i from 0 to #B-1 do ( -- wrong index set for i. #B\neq #ideals. 
     apply(#ideals,i-> 
 	(
-        pdimi = pdim(R^1/ideals_i);
+        pdimi := pdim(R^1/ideals_i);
         filename << pdimi << endl;
         pd = pd + pdimi;
 	pdHist = append(pdHist, pdimi)
