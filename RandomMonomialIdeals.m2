@@ -59,6 +59,8 @@ newPackage(
 	Reload => true 
     	)
 
+needsPackage "BoijSoederberg"
+
 export {
     "randomMonomialSets",
     "randomMonomialSet",
@@ -72,7 +74,9 @@ export {
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
-    "degStats"
+    "degStats",
+    "bettiStats",
+    "SaveBettis"
 }
 
 --***************************************--
@@ -174,6 +178,103 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
+bettiStats = method(TypicalValue =>Sequence, Options =>{SaveBettis => false})
+bettiStats List :=  o-> (listOfIdeals) -> ( 
+    if o.SaveBettis then (
+	basefilename:="DELETEme"; fileNameExt:="getridofthis";
+	filename1 := concatenate(basefilename,"bettis",fileNameExt)
+	);
+    -- sum of the betti tables and betti shapes: 
+    N := #listOfIdeals;
+    (ideals,Z) := extractNonzeroIdeals(listOfIdeals);
+    beta := new BettiTally; 
+    betaShapes := new BettiTally;
+    -- add up all the betti tables: 
+    apply(#ideals,i->( 
+        resi := betti res ideals_i;
+        if o.SaveBettis then filename1 << resi << endl;
+    	-- add Betti tables as we compute them, so as to not store an entire sample of Betti tables in memory:
+        beta = beta + resi;
+  	-- let's only keep a 1 in all spots where ther was a non-zero Betti number: 
+	beta1mtx := matrix(resi);
+	Rtemp := (ring ideals_i)^1/ideals_i;
+	beta1shape := new BettiTally from mat2betti  matrix pack(1+pdim(Rtemp), apply(flatten entries beta1mtx, i-> if i>0 then i=1 else i=0));
+	betaShapes = betaShapes + beta1shape
+	)
+    );
+    if o.SaveBettis then filename1 << close;
+    -- compute the average Betti table:
+    b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
+    -- compute the average Betti table shape: 
+    bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
+    -- Now, add the betti tables of all the zero ideals:
+    betaWithZeroIdeals := new BettiTally from beta;
+    betaShapeWithZeroIdeals := new BettiTally from betaShapes;
+    if Z>0 then ( 
+	apply(Z,i-> ( -- note that Z = N - #ideals -- 
+    	    -- compute the average Betti table:
+	    betaWithZeroIdeals = betaWithZeroIdeals + betti res (ideal(0)*ring ideals_0);
+    	    -- compute the average Betti table shape: 
+	    betaShapeWithZeroIdeals = betaShapeWithZeroIdeals + betti res (ideal(0)*ring ideals_0);
+	    )    
+    	);
+    -- compute the average Betti table including the count of zero ideals:
+    bWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaWithZeroIdeals), RR)));
+    -- compute the average Betti table SHAPE including the count of zero ideals:
+    bShapeWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaShapeWithZeroIdeals), RR)));
+    );
+    -- averages of the betti tables:     
+    if o.SaveBettis then (
+    filename2 := concatenate(basefilename,"avgBetti",fileNameExt);
+    if Z>0 then ( 
+    filename2 << "SUM OF BETTI TABLES (not including Betti tabls of any zero ideals generated)" << endl;
+    filename2 << beta << endl;
+    filename2 << "SUM OF BETTI TABLES (with zero ideals)" << endl;
+    filename2 << betaWithZeroIdeals << endl;
+    filename2 << "AVERAGE BETTI NUMBERS (without zero ideals)" << endl;
+    filename2 << b << endl;
+    filename2 << "AVERAGE BETTI NUMBERS (with zero ideals)" << endl;
+    filename2 << bWithZeroIdeals << endl;
+    ) else ( -- no zero ideals so don't worry about that part: 
+    filename2 << "SUM OF BETTI TABLES" << endl;
+    filename2 << beta << endl;
+    filename2 << "AVERAGE BETTI NUMBERS" << endl;
+    filename2 << b << endl;
+    );
+    filename2 << close
+    );
+    print "Average Betti numbers:" expression(b);
+    print "Interpretation: entry (i,j) in average Betti table encodes 
+      sum_{all ideals}beta_{ij} / (sample size).";
+    print "Note: the average Betti table does not include any zero ideals generated.";
+  -- average betti table SHAPE: 
+    if o.SaveBettis then (
+    filename3 := basefilename|"avgBettiShape"|fileNameExt;
+    if Z>0 then ( 
+    filename3 << "AVERAGE BETTI TABLE SHAPE (without zero ideals): an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
+    filename3 << bShape << endl;
+    filename3 << "AVERAGE BETTI TABLE SHAPE (with zero ideals): an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
+    filename3 << bShapeWithZeroIdeals << endl;
+    filename3<< "Interpretation: entry (i,j) in average Betti table SHAPE encodes 
+      sum_{all ideals} 1_{beta_{ij}>0} / (sample size); that is,
+      the proportion of ideals with a nonzero beta_{ij}."<<endl;
+    ) else ( -- no zero ideals so don't worry about that part: 
+    filename3 << "AVERAGE BETTI TABLE SHAPE: an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
+    filename3 << bShape << endl;
+    filename3<< "Interpretation: entry (i,j) in average Betti table SHAPE encodes 
+      sum_{all ideals} 1_{beta_{ij}>0} / (sample size); that is,
+      the proportion of ideals with a nonzero beta_{ij}."<<endl;
+    );
+    filename3 << close
+    );
+    print "Average Betti table shape:" expression(bShape);
+    print "Interpretation: entry (i,j) in average Betti table SHAPE encodes 
+      sum_{all ideals} 1_{beta_{ij}>0} / (sample size); that is,
+      the proportion of ideals with a nonzero beta_{ij}.";
+    print "Note: the average Betti table shape does not include any zero ideals generated.";
+    return (b,bShape)
+    )
+    
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
@@ -1067,7 +1168,8 @@ TEST ///
 
 end
 
-You can write anything you want down here.  I like to keep examples
-as I’m developing here.  Clean it up before submitting for
-publication.  If you don't want to do that, you can omit the "end"
-above.
+restart;
+uninstallPackage"RandomMonomialIdeals";
+installPackage"RandomMonomialIdeals";
+viewHelp RandomMonomialIdeals
+viewHelp bettiStats
