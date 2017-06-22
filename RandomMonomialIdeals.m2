@@ -72,8 +72,6 @@ export {
     "IncludeZeroIdeals",
     "dimStats",
     "ShowTally",
-    "BaseFileName",
-    "FileNameExt",
     "degStats",
     "bettiStats",
     "SaveBettis"
