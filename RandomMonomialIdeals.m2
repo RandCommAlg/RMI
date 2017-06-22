@@ -458,10 +458,6 @@ doc ///
    degStats(listOfIdeals)
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
-   
- SeeAlso
-  ShowTally
-
 ///
 
 doc ///
@@ -725,10 +721,6 @@ doc ///
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       randomMonomialSet(n,D,p,VariableName => y)
-  SeeAlso
-    randomMonomialSet
-    randomMonomialSets
-    randomMonomialIdeals
 ///
 
 doc ///
@@ -741,9 +733,6 @@ doc ///
     Text
       Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
       "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list.
-  SeeAlso
-    randomMonomialSet
-    randomMonomialSets
 ///
 
 doc ///
@@ -768,9 +757,6 @@ doc ///
      In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
- SeeAlso
-   idealsFromGeneratingSets
-   randomMonomialIdeals
 ///
 doc ///
  Key
@@ -806,9 +792,6 @@ doc ///
    dimStats(listOfIdeals)
   Text
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
-  
- SeeAlso
-   ShowTally
 ///
 
 doc ///
@@ -841,11 +824,6 @@ doc ///
      dimStats(listOfIdeals,ShowTally=>true)
      mingenStats(listOfIdeals,ShowTally=>true)
      degStats(listOfIdeals,ShowTally=>true)
-     
- SeeAlso
-   dimStats
-   mingenStats
-   degStats
 ///
 
 
