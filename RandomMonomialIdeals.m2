@@ -72,7 +72,8 @@ export {
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
-    "degStats"
+    "degStats",
+    "pdimStats"
 }
 
 --***************************************--
@@ -308,26 +309,19 @@ mingenStats (List) :=  o -> (ideals) -> (
 --prints and returns avg. proj dim (real number) and their histogram
 --avgPdim = method()
 --avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
-pdimStats = method()
-pdimStats (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
+pdimStats = method(TypicalValue=>RR)
+pdimStats (List) :=  (ideals) -> (
+    N:=#ideals;
     pd := 0;
     pdHist:={};
-    filename := concatenate(basefilename,"projdims",fileNameExt);
-    fileHist := concatenate(basefilename,"projdimsHistogram",fileNameExt);
     R:=ring(ideals_0);
---    for i from 0 to #B-1 do ( -- wrong index set for i. #B\neq #ideals. 
     apply(#ideals,i-> 
 	(
         pdimi := pdim(R^1/ideals_i);
-        filename << pdimi << endl;
         pd = pd + pdimi;
 	pdHist = append(pdHist, pdimi)
 	)
     );           
-    filename << close;
-    fileHist << values tally pdHist << endl; 
-    fileHist << tally pdHist;
-    fileHist<<close; 
     print "Average projective dimension:" expression(sub(1/N*pd, RR));
     sub(1/N*pd, RR)
     )
