@@ -324,7 +324,7 @@ pdimStats (List) :=  (ideals) -> (
     );           
     print "Average projective dimension:" expression(sub(1/N*pd, RR));
     sub(1/N*pd, RR)
-    )
+)
 
 --**********************************--
 --  Internal methods	    	    --
