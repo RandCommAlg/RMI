@@ -867,7 +867,7 @@ doc ///
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     borelFixedStats(listOfIdeals)
 ///
 
@@ -1096,8 +1096,11 @@ TEST ///
   assert (M>=numgens B_0)
 ///
 
+--***************--
+--    CMStats    --
+--***************--
+
 TEST ///
---for CMStats
  L=randomMonomialSet(5,1,1.0); R=ring(L#0);
  listOfIdeals = {monomialIdeal(0_R)};
  assert(1==CMStats(listOfIdeals))
@@ -1109,8 +1112,11 @@ TEST ///
  assert(sub(2/3,RR)==CMStats(listOfIdeals))
 ///
 
+--********************--
+--  borrelFixedStats  --
+--********************--
+
 TEST ///
---for borrel fixed stats
 L=randomMonomialSet(5,1,1.0); R=ring(L#0);
 listOfIdeals = {monomialIdeal(0_R)};
 assert(1==borelFixedStats(listOfIdeals))
@@ -1118,7 +1124,10 @@ listOfIdeals = {monomialIdeal(R_0*R_1)};
 assert(0==borelFixedStats(listOfIdeals))
 listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
 assert(.5==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+assert(sub(2/3,RR)==borelFixedStats(listOfIdeals))
 ///
+
 --***************--
 --  mingenStats  --
 --***************--
