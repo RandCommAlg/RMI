@@ -1171,5 +1171,6 @@ end
 restart;
 uninstallPackage"RandomMonomialIdeals";
 installPackage"RandomMonomialIdeals";
+check RandomMonomialIdeals 
 viewHelp RandomMonomialIdeals
 viewHelp bettiStats
