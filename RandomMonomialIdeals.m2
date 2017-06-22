@@ -637,7 +637,7 @@ doc ///
   idealsFromGeneratingSets(List)
  Inputs
   B: List
-    of lists of monomials
+    of sets of monomials
  Outputs
   ideals: List
     of @TO monomialIdeal@s
