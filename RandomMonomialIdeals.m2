@@ -1142,6 +1142,8 @@ TEST ///
   assert(sub(1.5,RR)==pdimStats(listOfIdeals))
   listOfIdeals={monomialIdeal(R_0^2*R_1,R_2)};
   assert(sub(2,RR)==pdimStats(listOfIdeals))
+  listOfIdeals={monomialIdeal(R_0,R_2),monomialIdeal(0_R),monomialIdeal(R_0^2*R_1,R_1^2)};
+  assert(sub(4/3,RR)==pdimStats(listOfIdeals))
 ///
 end
 
