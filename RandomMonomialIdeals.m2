@@ -463,7 +463,7 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   of BettyTallies, representing the mean Betti table and the average Betti shape of the ideals in the list {\tt ideals}.
+   of BettyTallies, representing the mean Betti table and the mean Betti shape of the ideals in the list {\tt ideals}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
@@ -472,25 +472,25 @@ doc ///
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
-   (avgBetti, avgBettiShape) = bettiStats L;
-   avgBetti
-   avgBettiShape
+   (meanBetti, meanBettiShape) = bettiStats L;
+   meanBetti
+   meanBettiShape
   Text 
    For sample size $N$, the average Betti table is to be interpreted as follows: 
-   entry $(i,j)$ in average Betti table encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
+   entry $(i,j)$ encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
   Example
    apply(L,i->betti res i)
-   avgBetti
+   meanBetti
   Text
    It may be of greater interest to look at which Betti numbers are simply nonzero. To do that, we compute the average Betti {\em shape}.
    For sample size $N$, the average Betti table {\em shape} is to be interpreted as follows:
-   entry (i,j) in average Betti table SHAPE encodes the following sum of indicators: 
+   entry (i,j) encodes the following sum of indicators: 
    $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
    the proportion of ideals with a nonzero beta_{ij}.
    Thus an entry of 0.33 means 33% of ideals have a non-zero Betti number there.
   Example
    apply(L,i->betti res i)
-   avgBettiShape   
+   meanBettiShape   
   Text 
    Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied! 
   Text
@@ -503,14 +503,14 @@ doc ///
   Example
    L=append(L,monomialIdeal 0_R);
    bettiStats L
-   (avgBettiNoZeroIdeals, avgBettiShapeNoZeroIdeals, avgBetti, avgBettiShape)=bettiStats(L,IncludeZeroIdeals=>false);
-   avgBettiNoZeroIdeals
-   avgBettiShapeNoZeroIdeals
+   (meanBettiNoZeroIdeals, meanBettiShapeNoZeroIdeals, meanBetti, meanBettiShape)=bettiStats(L,IncludeZeroIdeals=>false);
+   meanBettiNoZeroIdeals
+   meanBettiShapeNoZeroIdeals
   Text 
    For now I have an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
-   (but this is really going to move to option documentation, if we decide to keep it.) 
+   (but this is really going to move to option documentation, if we even decide to keep it.) 
   Example
-   bettiStats (L,SaveBettis=>true) -- saves 3 files (for now). 
+   bettiStats (L,SaveBettis=>true) -- saves 1 file (for now). 
 
 ///
 
@@ -1056,6 +1056,23 @@ TEST ///
     assert(1==min(apply((randomMonomialSet(n,D,toList(D:1.0), Strategy=>"Minimal"),m->first degree m))))
     assert(1==min(apply(randomMonomialSet(n,D,toList(D:1)), m->first degree m)))
 ///
+
+
+--*************************--
+--  bettiStats  --
+--*************************--
+TEST///
+   R = ZZ/101[a..c];
+   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3)};
+   (meanBetti, meanBettiShape) = bettiStats L;
+   -- mean Betti table:
+   b=new BettiTally from { (0,{0},0) => 2, (1,{2},2) => 2, (1,{3},3) => 1, (2,{4},4) => 1, (1,{4},4) => 1, (2,{5},5) =>1 }
+   assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix b,RR))
+   -- mean Betti shape: 
+   b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
+   assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
+///
+
 
 --*************************--
 --  degStats  --
