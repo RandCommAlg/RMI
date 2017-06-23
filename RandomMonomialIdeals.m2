@@ -1121,7 +1121,10 @@ TEST ///
 
 end
 
-You can write anything you want down here.  I like to keep examples
-as I’m developing here.  Clean it up before submitting for
-publication.  If you don't want to do that, you can omit the "end"
-above.
+restart;
+uninstallPackage"RandomMonomialIdeals";
+installPackage"RandomMonomialIdeals";
+viewHelp bettiStats
+
+check RandomMonomialIdeals 
+viewHelp RandomMonomialIdeals
