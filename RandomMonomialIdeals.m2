@@ -499,8 +499,8 @@ doc ///
    Namely, it computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample), 
    and it also computes the average shape of the Betti tables (where it only records a 1 if there was a non-zero Betti number). 
   Example
-   R=QQ[a,b,c];
-   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal(a^3*b,a*c)}
+   R = ZZ/101[a..e];
+   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
    (avgBetti, avgBettiShape) = bettiStats L 
   Text 
    For sample size $N$, the average Betti table is to be interpreted as follows: 
@@ -509,11 +509,12 @@ doc ///
    apply(L,i->betti res i)
    avgBetti
   Text
+   It may be of greater interest to look at which Betti numbers are simply nonzero. To do that, we compute the average Betti {\em shape}.
    For sample size $N$, the average Betti table {\em shape} is to be interpreted as follows:
    entry (i,j) in average Betti table SHAPE encodes the following sum of indicators: 
    $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
    the proportion of ideals with a nonzero beta_{ij}.
-   Thus an entry of 0.5 means 50% of ideals have a non-zero Betti number there.
+   Thus an entry of 0.33 means 33% of ideals have a non-zero Betti number there.
   Example
    apply(L,i->betti res i)
    avgBettiShape   
