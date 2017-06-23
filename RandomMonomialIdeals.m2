@@ -208,6 +208,7 @@ bettiStats List :=  o-> (ideals) -> (
     -- compute the average Betti table shape: 
     bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
     -- Now, add the betti tables of all the zero ideals:
+    {*
     betaWithZeroIdeals := new BettiTally from beta;
     betaShapeWithZeroIdeals := new BettiTally from betaShapes;
     if not o.IncludeZeroIdeals then (
@@ -222,8 +223,9 @@ bettiStats List :=  o-> (ideals) -> (
     bWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaWithZeroIdeals), RR)));
     -- compute the average Betti table SHAPE including the count of zero ideals:
     bShapeWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaShapeWithZeroIdeals), RR)));
-    return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals)--,pure)
+    --return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals)--,pure)
     );
+    *}
     return (b,bShape)--,pure)
     )
     
@@ -463,7 +465,7 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   of BettyTallies, representing the mean Betti table and the mean Betti shape of the ideals in the list {\tt ideals}.
+   of BettyTallies, representing the mean Betti table and the mean Betti shape of the elements in the list {\tt ideals}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
@@ -492,23 +494,19 @@ doc ///
    apply(L,i->betti res i)
    meanBettiShape   
   Text 
-   Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied! 
-  Text
-   If the sample includes zero ideals, then the same statistics of the non-zero ideals only are also reported:
-  Example 
+   Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied. 
+
   Text 
-   If {\tt ideals} contains zero ideals you may wish to exclude them from the Betti statistics. 
-   In this case, use the option, and then additional two elements are reported: the same statistics of the non-zero ideals only. 
-   **move this to optional input documentation** 
+   If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
+   In this case, use the optional input as follows, noting that the method returns the statisics with or without the zero ideals: 
   Example
-   L=append(L,monomialIdeal 0_R);
+   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
+   apply(L,i->betti res i)
    bettiStats L
-   (meanBettiNoZeroIdeals, meanBettiShapeNoZeroIdeals, meanBetti, meanBettiShape)=bettiStats(L,IncludeZeroIdeals=>false);
-   meanBettiNoZeroIdeals
-   meanBettiShapeNoZeroIdeals
+   bettiStats(L,IncludeZeroIdeals=>false)
   Text 
-   For now I have an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
-   (but this is really going to move to option documentation, if we even decide to keep it.) 
+   For now, the method also has an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
+   [** but this is really going to move to option documentation, if we even decide to keep it. **] 
   Example
    bettiStats (L,SaveBettis=>true) -- saves 1 file (for now). 
 
@@ -817,7 +815,7 @@ doc ///
    [randomMonomialIdeals, IncludeZeroIdeals]
    [bettiStats, IncludeZeroIdeals]
  Headline
-   optional input to choose whether or not zero ideals should be included in the list of ideals or statistics calculations
+   optional input to choose whether or not zero ideals should be included
  Description
    Text
      When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
