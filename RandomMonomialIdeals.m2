@@ -255,10 +255,6 @@ dimStats List := o-> (listOfIdeals) -> (
     ret = (avg, stdDev)
 )
 
---computes regularity of each RMI, prints, returns and saves to file `regularity'  - with an extension encoding values of n,p,D,N. 
--- also saves a distribution and a TALLY (i.e. histogram) of all regularities computed at the end of that file! 
---avgReg = method()
---avgReg (List,ZZ,String,String) :=   (ideals,N,basefilename,fileNameExt) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
@@ -868,11 +864,11 @@ doc ///
  Usage
   regStats(List)
  Inputs
-  listOfIdeals: List
+  : List
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   whose first entry is the average regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally 
+   whose first entry is the mean regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally.
  Description
   Text
    regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
