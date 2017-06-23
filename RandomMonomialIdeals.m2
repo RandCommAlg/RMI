@@ -493,6 +493,8 @@ doc ///
   Example
    apply(L,i->betti res i)
    avgBettiShape   
+  Text 
+   Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied! 
   Text
    If the sample includes zero ideals, then the same statistics of the non-zero ideals only are also reported:
   Example 
