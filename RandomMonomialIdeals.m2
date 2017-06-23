@@ -187,7 +187,7 @@ bettiStats List :=  o-> (ideals) -> (
     if not o.IncludeZeroIdeals then (ideals,Z) = extractNonzeroIdeals(ideals);
     beta := new BettiTally; 
     betaShapes := new BettiTally;
-    pure := 0; -- count pure Betti tables. 
+    pure := 0; -- count pure Betti tables. THIS IS NOT CURRENTLY RETURNED BY THE METHOD. DECIDE. 
     -- add up all the betti tables: 
     apply(#ideals,i->( 
         resi := betti res ideals_i;
@@ -210,7 +210,6 @@ bettiStats List :=  o-> (ideals) -> (
     -- Now, add the betti tables of all the zero ideals:
     betaWithZeroIdeals := new BettiTally from beta;
     betaShapeWithZeroIdeals := new BettiTally from betaShapes;
-    --if Z>0 then ( 
     if not o.IncludeZeroIdeals then (
 	apply(Z,i-> ( 
     	    -- compute the average Betti table:
@@ -225,7 +224,6 @@ bettiStats List :=  o-> (ideals) -> (
     bShapeWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaShapeWithZeroIdeals), RR)));
     return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals)--,pure)
     );
-    --if Z>0 then return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals,pure) else return (b,bShape,pure)
     return (b,bShape)--,pure)
     )
     
