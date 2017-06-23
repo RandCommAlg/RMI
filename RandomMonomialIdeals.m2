@@ -830,19 +830,19 @@ doc ///
   CMStats(List)
  
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
  Outputs
   : RR
    the percentage of Cohen-Macaulay ideals in the list
  Description
   Text
-   CMStats checks each monomialIdeal and returns the percentage of Cohen-Macaulay ideals out of the inputted list of monomialIdeals   
+   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    CMStats(listOfIdeals)
+    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    CMStats(ideals)
   Text
     Note that the method can be run on a list of @TO Ideal@s, too.
 ///
@@ -1174,7 +1174,11 @@ TEST ///
 ///
 end
 
-You can write anything you want down here.  I like to keep examples
-as I’m developing here.  Clean it up before submitting for
-publication.  If you don't want to do that, you can omit the "end"
-above.
+
+restart;
+uninstallPackage"RandomMonomialIdeals";
+installPackage"RandomMonomialIdeals";
+viewHelp bettiStats
+
+check RandomMonomialIdeals 
+viewHelp RandomMonomialIdeals
