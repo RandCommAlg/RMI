@@ -301,29 +301,20 @@ mingenStats (List) :=  o -> (ideals) -> (
 -- (mu,reg) = mingenStats(L);
 -- mu
 -- reg
--------------------------------------------------------------------------------------
-------------------------------Projective Dimension-----------------------------------
--------------------------------------------------------------------------------------
 
---computes proj. dim. of each RMI, saves to file “projdims” - with an extension encoding values of n,p,D,N. 
---prints and returns avg. proj dim (real number) and their histogram
---avgPdim = method()
---avgPdim (List,ZZ,String,String) :=  (ideals,N,basefilename,fileNameExt) -> (
-pdimStats = method(TypicalValue=>RR)
+
+pdimStats = method(TypicalValue=>Sequence)
 pdimStats (List) :=  (ideals) -> (
     N:=#ideals;
-    pd := 0;
     pdHist:={};
     R:=ring(ideals_0);
     apply(#ideals,i-> 
 	(
         pdimi := pdim(R^1/ideals_i);
-        pd = pd + pdimi;
 	pdHist = append(pdHist, pdimi)
 	)
     );           
-    print "Average projective dimension:" expression(sub(1/N*pd, RR));
-    sub(1/N*pd, RR)
+    (sub(1/N*(sum pdHist), RR), 0) -- I'm returning stdev=0 because we haven't computed it. 
 )
 
 --**********************************--
@@ -825,25 +816,23 @@ doc ///
   pdimStats
   (pdimStats,List)
  Headline
-  Computes the projective dimension of each RMI, prints and returns the average 
+  statistics on projective dimension of a list of monomial ideals
  Usage
   pdimStats(List)
- 
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
-  
  Outputs
-  : RR 
-   The average projective dimension of the list of monomialIdeals
+  : Sequence 
+   whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
  Description
   Text
-   pdimStats computes the projective dimension of each monomialIdeal and returns the average.   
+   pdimStats finds the mean and standard deviaation of the projective dimension of elements in the list: 
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    pdimStats(listOfIdeals)
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+   pdimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
@@ -852,9 +841,8 @@ doc ///
   Example
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
    pdimStats(listOfIdeals)
-  --Text
-  -- Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
-  
+  Text
+   Note that this function can be run with a list of @TO ideals@ as well. 
 ///
 
 --******************************************--
