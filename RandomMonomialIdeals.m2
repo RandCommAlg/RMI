@@ -207,7 +207,7 @@ bettiStats List :=  o-> (ideals) -> (
     b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
     -- compute the average Betti table shape: 
     bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
-    return (b,bShape)--,pure)
+    return (bShape,b)--,pure)
     )
     
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
@@ -446,27 +446,20 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   of BettyTallies, representing the mean Betti table and the mean Betti shape of the elements in the list {\tt ideals}.
+   of BettyTallies, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt ideals}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
-   Namely, it computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample), 
-   and it also computes the average shape of the Betti tables (where it only records a 1 if there was a non-zero Betti number). 
+   Namely, it computes the average shape of the Betti tables (where 1 is recorded in entry (ij) for each element if beta_{ij} is not zero), 
+   and it also computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample). 
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
-   (meanBetti, meanBettiShape) = bettiStats L;
-   meanBetti
+   (meanBettiShape,meanBetti) = bettiStats L;
    meanBettiShape
-  Text 
-   For sample size $N$, the average Betti table is to be interpreted as follows: 
-   entry $(i,j)$ encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
-  Example
-   apply(L,i->betti res i)
    meanBetti
   Text
-   It may be of greater interest to look at which Betti numbers are simply nonzero. To do that, we compute the average Betti {\em shape}.
-   For sample size $N$, the average Betti table {\em shape} is to be interpreted as follows:
+   For sample size $N$, the average Betti table {\em shape} simply considers nonzero Betti numbers. It is to be interpreted as follows:
    entry (i,j) encodes the following sum of indicators: 
    $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
    the proportion of ideals with a nonzero beta_{ij}.
@@ -475,16 +468,23 @@ doc ///
    apply(L,i->betti res i)
    meanBettiShape   
   Text 
+   For sample size $N$, the average Betti table is to be interpreted as follows: 
+   entry $(i,j)$ encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
+  Example
+   apply(L,i->betti res i)
+   meanBetti
+  Text 
    Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied. 
 
   Text 
    If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
-   In this case, use the optional input as follows, noting that the method returns the statisics with or without the zero ideals: 
+   In this case, use the optional input as follows: 
   Example
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
    apply(L,i->betti res i)
    bettiStats L
    bettiStats(L,IncludeZeroIdeals=>false)
+   
   Text 
    For now, the method also has an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
    [** but this is really going to move to option documentation, if we even decide to keep it. **] 
@@ -1043,13 +1043,13 @@ TEST ///
 TEST///
    R = ZZ/101[a..c];
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3)};
-   (meanBetti, meanBettiShape) = bettiStats L;
+   (meanBettiShape,meanBetti) = bettiStats L;
    -- mean Betti table:
    b=new BettiTally from { (0,{0},0) => 2, (1,{2},2) => 2, (1,{3},3) => 1, (2,{4},4) => 1, (1,{4},4) => 1, (2,{5},5) =>1 }
    assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix b,RR))
    -- mean Betti shape: 
    b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
-   assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
+   assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
 ///
 
 
