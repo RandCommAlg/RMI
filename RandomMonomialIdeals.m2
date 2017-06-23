@@ -207,25 +207,6 @@ bettiStats List :=  o-> (ideals) -> (
     b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
     -- compute the average Betti table shape: 
     bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
-    -- Now, add the betti tables of all the zero ideals:
-    {*
-    betaWithZeroIdeals := new BettiTally from beta;
-    betaShapeWithZeroIdeals := new BettiTally from betaShapes;
-    if not o.IncludeZeroIdeals then (
-	apply(Z,i-> ( 
-    	    -- compute the average Betti table:
-	    betaWithZeroIdeals = betaWithZeroIdeals + betti res (ideal(0)*ring ideals_0);
-    	    -- compute the average Betti table shape: 
-	    betaShapeWithZeroIdeals = betaShapeWithZeroIdeals + betti res (ideal(0)*ring ideals_0);
-	    )    
-    	);
-    -- compute the average Betti table including the count of zero ideals:
-    bWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaWithZeroIdeals), RR)));
-    -- compute the average Betti table SHAPE including the count of zero ideals:
-    bShapeWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaShapeWithZeroIdeals), RR)));
-    --return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals)--,pure)
-    );
-    *}
     return (b,bShape)--,pure)
     )
     
