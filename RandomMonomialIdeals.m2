@@ -176,20 +176,22 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
-bettiStats = method(TypicalValue =>Sequence, Options =>{SaveBettis => false})
-bettiStats List :=  o-> (listOfIdeals) -> ( 
+bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false})
+bettiStats List :=  o-> (ideals) -> ( 
     if o.SaveBettis then (
 	basefilename:="DELETEme"; fileNameExt:="GetRidOfThis";
 	filename1 := concatenate(basefilename,"bettis",fileNameExt)
 	);
     -- sum of the betti tables and betti shapes: 
-    N := #listOfIdeals;
-    (ideals,Z) := extractNonzeroIdeals(listOfIdeals);
+    N := #ideals; Z:=0;
+    if not o.IncludeZeroIdeals then (ideals,Z) = extractNonzeroIdeals(ideals);
     beta := new BettiTally; 
     betaShapes := new BettiTally;
+    pure := 0; -- count pure Betti tables. 
     -- add up all the betti tables: 
     apply(#ideals,i->( 
         resi := betti res ideals_i;
+	if isPure resi then pure = pure +1; -- IS there a shorter way to do this? why can't i run "value(true)" and get 1? :-/
         if o.SaveBettis then filename1 << resi << endl;
     	-- add Betti tables as we compute them, so as to not store an entire sample of Betti tables in memory:
         beta = beta + resi;
@@ -208,8 +210,9 @@ bettiStats List :=  o-> (listOfIdeals) -> (
     -- Now, add the betti tables of all the zero ideals:
     betaWithZeroIdeals := new BettiTally from beta;
     betaShapeWithZeroIdeals := new BettiTally from betaShapes;
-    if Z>0 then ( 
-	apply(Z,i-> ( -- note that Z = N - #ideals -- 
+    --if Z>0 then ( 
+    if not o.IncludeZeroIdeals then (
+	apply(Z,i-> ( 
     	    -- compute the average Betti table:
 	    betaWithZeroIdeals = betaWithZeroIdeals + betti res (ideal(0)*ring ideals_0);
     	    -- compute the average Betti table shape: 
@@ -220,40 +223,10 @@ bettiStats List :=  o-> (listOfIdeals) -> (
     bWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaWithZeroIdeals), RR)));
     -- compute the average Betti table SHAPE including the count of zero ideals:
     bShapeWithZeroIdeals := mat2betti(1/N*(sub(matrix(betaShapeWithZeroIdeals), RR)));
+    return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals)--,pure)
     );
-    {*
-    -- averages of the betti tables:     
-    if o.SaveBettis then (
-    filename2 := concatenate(basefilename,"avgBetti",fileNameExt);
-    if Z>0 then ( 
-    filename2 << "AVERAGE BETTI NUMBERS (without zero ideals)" << endl;
-    filename2 << b << endl;
-    filename2 << "AVERAGE BETTI NUMBERS (with zero ideals)" << endl;
-    filename2 << bWithZeroIdeals << endl;
-    ) else ( -- no zero ideals so don't worry about that part: 
-    filename2 << "AVERAGE BETTI NUMBERS" << endl;
-    filename2 << b << endl;
-    );
-    filename2 << close
-    );
-    print "Average Betti numbers:" expression(b);
-  -- average betti table SHAPE: 
-    if o.SaveBettis then (
-    filename3 := basefilename|"avgBettiShape"|fileNameExt;
-    if Z>0 then ( 
-    filename3 << "AVERAGE BETTI TABLE SHAPE (without zero ideals): an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
-    filename3 << bShape << endl;
-    filename3 << "AVERAGE BETTI TABLE SHAPE (with zero ideals): an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
-    filename3 << bShapeWithZeroIdeals << endl;
-    ) else ( -- no zero ideals so don't worry about that part: 
-    filename3 << "AVERAGE BETTI TABLE SHAPE: an entry of 0.2 means 20% of ideals have a non-zero Betti number there" << endl;
-    filename3 << bShape << endl;
-    );
-    filename3 << close
-    );
-    print "Average Betti table shape:" expression(bShape);
-    *}
-    if Z>0 then return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals) else return (b,bShape)
+    --if Z>0 then return (b,bShape,bWithZeroIdeals,bShapeWithZeroIdeals,pure) else return (b,bShape,pure)
+    return (b,bShape)--,pure)
     )
     
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
@@ -492,7 +465,7 @@ doc ///
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   of BettyTallies, representing the mean Betti table and the average Betti shape of the ideals in the list {\tt ideals}. If {\tt ideals} contains zero ideals, additional two elements are reported: the same statistics of the non-zero ideals only. 
+   of BettyTallies, representing the mean Betti table and the average Betti shape of the ideals in the list {\tt ideals}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
@@ -501,7 +474,9 @@ doc ///
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
-   (avgBetti, avgBettiShape) = bettiStats L 
+   (avgBetti, avgBettiShape) = bettiStats L;
+   avgBetti
+   avgBettiShape
   Text 
    For sample size $N$, the average Betti table is to be interpreted as follows: 
    entry $(i,j)$ in average Betti table encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
@@ -521,12 +496,16 @@ doc ///
   Text
    If the sample includes zero ideals, then the same statistics of the non-zero ideals only are also reported:
   Example 
+  Text 
+   If {\tt ideals} contains zero ideals you may wish to exclude them from the Betti statistics. 
+   In this case, use the option, and then additional two elements are reported: the same statistics of the non-zero ideals only. 
+   **move this to optional input documentation** 
+  Example
    L=append(L,monomialIdeal 0_R);
-   (avgBettiNoZeroIdeals, avgBettiShapeNoZeroIdeals, avgBetti, avgBettiShape) = bettiStats L;
+   bettiStats L
+   (avgBettiNoZeroIdeals, avgBettiShapeNoZeroIdeals, avgBetti, avgBettiShape)=bettiStats(L,IncludeZeroIdeals=>false);
    avgBettiNoZeroIdeals
-   avgBetti
    avgBettiShapeNoZeroIdeals
-   avgBettiShape
   Text 
    For now I have an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
    (but this is really going to move to option documentation, if we decide to keep it.) 
@@ -836,11 +815,12 @@ doc ///
  Key
    IncludeZeroIdeals
    [randomMonomialIdeals, IncludeZeroIdeals]
+   [bettiStats, IncludeZeroIdeals]
  Headline
-   optional input to choose whether or not zero ideals should be included in the list of ideals
+   optional input to choose whether or not zero ideals should be included in the list of ideals or statistics calculations
  Description
    Text
-     If {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
+     When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
      If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them. 
    Example
      n=2;D=2;p=0.0;N=1;
@@ -853,6 +833,9 @@ doc ///
      In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
+   Text
+     When the option is used with the method @TO bettiStats@, ....
+     **** Need to move here the doc for [bettiStats, IncludeZeroIdeals] from the  bettiStats doc node. :) 
  SeeAlso
    randomMonomialIdeals
 ///
