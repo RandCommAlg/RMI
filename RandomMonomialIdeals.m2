@@ -838,6 +838,7 @@ doc ///
      **** Need to move here the doc for [bettiStats, IncludeZeroIdeals] from the  bettiStats doc node. :) 
  SeeAlso
    randomMonomialIdeals
+   bettiStats
 ///
 doc ///
  Key
