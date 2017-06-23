@@ -11,14 +11,14 @@ newPackage(
 		HomePage => "http://math.iit.edu/~spetrov1/"
 	    },
 	    {
-		Name => "Despina Stasi", 
-		Email => "stasdes@iit.edu", 
-		HomePage => "http://math.iit.edu/~stasdes/"
-	    },	
-	    {
 		Name => "Dane Wilburne", 
 		Email => "dwilburn@hawk.iit.edu", 
 		HomePage => "http://mypages.iit.edu/~dwilburn/"
+	    },	
+	    {
+		Name => "Despina Stasi", 
+		Email => "stasdes@iit.edu", 
+		HomePage => "http://math.iit.edu/~stasdes/"
 	    },	
 	    {
 		Name => "Tanner Zielinski", 
@@ -32,23 +32,19 @@ newPackage(
 	    },
 	    {
 		Name => "Parker Joncus", 
-		Email => "pjoncus@hawk.iit.edu", 
-		HomePage => ""
+		Email => "pjoncus@hawk.iit.edu"
 	    },
 	    {
 		Name => "Richard Osborn", 
-		Email => "rosborn@hawk.iit.edu", 
-		HomePage => ""
+		Email => "rosborn@hawk.iit.edu"
 	    },
 	    {
 	    	Name => "Monica Yun", 
-	    	Email => "myun1@hawk.iit.edu", 
-	    	HomePage => ""
+	    	Email => "myun1@hawk.iit.edu"
 	    },
 	    {
 	    	Name => "Genevieve Hummel", 
-	    	Email => "ghummel1@hawk.iit.edu", 
-	    	HomePage => ""
+	    	Email => "ghummel1@hawk.iit.edu"
 	    }
           -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
@@ -70,8 +66,6 @@ export {
     "IncludeZeroIdeals",
     "dimStats",
     "ShowTally",
-    "BaseFileName",
-    "FileNameExt",
     "degStats"
 }
 
@@ -344,12 +338,63 @@ doc ///
  Key
   RandomMonomialIdeals
  Headline
-  A package for generating Erdos-Renyi-type random monomial ideals and variations.
+  A package for generating Erdos-Renyi-type random monomial ideals and variations
  Description
   Text
-   {\em RandomMonomialIdeals} is a  package that... 
-  -- Caveat
-  -- Still trying to figure this out. [REMOVE ME]
+   {\em RandomMonomialIdeals} is a  package for sampling random monomial ideals from the Erdos-Renyi-type distribution, the graded version of it, and some extensions. 
+   The models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
+   (preprint available at **INSERT LINK** arXiv:1701.07130). 
+   
+   The main method, @TO randomMonomialSets@, generates a sample of size $N$ from the distribution $\mathcal B(n, D, p)$, where $n$ is the number of variables, $D$ is the 
+   maximum degree, and $p$ is the probability of selecting any given monomial: 
+  Example
+   n=3; D=2; p=0.5; N=4; 
+   L = randomMonomialSets(n,D,p,N)
+  Text 
+   For detailed model definition, see Section 1 of *PAPER REF*. 
+   
+   To sample from the graded model from Section 6 of *PAPER REF*, simply replace $p$ by a list of $D$ probabilities, one for each degree:
+  Example
+   randomMonomialSets(n,D,{0.0,1.0},N)
+  Text
+   Once a sample is generated, one can compute various statistics regarding algebraic properties of the sample. 
+   The methods in the package offer a way to compute and summarize statistics on some of the common properties, such as 
+   degree, dimension, projective dimension, Castelnuovo-Mumford regularity, etc. For example: 
+  Example 
+   ideals=idealsFromGeneratingSets(L)
+   dimStats(ideals,ShowTally=>true)
+  Text 
+   The first entry in the output of  @TO dimStats@ is the mean Krull dimension of the sample, and the second entry is the standard deviation.
+   Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@:
+  Example
+   mingenStats ideals
+   --bettiStats ideals -- to do: UNCOMMENT: will work once pull request merged, now it doesn' work
+  Text
+   For developing other models and computing statistics on objects other than monomial ideals, the package also 
+   defines a new Type: Sample . 
+   TO DO: WRITE ABOUT THIS. 
+   Convenient storage of statistics from a sample of objects. 
+   Streamlined way to store statistics or sample data into files and folders (optional). 
+  Example 
+   -- what? 
+  Text
+  
+   Note that the methods to generate samples of sets of monomials or monomial ideals offer various options, such as selecting a specific ring with which to work, or change variable names, coefficients, etc. Here is a simple example:
+  Example
+   R=ZZ/101[a..e];
+   randomMonomialSets(R,D,p,N)
+   randomMonomialSets(n,D,p,N,VariableName=>"t")
+  Text 
+   TO DO (some leftover comments): 
+   Make sure we mention why we are keeping both the option for the user to work with the random SETS as well as random IDEALS 
+   - to allow the user to work with both sets of monomials and ideals; 
+   they induce the same distribution on the ideals:
+  Example
+   randomMonomialSets(3,4,1.0,1)
+   randomMonomialIdeals(3,4,1.0,1)
+ SeeAlso
+  randomMonomialSet
+  -- 
 ///
 
 doc ///
@@ -1067,7 +1112,10 @@ TEST ///
 
 end
 
-You can write anything you want down here.  I like to keep examples
-as I’m developing here.  Clean it up before submitting for
-publication.  If you don't want to do that, you can omit the "end"
-above.
+restart;
+uninstallPackage"RandomMonomialIdeals";
+installPackage"RandomMonomialIdeals";
+viewHelp bettiStats
+
+check RandomMonomialIdeals 
+viewHelp RandomMonomialIdeals
