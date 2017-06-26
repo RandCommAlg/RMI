@@ -52,8 +52,9 @@ newPackage(
 	},
     	Headline => "A package for generating Erdos-Renyi-type random monomial ideals",
     	DebuggingMode => false,
-	Reload => true 
+	Reload => true
     	)
+needsPackage "Depth";
 
 export {
     "randomMonomialSets",
@@ -65,6 +66,8 @@ export {
     "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
+    "CMStats",
+    "borelFixedStats",
     "ShowTally",
     "degStats"
 }
@@ -88,7 +91,9 @@ randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
 
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,M,o))
+    x := toSymbol o.VariableName;
+    R := o.Coefficients[x_1..x_n];
+    apply(N,i-> randomMonomialSet(R,D,M,o))
 )
 
 randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
@@ -244,7 +249,29 @@ dimStats List := o-> (listOfIdeals) -> (
  	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
+--checks if each RMI is CM and prints the % CM as a real number
+CMStats = method(TypicalValue => RR)
+CMStats (List) :=  (listOfIdeals) -> (
+    cm := 0;
+    N:= #listOfIdeals;
+    R := ring(listOfIdeals#0);
+    for i from 0 to #listOfIdeals-1 do (
+       if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
+     print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
+   sub((cm)/N, RR)
+)
 
+--checks whether each RMI is Borel-fixed, 
+--prints and returns % of Borel-fixed RMIs in sample (real number) 
+borelFixedStats = method()
+borelFixedStats (List) :=  (ideals) -> (
+    bor := 0;
+    N:=#ideals;
+    for i from 0 to #ideals-1 do ( 
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
+    print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
+    sub((bor)/N, RR)
+)
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
     N:=#ideals;
@@ -327,7 +354,7 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
-    )
+)
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
@@ -838,7 +865,56 @@ doc ///
    mingenStats
    degStats
 ///
-
+doc ///
+ Key
+  CMStats
+  (CMStats,List)
+ Headline
+  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
+ Usage
+  CMStats(List)
+ 
+ Inputs
+  ideals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : RR
+   the percentage of Cohen-Macaulay ideals in the list
+ Description
+  Text
+   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    CMStats(ideals)
+  Text
+    Note that the method can be run on a list of @TO Ideal@s, too.
+///
+doc ///
+ Key
+  borelFixedStats
+  (borelFixedStats ,List)
+ Headline
+  percentage of Borel-fixed monomialIdeals in the given list
+ Usage
+  borelFixedStats(List)
+ 
+ Inputs
+  listOfIdeals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : RR
+   the percentage of Borel-fixed monomialIdeals in the list
+ Description
+  Text
+   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    borelFixedStats(listOfIdeals)
+///
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
@@ -1066,6 +1142,38 @@ TEST ///
 ///
 
 --***************--
+--    CMStats    --
+--***************--
+
+TEST ///
+ L=randomMonomialSet(5,1,1.0); R=ring(L#0);
+ listOfIdeals = {monomialIdeal(0_R)};
+ assert(1==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(R_0*R_1, R_2*R_0)};
+ assert(0==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
+ assert(.5==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+ assert(sub(2/3,RR)==CMStats(listOfIdeals))
+///
+
+--********************--
+--  borrelFixedStats  --
+--********************--
+
+TEST ///
+L=randomMonomialSet(5,1,1.0); R=ring(L#0);
+listOfIdeals = {monomialIdeal(0_R)};
+assert(1==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0*R_1)};
+assert(0==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
+assert(.5==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+assert(sub(2/3,RR)==borelFixedStats(listOfIdeals))
+///
+
+--***************--
 --  mingenStats  --
 --***************--
 
@@ -1109,8 +1217,8 @@ TEST ///
   assert(0.5===A_4)
   assert(2==sum(values(A_5)))
 ///
-
 end
+
 
 restart;
 uninstallPackage"RandomMonomialIdeals";
