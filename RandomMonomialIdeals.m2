@@ -315,8 +315,8 @@ pdimStats (List) := o-> (ideals) -> (
 	)
     );           
     ret:=();
-    avg:=sub(1/N*(sum pdHist,RR));
-    Ex2:=sub(1/N*(sum apply(elements(tally pdHist), i->i^2)), RR);
+    avg:=sub(((1/N)*(sum pdHist)),RR);
+    Ex2:=sub(((1/N)*(sum apply(elements(tally pdHist), i->i^2))), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
     if o.ShowTally 
@@ -839,15 +839,15 @@ doc ///
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-   --pdimStats(ideals) -- THIS LINE PRODUCES AN ERROR FOR SONJA
+   pdimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   --pdimStats(listOfIdeals) -- THIS LINE PRODUCES AN ERROR FOR SONJA
+   pdimStats(listOfIdeals)
   Example
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   --pdimStats(listOfIdeals) -- THIS LINE PRODUCES AN ERROR FOR SONJA
+   pdimStats(listOfIdeals)
   Text
    Note that this function can be run with a list of @TO ideal@s as well. 
 ///
@@ -1130,15 +1130,20 @@ TEST ///
   L=randomMonomialSet(3,3,1.0);
   R=ring(L#0);
   listOfIdeals={monomialIdeal(0_R)};
-  assert(sub(0,RR)==pdimStats(listOfIdeals))
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0,R_1,R_2)};
-  assert(sub(3,RR)==pdimStats(listOfIdeals))
+  assert(sub(3,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0*R_1^2,R_1^3,R_2)};
-  assert(sub(1.5,RR)==pdimStats(listOfIdeals))
+  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0^2*R_1,R_2)};
-  assert(sub(2,RR)==pdimStats(listOfIdeals))
+  assert(sub(2,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0,R_2),monomialIdeal(0_R),monomialIdeal(R_0^2*R_1,R_1^2)};
-  assert(sub(4/3,RR)==pdimStats(listOfIdeals))
+  assert(sub(4/3,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(((8/3)-(16/9))^(1/2),RR)==(pdimStats(listOfIdeals))_1)
 ///
 end
 
