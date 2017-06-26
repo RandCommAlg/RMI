@@ -267,7 +267,7 @@ regStats List := o-> (listOfIdeals) -> (
 	regHistogram = N:-infinity;
 	stdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally regHistogram); return ret;);
-	print "Average regularity:" expression(-infinity);
+	print "All ideals in this set are the zero ideal";
 	ret = (-infinity, 0)
     )
     else (
@@ -281,6 +281,7 @@ regStats List := o-> (listOfIdeals) -> (
     	     stdDev = var^(1/2);
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
+	     print(concatenate(toString(N-#ideals), " zero ideals were extracted from this sample"));
     	     ret = (avg, stdDev)
          )
     
