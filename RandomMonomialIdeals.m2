@@ -878,13 +878,13 @@ doc ///
   Text
    regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
   Example
-   n=4; D=3; p={0.0,1.0,0.0}; N=3;
-   B=randomMonomialIdeals(n,D,p,N);
+   n=4; D=3; p={0.0,1.0,0.0}; N=2;
+   B=randomMonomialIdeals(n,D,p,N)
    regStats(B)
   Text
    If the list given is a list of all zero ideals, regStats returns -infinity for the mean regularity.
   Example
-   B=randomMonomialIdeals(3,3,0.0,1);
+   B=randomMonomialIdeals(3,3,0.0,1)
    regStats(B)
   Text
    Note that this function can be called on a list of @TO Ideal@ objects instead.
