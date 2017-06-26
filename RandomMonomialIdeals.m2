@@ -11,6 +11,11 @@ newPackage(
 		HomePage => "http://math.iit.edu/~spetrov1/"
 	    },
 	    {
+		Name => "Contributing Author: Name", 
+		Email => "sonja.petrovic@iit.edu", 
+		HomePage => "http://math.iit.edu/~spetrov1/"
+	    },
+	    {
 		Name => "Dane Wilburne", 
 		Email => "dwilburn@hawk.iit.edu", 
 		HomePage => "http://mypages.iit.edu/~dwilburn/"
