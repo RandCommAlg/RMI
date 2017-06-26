@@ -635,14 +635,14 @@ doc ///
   B: List
     of sets of monomials
  Outputs
-  ideals: List
+  : List
     of @TO monomialIdeal@s
  Description
   Text
    idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal. It counts how many sets are given, and how many sets are converted to the zero ideal.
   Example
-   n=5; D=2; p=1.0; N=4;
-   B=randomMonomialSets(n,D,p,N);
+   n=4; D=2; p=1.0; N=3;
+   B=randomMonomialSets(n,D,p,N); B/print
    idealsFromGeneratingSets(B)
  SeeAlso
   randomMonomialIdeals
