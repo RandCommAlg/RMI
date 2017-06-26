@@ -266,8 +266,12 @@ regStats List := o-> (listOfIdeals) -> (
     if set {} === set ideals then (
 	regHistogram = N:-infinity;
 	stdDev := 0;
-	if o.ShowTally then(ret=(-infinity, 0, tally regHistogram); return ret;);
-	print "All ideals in this set are the zero ideal";
+	if o.ShowTally then(
+	    print "All ideals in this list are the zero ideal";
+	    ret=(-infinity, 0, tally regHistogram); 
+	    return ret;
+	    );
+	print "All ideals in this list are the zero ideal";
 	ret = (-infinity, 0)
     )
     else (
