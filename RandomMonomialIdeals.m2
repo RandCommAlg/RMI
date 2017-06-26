@@ -469,11 +469,11 @@ doc ///
  Usage
   bettiStats(List)
  Inputs
-  ideals: List
+  L: List
    of @TO monomialIdeal@s
  Outputs
   : Sequence
-   of BettyTallies, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt ideals}.
+   of BettyTallies, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt L}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
@@ -481,7 +481,7 @@ doc ///
    and it also computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample). 
   Example
    R = ZZ/101[a..e];
-   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
+   L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
    (meanBettiShape,meanBetti) = bettiStats L;
    meanBettiShape
    meanBetti
@@ -509,7 +509,6 @@ doc ///
   Example
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
    apply(L,i->betti res i)
-   bettiStats L
    bettiStats(L,IncludeZeroIdeals=>false)
    
   Text 
@@ -517,7 +516,6 @@ doc ///
    [** but this is really going to move to option documentation, if we even decide to keep it. **] 
   Example
    bettiStats (L,SaveBettis=>true) -- saves 1 file (for now). 
-
 ///
 
 doc ///
