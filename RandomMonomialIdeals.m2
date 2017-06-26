@@ -303,8 +303,8 @@ mingenStats (List) :=  o -> (ideals) -> (
 -- reg
 
 
-pdimStats = method(TypicalValue=>Sequence)
-pdimStats (List) :=  (ideals) -> (
+pdimStats = method(TypicalValue=>Sequence, Options => {ShowTally => false})
+pdimStats (List) := o-> (ideals) -> (
     N:=#ideals;
     pdHist:={};
     R:=ring(ideals_0);
@@ -314,7 +314,14 @@ pdimStats (List) :=  (ideals) -> (
 	pdHist = append(pdHist, pdimi)
 	)
     );           
-    (sub(1/N*(sum pdHist), RR), 0) -- I'm returning stdev=0 because we haven't computed it. 
+    ret:=();
+    avg:=sub(1/N*(sum pdHist,RR));
+    Ex2:=sub(1/N*(sum apply(elements(tally pdHist), i->i^2)), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
+    if o.ShowTally 
+         then(ret = (avg, stdDev, tally pdHist), return ret;);
+    ret=(avg, stdDev) 
 )
 
 --**********************************--
@@ -1116,7 +1123,7 @@ TEST ///
 ///
 
 --***************--
---  mingenStats  --
+--   pdimStats   --
 --***************--
 
 TEST ///
