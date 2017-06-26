@@ -787,35 +787,34 @@ doc ///
    [dimStats, ShowTally]
    [mingenStats, ShowTally]
    [degStats, ShowTally]
+   [pdimStats, ShowTally]
  Headline
    optional input to choose if the tally is to be returned 
  Description
    Text
-     If {\tt ShowTally => false} (the default value), then only the statistics of the function will be returned. 
-     If {\tt ShowTally => true}, then both the statistics and the dimension tally will be returned. 
+     If {\tt ShowTally => false} (the default value), then only the 2 basic statistics - mean and standard deviation - of the function will be returned. 
+     If {\tt ShowTally => true}, then both the statistics and the tally will be returned. 
 
    Example
      n=3;D=3;p=0.0;N=3;
-     listOfIdeals = randomMonomialIdeals(n,D,p,N);
-     dimStats(listOfIdeals)
-     mingenStats(listOfIdeals)
-     degStats(listOfIdeals)
+     ideals = randomMonomialIdeals(n,D,p,N);
+     dimStats(ideals)
+     mingenStats(ideals)
+     degStats(ideals)
+     pdimStats(ideals)
    Text
      In the example above, only the statistics are outputted since by default {\tt ShowTally => false}. 
    Text
     In order to view the tally, ShowTally must be set to true ({\tt ShowTally => true}) when the function is called: 
    Example
      L=randomMonomialSet(3,3,1.0);
+     -- QUESTION: what is the purpose of using L here?! 
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
      dimStats(listOfIdeals,ShowTally=>true)
      mingenStats(listOfIdeals,ShowTally=>true)
      degStats(listOfIdeals,ShowTally=>true)
-     
- SeeAlso
-   dimStats
-   mingenStats
-   degStats
+     pdimStats(listOfIdeals,ShowTally=>true)
 ///
 
 doc ///
@@ -836,9 +835,8 @@ doc ///
   Text
    pdimStats finds the mean and standard deviaation of the projective dimension of elements in the list: 
   Example
-   L=randomMonomialSet(3,3,1.0);
-   R=ring(L#0);
-   ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+   R=ZZ/101[a,b,c]
+   ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
