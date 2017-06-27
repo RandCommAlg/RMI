@@ -75,7 +75,8 @@ export {
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
-    "degStats"
+    "degStats",
+    "pdimStats"
 }
 
 --***************************************--
@@ -327,6 +328,28 @@ mingenStats (List) :=  o -> (ideals) -> (
 -- (mu,reg) = mingenStats(L);
 -- mu
 -- reg
+
+
+pdimStats = method(TypicalValue=>Sequence, Options => {ShowTally => false})
+pdimStats (List) := o-> (ideals) -> (
+    N:=#ideals;
+    pdHist:={};
+    R:=ring(ideals_0);
+    apply(#ideals,i-> 
+	(
+        pdimi := pdim(R^1/ideals_i);
+	pdHist = append(pdHist, pdimi)
+	)
+    );           
+    ret:=();
+    avg:=sub(((1/N)*(sum pdHist)),RR);
+    Ex2:=sub(((1/N)*(sum apply(elements(tally pdHist), i->i^2))), RR);
+    var:= Ex2 - avg^2;
+    stdDev:= var^(1/2);
+    if o.ShowTally 
+         then(ret = (avg, stdDev, tally pdHist), return ret;);
+    ret=(avg, stdDev) 
+)
 
 --**********************************--
 --  Internal methods	    	    --
@@ -794,37 +817,81 @@ doc ///
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
 ///
 
+
 doc ///
  Key
    ShowTally
    [dimStats, ShowTally]
    [mingenStats, ShowTally]
    [degStats, ShowTally]
+   [pdimStats, ShowTally]
  Headline
    optional input to choose if the tally is to be returned 
  Description
    Text
-     If {\tt ShowTally => false} (the default value), then only the statistics of the function will be returned. 
-     If {\tt ShowTally => true}, then both the statistics and the dimension tally will be returned. 
+     If {\tt ShowTally => false} (the default value), then only the 2 basic statistics - mean and standard deviation - of the function will be returned. 
+     If {\tt ShowTally => true}, then both the statistics and the tally will be returned. 
 
    Example
      n=3;D=3;p=0.0;N=3;
-     listOfIdeals = randomMonomialIdeals(n,D,p,N);
-     dimStats(listOfIdeals)
-     mingenStats(listOfIdeals)
-     degStats(listOfIdeals)
+     ideals = randomMonomialIdeals(n,D,p,N);
+     dimStats(ideals)
+     mingenStats(ideals)
+     degStats(ideals)
+     pdimStats(ideals)
    Text
      In the example above, only the statistics are outputted since by default {\tt ShowTally => false}. 
    Text
     In order to view the tally, ShowTally must be set to true ({\tt ShowTally => true}) when the function is called: 
    Example
      L=randomMonomialSet(3,3,1.0);
+     -- QUESTION: what is the purpose of using L here?! 
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
      dimStats(listOfIdeals,ShowTally=>true)
      mingenStats(listOfIdeals,ShowTally=>true)
      degStats(listOfIdeals,ShowTally=>true)
+     pdimStats(listOfIdeals,ShowTally=>true)
 ///
+
+doc ///
+ Key
+  pdimStats
+  (pdimStats,List)
+ Headline
+  statistics on projective dimension of a list of monomial ideals
+ Usage
+  pdimStats(List)
+ Inputs
+  ideals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : Sequence 
+   whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
+ Description
+  Text
+   pdimStats finds the mean and standard deviation of the projective dimension of elements in the list: 
+  Example
+   R=ZZ/101[a,b,c]
+   ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
+   pdimStats(ideals)
+  Text
+   pdimStats will also output the projective dimension Tally using the optional input ShowTally
+  Example
+   R=ZZ/101[a,b,c]
+   ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
+   pdimStats(ideals, ShowTally=>true)
+  Text
+   The following example uses the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+  Example
+   listOfIdeals = randomMonomialIdeals(4,3,1.0,3)
+   pdimStats(listOfIdeals)
+  Text
+   Note that this function can be run with a list of @TO ideal@s as well. 
+ SeeAlso
+   ShowTally
+///
+
 doc ///
  Key
   CMStats
@@ -833,7 +900,6 @@ doc ///
   percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
- 
  Inputs
   ideals: List
     of @TO monomialIdeal@s
@@ -851,6 +917,7 @@ doc ///
   Text
     Note that the method can be run on a list of @TO Ideal@s, too.
 ///
+
 doc ///
  Key
   borelFixedStats
@@ -1177,6 +1244,32 @@ TEST ///
   assert(0.5===A_4)
   assert(2==sum(values(A_5)))
 ///
+
+--***************--
+--   pdimStats   --
+--***************--
+
+TEST ///
+  L=randomMonomialSet(3,3,1.0);
+  R=ring(L#0);
+  listOfIdeals={monomialIdeal(0_R)};
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  listOfIdeals={monomialIdeal(R_0,R_1,R_2)};
+  assert(sub(3,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0*R_1^2,R_1^3,R_2)};
+  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_1)
+  listOfIdeals={monomialIdeal(R_0^2*R_1,R_2)};
+  assert(sub(2,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  listOfIdeals={monomialIdeal(R_0,R_2),monomialIdeal(0_R),monomialIdeal(R_0^2*R_1,R_1^2)};
+  assert(sub(4/3,RR)==(pdimStats(listOfIdeals))_0)
+  assert(sub(((8/3)-(16/9))^(1/2),RR)==(pdimStats(listOfIdeals))_1)
+///
+
+end
 
 --****************************--
 --  idealsFromGeneratingSets  --
