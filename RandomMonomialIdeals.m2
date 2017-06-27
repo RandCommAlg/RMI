@@ -931,6 +931,9 @@ doc ///
     R=ring(L#0);
     listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
     borelFixedStats(listOfIdeals)
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 ///
 
