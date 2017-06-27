@@ -839,6 +839,13 @@ doc ///
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
+   pdimStats will also output the Histogram Tally using the optional input ShowTally
+  Example
+   L=randomMonomialSet(3,3,1.0);
+   R=ring(L#0);
+   ideals = {monomialIdeal(R_0,R_2),monomialIdeal(0_R),monomialIdeal(R_0^2*R_1,R_1^2)}
+   pdimStats(ideals, ShowTally=>true)
+  Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3)) 
@@ -848,6 +855,8 @@ doc ///
    pdimStats(listOfIdeals)
   Text
    Note that this function can be run with a list of @TO ideal@s as well. 
+ SeeAlso
+   ShowTally
 ///
 
 --******************************************--
