@@ -74,8 +74,6 @@ export {
     "CMStats",
     "borelFixedStats",
     "ShowTally",
-    "BaseFileName",
-    "FileNameExt",
     "degStats",
     "pdimStats"
 }
