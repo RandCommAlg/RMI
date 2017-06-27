@@ -22,16 +22,17 @@ apply(B,b->phi b)
 -- the above example gives you all monomials with 1-norm 2. 
 
 
--- let's create : 
-allLaurentMonomials FUNCTION: 
+-- let's create a funciton for the above: 
+allLaurentMonomials = (n,D) -> (
 -- input n 
 -- input D
+R:=ZZ/101[x_1..x_n,a_1..a_n];
+I:=ideal apply(toList(1..n),i-> a_i*x_i-1);
+F:=R/I;
+L:=QQ[x_1..x_n, MonomialOrder=>Lex,Inverses=>true];
+phi := map( L , F ,     matrix{join(toList(x_1..x_n), apply(toList(1..n),i->x_i^(-1)) ) } ); 
+B  :=  flatten flatten apply(toList(1..D),d->entries basis(d,F));
+apply(B,b->phi b)
+)
 
---for testing: 
-n=3
-D=2
--- 
---- x= symbol 'x'; a=symbol 'a'; -- free up "x" and "a" b/c I used them already above 
-R=ZZ/101[x_1..x_n,a_1..a_n]
-I=ideal apply(toList(1..n),i-> a_i*x_i-1)
-phi = map( QQ[x_1..x_n, MonomialOrder=>Lex,Inverses=>true]
+allLaurentMonomials(3,2) 
