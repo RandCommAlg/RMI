@@ -876,6 +876,53 @@ doc ///
     borelFixedStats(listOfIdeals)
 ///
 
+doc ///
+ Key
+   Verbose
+   [degStats, Verbose]
+   [idealsFromGeneratingSets, Verbose]
+   [dimStats, Verbose]
+   [CMStats, Verbose]
+   [borelFixedStats, Verbose]
+   [mingenStats, Verbose]
+   
+ Headline
+   optional input to choose if the statement is to be displayed 
+ Description
+   Text
+     If {\tt Verbose => false} (the default value), then function will execute without display. 
+     If {\tt ShowTally => true}, then an informational statement will be displayed. 
+
+   Example
+     n=3;D=3;p=0.0;N=3;
+     listOfIdeals = randomMonomialIdeals(n,D,p,N);
+     dimStats(listOfIdeals)
+     mingenStats(listOfIdeals)
+     degStats(listOfIdeals)
+   Text
+     In the example above, only return values are outputted since by default {\tt Verbose => false}. 
+   Text
+    In order to view the statements, Verbose must be set to true ({\tt Verbose => true}) when the function is called: 
+   Example
+     L=randomMonomialSet(3,3,1.0);
+     R=ring(L#0);
+     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+     degStats(listOfIdeals, Verbose => true)
+     idealsFromGeneratingSets(listOfIdeals, Verbose => true)
+     dimStats(listOfIdeals,Verbose=>true)
+     CMStats(listOfIdeals, Verbose => true)
+     borelFixedStats(listOfIdeals, Verbose => true)
+     mingenStats(listOfIdeals,Verbose=>true)
+          
+ SeeAlso
+   degStats
+   idealsFromGeneratingSets 
+   dimStats
+   CMStats
+   borelFixedStats
+   mingenStats
+   
+///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
