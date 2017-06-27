@@ -833,7 +833,7 @@ doc ///
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
  Description
   Text
-   pdimStats finds the mean and standard deviaation of the projective dimension of elements in the list: 
+   pdimStats finds the mean and standard deviation of the projective dimension of elements in the list: 
   Example
    R=ZZ/101[a,b,c]
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
@@ -845,10 +845,7 @@ doc ///
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
    pdimStats(ideals, ShowTally=>true)
   Text
-   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
-  Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3)) 
-   pdimStats(listOfIdeals)
+   The following example uses the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    listOfIdeals = randomMonomialIdeals(4,3,1.0,3)
    pdimStats(listOfIdeals)
