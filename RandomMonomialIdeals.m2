@@ -56,8 +56,9 @@ newPackage(
 	},
     	Headline => "A package for generating Erdos-Renyi-type random monomial ideals",
     	DebuggingMode => false,
-	Reload => true 
+	Reload => true
     	)
+needsPackage "Depth";
 
 export {
     "randomMonomialSets",
@@ -69,6 +70,8 @@ export {
     "mingenStats",
     "IncludeZeroIdeals",
     "dimStats",
+    "CMStats",
+    "borelFixedStats",
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
@@ -94,7 +97,9 @@ randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
 
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
-    apply(N,i-> randomMonomialSet(n,D,M,o))
+    x := toSymbol o.VariableName;
+    R := o.Coefficients[x_1..x_n];
+    apply(N,i-> randomMonomialSet(R,D,M,o))
 )
 
 randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
@@ -174,25 +179,16 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
---computes degree of R/I for each RMI, saves degrees to file “degree” - with an extension encoding values of n,p,D,N. 
---prints and returns avg. degree (real number)
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     deg := 0;
     degHistogram:={};
-    --filename := o.BaseFileName|"degree"|o.FileNameExt;
-    --fileHist := o.BaseFileName|"degreeHistogram"|o.FileNameExt;
     apply(#listOfIdeals, i->( 
         degi := degree listOfIdeals_i;
-	--filename << degi << endl
         degHistogram = append(degHistogram, degi)
 	)
     );
-    --filename << close;
-    --fileHist << values tally degHistogram << endl;
-    --fileHist << tally degHistogram;
-    --fileHist << close;
     ret:=();
     avg:=sub(1/N*(sum degHistogram), RR);
     Ex2:=sub(1/N*(sum apply(elements(tally degHistogram), i->i^2)), RR);
@@ -206,33 +202,19 @@ degStats List :=  o-> (listOfIdeals) -> (
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
--- ^^ change this to by default NOT write to file; and if option " SaveToFile=> true " then do write to file.
--- see branch @25 for this fix. 
 idealsFromGeneratingSets(List):= o -> (B) -> (
---idealsFromGeneratingSets (List,RR,ZZ,String) := o -> (B,p,D,basefilename) -> (
-	-- ^^ we can decide if we want p,D,basefilename to be optionalinputs that are put together in a sequence 
-	-- i.e., do (p,D,baseFileName) as input. 
-	-- maybe the filename should be optional and make it "temp" for default. 
     N := # B;
     n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
-    -- see branch @25 for the file writing: 
-    --    fileNameExt := concatenate("_for_params_n",toString(n),"_p",toString(p),"_D",toString(D),"_N",toString(N));
-    --    filename := concatenate(basefilename,"randomIdeals",fileNameExt,".txt");
     ideals := {};
     for i from 0 to #B-1 do {
 	ideals = B / (b-> monomialIdeal b);
-	--	filename << toString B#i << endl; 
 	};
-    --    filename<<close;
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     print(concatenate("There are ", toString(#B)," ideals in this sample."));
     print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
---computes of each RMI, saves to file `dimension' - with an extension encoding values of n,p,D,N. 
---prints and returns the avg. Krull dim (real number) 
---also saves the histogram of dimensions
 dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
@@ -273,7 +255,29 @@ dimStats List := o-> (listOfIdeals) -> (
  	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
+--checks if each RMI is CM and prints the % CM as a real number
+CMStats = method(TypicalValue => RR)
+CMStats (List) :=  (listOfIdeals) -> (
+    cm := 0;
+    N:= #listOfIdeals;
+    R := ring(listOfIdeals#0);
+    for i from 0 to #listOfIdeals-1 do (
+       if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
+     print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
+   sub((cm)/N, RR)
+)
 
+--checks whether each RMI is Borel-fixed, 
+--prints and returns % of Borel-fixed RMIs in sample (real number) 
+borelFixedStats = method()
+borelFixedStats (List) :=  (ideals) -> (
+    bor := 0;
+    N:=#ideals;
+    for i from 0 to #ideals-1 do ( 
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
+    print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
+    sub((bor)/N, RR)
+)
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 mingenStats (List) :=  o -> (ideals) -> (
     N:=#ideals;
@@ -299,8 +303,6 @@ mingenStats (List) :=  o -> (ideals) -> (
             mingensi := gens gb ideals_i;
             numgensi := numgens source mingensi; 
             mi := max({degrees(mingensi)}#0#1); 
---        m = m + mi#0;
---        num = num + numgensi;
 	    numgensHist = append(numgensHist, numgensi); 
 	    complexityHist = append(complexityHist, mi#0)
 	    )
@@ -315,9 +317,7 @@ mingenStats (List) :=  o -> (ideals) -> (
     comStdDev= comVar^(1/2);
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
-    --   print "Average # of min gens:" expression(sub((1/(#ideals))*num, RR));
     print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    --    print "Average degree complexity:" expression(sub((1/(#ideals))*m, RR));
     print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
     ret = (numAvg, numStdDev, comAvg, comStdDev)
     )
@@ -360,7 +360,7 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
     -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
-    )
+)
 
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
@@ -825,7 +825,56 @@ doc ///
      mingenStats(listOfIdeals,ShowTally=>true)
      degStats(listOfIdeals,ShowTally=>true)
 ///
-
+doc ///
+ Key
+  CMStats
+  (CMStats,List)
+ Headline
+  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
+ Usage
+  CMStats(List)
+ 
+ Inputs
+  ideals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : RR
+   the percentage of Cohen-Macaulay ideals in the list
+ Description
+  Text
+   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    CMStats(ideals)
+  Text
+    Note that the method can be run on a list of @TO Ideal@s, too.
+///
+doc ///
+ Key
+  borelFixedStats
+  (borelFixedStats ,List)
+ Headline
+  percentage of Borel-fixed monomialIdeals in the given list
+ Usage
+  borelFixedStats(List)
+ 
+ Inputs
+  listOfIdeals: List
+    of @TO monomialIdeal@s
+ Outputs
+  : RR
+   the percentage of Borel-fixed monomialIdeals in the list
+ Description
+  Text
+   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
+  Example
+    L=randomMonomialSet(3,3,1.0);
+    R=ring(L#0);
+    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    borelFixedStats(listOfIdeals)
+///
 
 --******************************************--
 -- TESTS     	     	       	    	    -- 
@@ -1050,6 +1099,38 @@ TEST ///
   n=4; D=6; M=7; N=1;
   B = flatten randomMonomialIdeals(n,D,M,N);
   assert (M>=numgens B_0)
+///
+
+--***************--
+--    CMStats    --
+--***************--
+
+TEST ///
+ L=randomMonomialSet(5,1,1.0); R=ring(L#0);
+ listOfIdeals = {monomialIdeal(0_R)};
+ assert(1==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(R_0*R_1, R_2*R_0)};
+ assert(0==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
+ assert(.5==CMStats(listOfIdeals))
+ listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+ assert(sub(2/3,RR)==CMStats(listOfIdeals))
+///
+
+--********************--
+--  borrelFixedStats  --
+--********************--
+
+TEST ///
+L=randomMonomialSet(5,1,1.0); R=ring(L#0);
+listOfIdeals = {monomialIdeal(0_R)};
+assert(1==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0*R_1)};
+assert(0==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
+assert(.5==borelFixedStats(listOfIdeals))
+listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
+assert(sub(2/3,RR)==borelFixedStats(listOfIdeals))
 ///
 
 --***************--
