@@ -216,7 +216,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     if o.Verbose then
-     stdio <<concatenate("There are ", toString(#B)," ideals in this sample."), concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal.") << endl;
+     stdio <<concatenate("There are ", toString(#B)," ideals in this sample.", "Of those, ", toString(numberOfZeroIdeals), " were the zero ideal.") << endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
@@ -1031,8 +1031,9 @@ doc ///
  Key
    Verbose
    [degStats, Verbose]
-   [idealsFromGeneratingSets, Verbose]
    [dimStats, Verbose]
+   [idealsFromGeneratingSets, Verbose]
+   [regStats, Verbose]
    [CMStats, Verbose]
    [borelFixedStats, Verbose]
    [mingenStats, Verbose]
@@ -1059,16 +1060,18 @@ doc ///
      R=ring(L#0);
      listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
      degStats(listOfIdeals, Verbose => true)
-     idealsFromGeneratingSets(listOfIdeals, Verbose => true)
      dimStats(listOfIdeals,Verbose=>true)
+     idealsFromGeneratingSets(listOfIdeals, Verbose => true)
+     regStats(listOfIdeals, Verbose => true)
      CMStats(listOfIdeals, Verbose => true)
      borelFixedStats(listOfIdeals, Verbose => true)
      mingenStats(listOfIdeals,Verbose=>true)
           
  SeeAlso
    degStats
-   idealsFromGeneratingSets 
    dimStats
+   idealsFromGeneratingSets 
+   regStats
    CMStats
    borelFixedStats
    mingenStats
