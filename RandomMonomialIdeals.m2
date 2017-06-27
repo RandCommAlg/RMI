@@ -839,7 +839,7 @@ doc ///
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
-   pdimStats will also output the Histogram Tally using the optional input ShowTally
+   pdimStats will also output the projective dimension Tally using the optional input ShowTally
   Example
    R=ZZ/101[a,b,c]
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
