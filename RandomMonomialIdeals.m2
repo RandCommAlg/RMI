@@ -216,7 +216,8 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     if o.Verbose then
-     stdio <<"There are "<< toString(#B)<<" ideals in this sample. "<< "Of those, "<< toString(numberOfZeroIdeals)<<" were the zero ideal." << endl;
+    vString := concatenate("There are ",toString(#B)," ideals in this sample. Of those, ", toString(numberOfZeroIdeals)," were the zero ideal.");
+     stdio <<vString<< endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
