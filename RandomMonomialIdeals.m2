@@ -481,10 +481,6 @@ doc ///
    degStats(listOfIdeals)
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
-   
- SeeAlso
-  ShowTally
-
 ///
 
 doc ///
@@ -652,6 +648,31 @@ doc ///
 
 doc ///
  Key
+  idealsFromGeneratingSets
+  (idealsFromGeneratingSets, List)
+ Headline
+  creates ideals from sets of monomials
+ Usage
+  idealsFromGeneratingSets(List)
+ Inputs
+  B: List
+    of sets of monomials
+ Outputs
+  : List
+    of @TO monomialIdeal@s
+ Description
+  Text
+   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal. It counts how many sets are given, and how many sets are converted to the zero ideal.
+  Example
+   n=4; D=2; p=1.0; N=3;
+   B=randomMonomialSets(n,D,p,N); B/print
+   idealsFromGeneratingSets(B)
+ SeeAlso
+  randomMonomialIdeals
+///
+
+doc ///
+ Key
   mingenStats
   (mingenStats, List)
  Headline
@@ -723,10 +744,6 @@ doc ///
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       randomMonomialSet(n,D,p,VariableName => y)
-  SeeAlso
-    randomMonomialSet
-    randomMonomialSets
-    randomMonomialIdeals
 ///
 
 doc ///
@@ -739,14 +756,12 @@ doc ///
     Text
       Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
       "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list.
-  SeeAlso
-    randomMonomialSet
-    randomMonomialSets
 ///
 
 doc ///
  Key
    IncludeZeroIdeals
+   [idealsFromGeneratingSets, IncludeZeroIdeals]
    [randomMonomialIdeals, IncludeZeroIdeals]
  Headline
    optional input to choose whether or not zero ideals should be included in the list of ideals
@@ -765,8 +780,6 @@ doc ///
      In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
- SeeAlso
-   randomMonomialIdeals
 ///
 doc ///
  Key
@@ -802,9 +815,6 @@ doc ///
    dimStats(listOfIdeals)
   Text
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
-  
- SeeAlso
-   ShowTally
 ///
 
 
@@ -1261,6 +1271,29 @@ TEST ///
 
 end
 
+--****************************--
+--  idealsFromGeneratingSets  --
+--****************************--
+
+TEST///
+  -- check the number of ideals
+  n=5; D=5; p=.6; N=3;
+  B = flatten idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>false);
+  assert (N===(#B-1+last(B))) -- B will be a sequence of nonzero ideals and the number of zero ideals in entry last(B)
+  C = idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>true);
+  assert (N===#C)
+///
+
+TEST ///
+  --check that all elements are MonomialIdeal
+  n=3;D=3;p=1.0;N=5;
+  B=idealsFromGeneratingSets(randomMonomialSets(n,D,p,N));
+  assert (all(B,b->instance(b,MonomialIdeal)))
+  C=idealsFromGeneratingSets(randomMonomialSets(n,D,p,N),IncludeZeroIdeals=>false);
+  assert (all(C#0,c->instance(c,MonomialIdeal)))
+///
+
+end
 
 restart;
 uninstallPackage"RandomMonomialIdeals";
