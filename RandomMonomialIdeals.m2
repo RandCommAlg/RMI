@@ -242,7 +242,7 @@ dimStats List := o-> (listOfIdeals) -> (
     ret = (avg, stdDev)
 )
 
-regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+regStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     ideals := extractNonzeroIdeals(listOfIdeals);
@@ -254,11 +254,11 @@ regStats List := o-> (listOfIdeals) -> (
 	regHistogram = N:-infinity;
 	stdDev := 0;
 	if o.ShowTally then(
-	    print "All ideals in this list are the zero ideal";
 	    ret=(-infinity, 0, tally regHistogram); 
 	    return ret;
 	    );
-	print "All ideals in this list are the zero ideal";
+	if o.Verbose then
+         stdio <<"All ideals in this list are the zero ideal" << endl;
 	ret = (-infinity, 0)
     )
     else (
@@ -272,7 +272,8 @@ regStats List := o-> (listOfIdeals) -> (
     	     stdDev = var^(1/2);
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
-	     print(concatenate(toString(N-#ideals), " zero ideals were extracted from this sample"));
+	     if o.Verbose then
+              stdio <<concatenate(toString(N-#ideals), " zero ideals were extracted from this sample")<< endl;
     	     ret = (avg, stdDev)
          )
     
