@@ -48,22 +48,14 @@ readBs = filename -> lines(get(filename))
 --computes bettis of each ideal, saves to file `bettis'  - with an extension encoding values of n,p,D,N. 
 --computes avg. betti table, prints and saves to file `avgBetti' - with an extension encoding values of n,p,D,N. 
 --returns avg betti table and avg betti table shape.
-needsPackage "BoijSoederberg"
---bettiStats =    (ideals,basefilename,fileNameExt) -> (
-bettiStats =    (ideals)->(
+bettiStats =    (ideals,N,Z,basefilename,fileNameExt) -> (
 --bettis =    (ideals,N,Z,basefilename,fileNameExt) -> (
     --
     -- NOTE --- THIS (AND OTHERS?) METHOD BREAKS IF THERE ARE NO ZERO IDEALS GENERATED. (!!) 
     -- THIS IS A SIMPLE BUG.
     -- FIX IT.
     -- 
-    -- what is this comment???????????
-    --
   -- sum of the betti tables and betti shapes: 
-    basefilename="DELETEme"; fileNameExt="getridofthis";
-    N:=#ideals;
-    Z:=0;
-    (ideals,Z)=extractNonzeroIdeals(ideals);
     beta = new BettiTally; 
     betaShapes = new BettiTally;
     filename1 = concatenate(basefilename,"bettis",fileNameExt);
