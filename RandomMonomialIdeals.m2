@@ -75,7 +75,8 @@ export {
     "ShowTally",
     "BaseFileName",
     "FileNameExt",
-    "degStats"
+    "degStats",
+    "Verbose"
 }
 
 --***************************************--
@@ -179,7 +180,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
-degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
+degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false, Verbose => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     deg := 0;
@@ -196,12 +197,13 @@ degStats List :=  o-> (listOfIdeals) -> (
     stdDev:= var^(1/2);
     if o.ShowTally
     	then(ret=(avg, stdDev,tally degHistogram); return ret;);
-    print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
+    if o.Verbose then
+     stdio <<"Average Degree:" expression(sub(1/N*(sum degHistogram), RR)) << endl;
     ret = (avg, stdDev)
 )
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
-idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true, Verbose => false})
 idealsFromGeneratingSets(List):= o -> (B) -> (
     N := # B;
     n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
@@ -210,12 +212,12 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	ideals = B / (b-> monomialIdeal b);
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
-    print(concatenate("There are ", toString(#B)," ideals in this sample."));
-    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
+    if o.Verbose then
+     stdio <<concatenate("There are ", toString(#B)," ideals in this sample."), concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal.") << endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
-dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     dims:=0;
@@ -232,7 +234,8 @@ dimStats List := o-> (listOfIdeals) -> (
     stdDev:= var^(1/2);
     if o.ShowTally 
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
-    print "Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR));
+    if o.Verbose then
+     stdio <<"Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR)) << endl;
     ret = (avg, stdDev)
 )
 
@@ -256,30 +259,32 @@ dimStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 --checks if each RMI is CM and prints the % CM as a real number
-CMStats = method(TypicalValue => RR)
-CMStats (List) :=  (listOfIdeals) -> (
+CMStats = method(TypicalValue => RR, Options =>{Verbose => false})
+CMStats (List) := RR => o -> (listOfIdeals) -> (
     cm := 0;
     N:= #listOfIdeals;
     R := ring(listOfIdeals#0);
     for i from 0 to #listOfIdeals-1 do (
        if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
-     print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
+   if o.Verbose then
+    stdio <<"Percent Cohen-Macaulay:" expression(sub((cm)/N, RR)) << endl;
    sub((cm)/N, RR)
 )
 
 --checks whether each RMI is Borel-fixed, 
 --prints and returns % of Borel-fixed RMIs in sample (real number) 
-borelFixedStats = method()
-borelFixedStats (List) :=  (ideals) -> (
+borelFixedStats = method(TypicalValue =>RR, Options =>{Verbose => false})
+borelFixedStats (List) := RR => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
     for i from 0 to #ideals-1 do ( 
-        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
-    print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
+      if o.Verbose then
+    stdio <<"Percent Borel-fixed:" expression(sub((bor)/N, RR)) << endl;   
     sub((bor)/N, RR)
 )
-mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-mingenStats (List) :=  o -> (ideals) -> (
+mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
+mingenStats (List) := Sequence => o -> (ideals) -> (
     N:=#ideals;
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
@@ -294,8 +299,8 @@ mingenStats (List) :=  o -> (ideals) -> (
 	numStdDev := 0;
 	comStdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
-	print "Average # of min gens:" expression(-infinity);
-	print "Average degree complexity:" expression(-infinity);
+	if o.Verbose then(
+         stdio <<"Average # of min gens:" expression(-infinity), "Average degree complexity:" expression(-infinity); << endl);
 	ret = (-infinity, 0, -infinity, 0)
     )
     else (
@@ -316,11 +321,11 @@ mingenStats (List) :=  o -> (ideals) -> (
     numStdDev= numVar^(1/2);
     comStdDev= comVar^(1/2);
     if o.ShowTally 
-       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
-    print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
+       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+    if o.Verbose then
+     stdio <<"Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR)), "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR)); << endl; 
     ret = (numAvg, numStdDev, comAvg, comStdDev)
-    )
+  )
 )
 -- example to run this^^ right now: 
 -- L=randomMonomialIdeals(3,4,0.5,2)
