@@ -911,15 +911,12 @@ doc ///
      In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
-<<<<<<< HEAD
    Text
      When the option is used with the method @TO bettiStats@, ....
      **** Need to move here the doc for [bettiStats, IncludeZeroIdeals] from the  bettiStats doc node. :) 
  SeeAlso
    randomMonomialIdeals
    bettiStats
-=======
->>>>>>> master
 ///
 doc ///
  Key
@@ -1504,8 +1501,6 @@ TEST ///
 
 end
 
-<<<<<<< HEAD
-=======
 --****************************--
 --  idealsFromGeneratingSets  --
 --****************************--
@@ -1530,7 +1525,6 @@ TEST ///
 
 end
 
->>>>>>> master
 restart;
 uninstallPackage"RandomMonomialIdeals";
 installPackage"RandomMonomialIdeals";
