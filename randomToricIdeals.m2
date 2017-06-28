@@ -59,11 +59,15 @@ allMonomials = allLaurentMonomials(n,D);
 B = take(random(allMonomials),M)
 )
 
+randomMLMonomialSet(3,2,8)
+
 randomERLMonomialSet = (n,D,p) -> (
 -- ER model with L1 norm monomial generating model
 allMonomials = allLaurentMonomials(n,D);
 B = select(allMonomials, m->random(0.0,1.0)<=p)
 )
+
+randomERLMonomialSet(3,2,.2)
 
 randomMlMonomialSet = (n,L,U,M) -> (
 -- fixed M model with positive degree sum/negative degree sum monomial generating model
@@ -71,8 +75,12 @@ allMonomials = laurentMonomials(n,L,U);
 B = take(random(allMonomials),M)
 )
 
+randomMlMonomialSet(3,-2,1,5)
+
 randomERlMonomialSet = (n,L,U,p) -> (
 -- ER model with positive degree sum/negative degree sum monomial generating model
-allMonomials = larentMonomials(n,L,U);
+allMonomials = laurentMonomials(n,L,U);
 B= select(allMonomials, m->random(0.0,1.0)<=p)
 )
+
+randomERlMonomialSet (3,-1,2,.2)
