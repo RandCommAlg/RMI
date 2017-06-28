@@ -4,6 +4,8 @@
 -- with a given 1-norm. We start with example and move to 
 -- a function that works on n variables and 1-norm D. 
 
+{*
+
 R=QQ[a,b,c,x,y,z]
 I=ideal(a*x-1,b*y-1,c*z-1)
  F=R/I
@@ -20,7 +22,7 @@ B  =  flatten entries basis(2,F)
 apply(B,b->phi b)
 
 -- the above example gives you all monomials with 1-norm 2. 
-
+*}
 
 -- let's create a funciton for the above: 
 allLaurentMonomials = (n,D) -> (
