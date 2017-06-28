@@ -37,4 +37,28 @@ B  :=  flatten flatten apply(toList(1..D),d->entries basis(d,F));
 apply(B,b->phi b)
 )
 
+allLaurentMonomials = (n,L,U) -> (
+R:=ZZ/101[x_1..x_n,a_1..a_n, Degrees=>join(toList(n:{1,0}), toList(n:{0,-1}))];
+I:=ideal apply(toList(1..n), i->a_i*x_i-1);
+F:=R/I;
+K:=QQ[x_1..x_n, MonomialOrder=>Lex,Inverses=>true];
+phi:= map(K,F, matrix{join(toList(x_1..x_n), apply(toList(1..n),i->x_i^(-1)))});
+B:= delete(sub(1,F), flatten flatten flatten apply(toList(0..U), i->apply(toList(L..0),j->entries basis({i,j},F))));
+apply(B, b->phi b)
+)
+
 allLaurentMonomials(3,2) 
+
+randomLMonomialSet = (n,D,M) -> (
+-- fixed M model
+allMonomials = allLaurentMonomials(n,D);
+B = take(random(allMonomials),M)
+)
+
+randomLMonomialSet = (n,D,p) -> (
+-- ER model
+allMonomials = allLaurentMonomials(n,D);
+B = select(allMonomials, m->random(0.0,1.0)<=p)
+)
+
+
