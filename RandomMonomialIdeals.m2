@@ -210,10 +210,10 @@ bettiStats List :=  o-> (ideals) -> (
 	)
     );
     if o.SaveBettis then filename1 << close;
-    -- compute the average Betti table:
-    b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
     -- compute the average Betti table shape: 
     bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
+    -- compute the average Betti table:
+    b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
     return (bShape,b)--,pure)
     )
     
