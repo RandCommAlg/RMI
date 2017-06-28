@@ -78,7 +78,7 @@ export {
     "ShowTally",
     "degStats",
     "bettiStats",
-    "SaveBettis"
+    "SaveBettis",
     "pdimStats"
 }
 
@@ -192,16 +192,19 @@ bettiStats List :=  o-> (ideals) -> (
     -- sum of the betti tables and betti shapes: 
     N := #ideals; Z:=0;
     if not o.IncludeZeroIdeals then (ideals,Z) = extractNonzeroIdeals(ideals);
-    beta := new BettiTally; 
+--    betaSum := new BettiTally; 
     betaShapes := new BettiTally;
+    bettisHistogram := {};
     pure := 0; -- count pure Betti tables. THIS IS NOT CURRENTLY RETURNED BY THE METHOD. DECIDE. 
     -- add up all the betti tables: 
     apply(#ideals,i->( 
         resi := betti res ideals_i;
 	if isPure resi then pure = pure +1; -- IS there a shorter way to do this? why can't i run "value(true)" and get 1? :-/
         if o.SaveBettis then filename1 << resi << endl;
-    	-- add Betti tables as we compute them, so as to not store an entire sample of Betti tables in memory:
-        beta = beta + resi;
+--    	-- add Betti tables as we compute them, so as to not store an entire sample of Betti tables in memory:
+--        betaSum = betaSum + resi;
+--	-- SHOOT. I need the entire sample of Betti tables so as to compute stddev at the end! 
+    	bettisHistogram = append(bettisHistogram, resi); 
   	-- let's only keep a 1 in all spots where ther was a non-zero Betti number: 
 	beta1mtx := matrix(resi);
 	Rtemp := (ring ideals_i)^1/ideals_i;
@@ -211,10 +214,35 @@ bettiStats List :=  o-> (ideals) -> (
     );
     if o.SaveBettis then filename1 << close;
     -- compute the average Betti table shape: 
-    bShape := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
-    -- compute the average Betti table:
-    b := mat2betti(1/#ideals*(sub(matrix(beta), RR)));
-    return (bShape,b)--,pure)
+    bShapeMean := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
+    -- compute the average (entry-wise) Betti table:
+    betaSum := sum bettisHistogram; 
+    bMean := mat2betti(1/#ideals*(sub(matrix(betaSum), RR)));
+{*  -- WORKING DRAFT WHICH IS NOT COMPILING DUE TO PROBLEM MENTIONED BELOW: 
+    -- compute the standard deviation (entry-wise) of the Betti tables: 
+---
+-- (will clean up) -- we really don't have to save each of the following betti as new tables; but for convenience of tracking the formula let me keep it temporarily:
+    S := matrix betaSum;
+    apply(bettisHistogram, currentBetti -> (
+	    currentBettiMatrix = matrix currentBetti; 
+    	    apply(numrows S, i-> 
+		apply(numcols S, j->
+	    	    (
+			--compute  (bMean_(i,j) - bCurrent_(i,j))^2
+			print ( sub(S_j_i / #ideals , RR) - currentBettiMatrix_j_i ); -- need to square
+			-- PROBLEM: these tables are of all kinds of different sizes.
+			-- OK i need a better way to compute StdDev. 
+			)
+	    	    )
+		)
+    	    )
+	);
+--    betaSquareDev := sum_over_i (bettisHistogram_i - bMean)^2;
+--    betaVariance := (1/#ideals*betaSquareDev); 
+--    bStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
+---
+*} 
+    return (bShapeMean,bMean)--,pure)
     )
     
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
@@ -560,7 +588,7 @@ doc ///
    apply(L,i->betti res i)
    meanBetti
   Text 
-   Note that this method will work on a List of any objects to which @TO betti@ @TO res@ can be applied. 
+   Note that this method will work on a @TO List of any objects to which @TO betti@ @TO res@ can be applied. 
 
   Text 
    If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
