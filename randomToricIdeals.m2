@@ -25,7 +25,7 @@ apply(B,b->phi b)
 *}
 
 -- let's create a funciton for the above: 
-allLaurentMonomials=method();
+allLaurentMonomials=method()
 
 allLaurentMonomials = (n,D) -> (
 -- input n 
@@ -38,6 +38,7 @@ phi := map( L , F ,     matrix{join(toList(x_1..x_n), apply(toList(1..n),i->x_i^
 B  :=  flatten flatten apply(toList(1..D),d->entries basis(d,F));
 apply(B,b->phi b)
 )
+allLaurentMonomials(3,2) 
 
 allLaurentMonomials = (n,L,U) -> (
 R:=ZZ/101[x_1..x_n,a_1..a_n, Degrees=>join(toList(n:{1,0}), toList(n:{0,-1}))];
@@ -49,7 +50,7 @@ B:= delete(sub(1,F), flatten flatten flatten apply(toList(0..U), i->apply(toList
 apply(B, b->phi b)
 )
 
-allLaurentMonomials(3,2) 
+allLaurentMonomials(3,-2,2) 
 
 randomLMonomialSet = (n,D,M) -> (
 -- fixed M model
