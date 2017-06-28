@@ -25,8 +25,6 @@ apply(B,b->phi b)
 *}
 
 -- let's create a funciton for the above: 
-allLaurentMonomials=method()
-
 allLaurentMonomials = (n,D) -> (
 -- input n 
 -- input D
@@ -40,7 +38,10 @@ apply(B,b->phi b)
 )
 allLaurentMonomials(3,2) 
 
-allLaurentMonomials = (n,L,U) -> (
+laurentMonomials = (n,L,U) -> (
+-- input n
+-- input L<0
+-- input U>0
 R:=ZZ/101[x_1..x_n,a_1..a_n, Degrees=>join(toList(n:{1,0}), toList(n:{0,-1}))];
 I:=ideal apply(toList(1..n), i->a_i*x_i-1);
 F:=R/I;
@@ -50,18 +51,28 @@ B:= delete(sub(1,F), flatten flatten flatten apply(toList(0..U), i->apply(toList
 apply(B, b->phi b)
 )
 
-allLaurentMonomials(3,-2,2) 
+laurentMonomials(3,-2,2) 
 
-randomLMonomialSet = (n,D,M) -> (
--- fixed M model
+randomMLMonomialSet = (n,D,M) -> (
+-- fixed M model with L1 norm monomial generationg model
 allMonomials = allLaurentMonomials(n,D);
 B = take(random(allMonomials),M)
 )
 
-randomLMonomialSet = (n,D,p) -> (
--- ER model
+randomERLMonomialSet = (n,D,p) -> (
+-- ER model with L1 norm monomial generating model
 allMonomials = allLaurentMonomials(n,D);
 B = select(allMonomials, m->random(0.0,1.0)<=p)
 )
 
+randomMlMonomialSet = (n,L,U,M) -> (
+-- fixed M model with positive degree sum/negative degree sum monomial generating model
+allMonomials = laurentMonomials(n,L,U);
+B = take(random(allMonomials),M)
+)
 
+randomERlMonomialSet = (n,L,U,p) -> (
+-- ER model with positive degree sum/negative degree sum monomial generating model
+allMonomials = larentMonomials(n,L,U);
+B= select(allMonomials, m->random(0.0,1.0)<=p)
+)
