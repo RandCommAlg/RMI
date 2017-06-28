@@ -25,6 +25,8 @@ apply(B,b->phi b)
 *}
 
 -- let's create a funciton for the above: 
+allLaurentMonomials=method();
+
 allLaurentMonomials = (n,D) -> (
 -- input n 
 -- input D
