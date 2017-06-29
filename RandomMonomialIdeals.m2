@@ -71,16 +71,14 @@ export {
     "ShowDegreeTally",
     "ShowDimensionTally",
     "IncludeZeroIdeals",
-    "ShowDimensionTally",
     "BaseFileName",
     "FileNameExt",
     -- Sample
     "sample",
-    "Parameters", "SampleSize", "getData",
+    "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
-    "Model",
-    "Generate",
-    "GradedER",
+    -- Model
+    "ER",
     "statistics",
     "WriteWithName", "Mean", "StdDev", "Histogram", "Statistics"
 }
@@ -98,32 +96,73 @@ Sample = new Type of MutableHashTable
 Model = new Type of HashTable
 
 Data = local Data
+Generate = local Generate
 
-GradedER = method(TypicalValue => Model)
-GradedER (ZZ,ZZ,RR) := (n,D,p) -> (
+ER = method(TypicalValue => Model)
+ER (ZZ,ZZ,RR) := (n,D,p) -> (
     -- Error checks
-    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     x := symbol x;
     R := QQ[x_1..x_n];
-    new Model from {Name => "GradedER",
+    new Model from {Name => "Erdos-Renyi",
 	            Parameters=>(n,D,p),
 		    Generate=>()->randomMonomialSet(R,D,p)}
 )
 
+ER (PolynomialRing,ZZ,RR) := (R,D,p) -> (
+    -- Error checks
+    new Model from {Name => "Erdos-Renyi",
+	            Parameters=>(R,D,p),
+		    Generate=>()->randomMonomialSet(R,D,p)}
+)
+
+ER (ZZ,ZZ,ZZ) := (n,D,M) -> (
+    -- Error checks
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    new Model from {Name => "Erdos-Renyi",
+	            Parameters=>(n,D,M),
+		    Generate=>()->randomMonomialSet(R,D,M)}
+)
+
+ER (PolynomialRing,ZZ,ZZ) := (R,D,M) -> (
+    -- Error checks
+    new Model from {Name => "Erdos-Renyi",
+	            Parameters=>(R,D,M),
+		    Generate=>()->randomMonomialSet(R,D,M)}
+)
+
+ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
+    -- Error checks
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    new Model from {Name => "Erdos-Renyi",
+	            Parameters=>(n,D,pOrM),
+		    Generate=>()->randomMonomialSet(R,D,pOrM)}
+)
+
+ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
+    -- Error checks
+    new Model from {Name => "Erdos-Renyi",
+	            Parameters=>(R,D,pOrM),
+		    Generate=>()->randomMonomialSet(R,D,pOrM)}
+)
+
 sample = method(TypicalValue => Sample)
 sample (Model, ZZ) := (M,N) -> (
-    new Sample from {Model=>M,
-		     SampleSize=>N,
-		     Data=>apply(N,i->M.Generate())}
+    s:=new Sample from {ModelName=>M.Name,
+	                Parameters=>M.Parameters,
+		        SampleSize=>N};
+    s.Data = apply(N,i->M.Generate());
+    s
 )
 
 sample String := filename -> (
     if not isDirectory filename then error "expected a directory";
     modelFile := realpath filename | "Model.txt";
     model := lines read openIn modelFile; -- catch errors
-    s := new Sample from {Model=>model#0,
-	                  Parameters=>value model#1,
-			  SampleSize=>value model#2};
+    s := new Sample from {ModelName=> model#1,
+                          Parameters=>value toString stack drop(model,{0,1}),
+			  SampleSize=>value model#0};
     dataFile := realpath filename | "Data.txt";
     s.Data = value read openIn dataFile;
     s
@@ -131,6 +170,9 @@ sample String := filename -> (
 
 getData = method()
 getData Sample := s -> (s.Data)
+
+-- TODO Prettyprint sample object
+-- net Sample := s -> ()
 
 writeSample = method()
 writeSample (Sample, String) := (s, filename) -> (
@@ -143,16 +185,16 @@ writeSample (Sample, String) := (s, filename) -> (
         mkdir filename;
     );
     realpath filename | "Model.txt" <<
-	s.Model << endl <<
-	s.Parameters << endl <<
-	s.SampleSize << close;
-    realpath filename | "Data.txt" << serialize s.Data << close;
+	s.SampleSize << endl <<
+	s.ModelName << endl <<
+	serialize s.Parameters << close;
+    realpath filename | "Data.txt" << serialize s.Data << close; -- Write other data
 )
 
 --File << Sample := (file, s) -> () Can't check if File is directory or not
 
 statistics = method(TypicalValue => HashTable, Options => {Statistics=>{Mean,StdDev,Histogram},
-	                                                               WriteWithName=>""})
+	                                                                WriteWithName=>""})
 statistics (Sample, Function) := HashTable => o -> (s,f) -> (
     fData := apply(s.Data,f);
     mean := (sum fData)/s.SampleSize;
@@ -844,6 +886,129 @@ doc ///
      
  SeeAlso
    dimStats
+///
+
+doc ///
+ Key
+  sample
+  (sample,Model,ZZ)
+  (sample,String)
+ Headline
+  generates a Sample object sampling from the given Model
+ Usage
+  sample(Model,ZZ)
+  sample(String)
+ Inputs
+  M: Model
+    model to be sampled from
+  : String
+    filename where the sample is stored
+  N: ZZ
+    number of samples generated
+ Outputs
+  S: Sample
+   Sample over specified Model with $N$ samples
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  writeSample
+  (writeSample,Sample,String)
+ Headline
+  write sample to a file
+ Usage
+  writeSample(Sample,String)
+ Inputs
+  S: Sample
+    Sample to write to file
+  FileName: String
+    file name to write sample to
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  getData
+  (getData,Sample)
+ Headline
+  get the underlying samples
+ Usage
+  getData(Sample)
+ Inputs
+  S: Sample
+    Sample to extract data
+ Outputs
+  Data: List
+   List of all samples in object
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  ER
+  (ER,ZZ,ZZ,RR)
+  (ER,PolynomialRing,ZZ,RR)
+  (ER,ZZ,ZZ,ZZ)
+  (ER,PolynomialRing,ZZ,ZZ)
+  (ER,ZZ,ZZ,List)
+  (ER,PolynomialRing,ZZ,List)
+ Headline
+  creates a model for sampling from the Erdos-Renyi type distribution on monomials
+ Usage
+  ER(ZZ,ZZ,RR)
+  ER(PolynomialRing,ZZ,RR)
+  ER(ZZ,ZZ,ZZ)
+  ER(PolynomialRing,ZZ,ZZ)
+  ER(ZZ,ZZ,List)
+  ER(PolynomialRing,ZZ,List)
+ Inputs
+  n: ZZ
+    number of variables
+  : PolynomialRing
+    the ring in which monomial sets are to live if n is not specified
+  D: ZZ
+    maximum degree
+  p: RR
+     the probability of selecting a monomial, 
+  M: ZZ
+     number of monomials in the set, 
+  : List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  statistics
+  (statistics,Sample,Function)
+ Headline
+  generate statistics for a sample
+ Usage
+  statistics(Sample,Function)
+ Inputs
+  S: Sample
+    Sample to run statistics on
+  f: Function
+    function over the data
+ Outputs
+  Stats: HashTable
+   Hash table containing statistics for the sample
+ Description
+  Text
+   TODO
 ///
 
 
