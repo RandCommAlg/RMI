@@ -338,7 +338,7 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
 	comStdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
 	if o.Verbose then(
-         stdio <<"Average # of min gens:" expression(-infinity), "Average degree complexity:" expression(-infinity); << endl);
+         stdio <<"Average # of min gens:" expression(-infinity) << " Average degree complexity:" expression(-infinity) << endl);
 	ret = (-infinity, 0, -infinity, 0)
     )
     else (
@@ -1047,9 +1047,14 @@ doc ///
    Example
      n=3;D=3;p=0.0;N=3;
      listOfIdeals = randomMonomialIdeals(n,D,p,N);
-     dimStats(listOfIdeals)
-     mingenStats(listOfIdeals)
      degStats(listOfIdeals)
+     dimStats(listOfIdeals)
+     idealsFromGeneratingSets(listOfIdeals)
+     regStats(listOfIdeals)
+     CMStats(listOfIdeals)
+     borelFixedStats(listOfIdeals)
+     mingenStats(listOfIdeals)
+     
    Text
      In the example above, only return values are outputted since by default {\tt Verbose => false}. 
    Text
