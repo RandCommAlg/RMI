@@ -75,12 +75,7 @@ export {
     "borelFixedStats",
     "ShowTally",
     "degStats",
-    "pdimStats"
-    "ShowDegreeTally",
-    "ShowDimensionTally",
-    "IncludeZeroIdeals",
-    "BaseFileName",
-    "FileNameExt",
+    "pdimStats",
     -- Sample
     "sample",
     "ModelName", "Parameters", "SampleSize", "getData",
@@ -207,7 +202,7 @@ statistics (Sample, Function) := HashTable => o -> (s,f) -> (
     fData := apply(s.Data,f);
     mean := (sum fData)/s.SampleSize;
     ret := {Mean=>mean,
-	    StdDev=>sqrt sum apply(fData, x-> (mean-x)^2),
+	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
 	    Histogram=>tally fData};
     if #o.WriteWithName != 0 then s#(toSymbol o.WriteWithName) = ret;
     ret
