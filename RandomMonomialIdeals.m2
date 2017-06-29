@@ -433,8 +433,8 @@ doc ///
  Description
   Text
    {\em RandomMonomialIdeals} is a  package for sampling random monomial ideals from the Erdos-Renyi-type distribution, the graded version of it, and some extensions. 
-   The models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
-   (preprint available at **INSERT LINK** arXiv:1701.07130). 
+   Some of the models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
+   (preprint available at **INSERT LINK** arXiv:1701.07130). The package also generalizes ....[fixed $M$ stuff, which isn't in the paper.]
    
    The main method, @TO randomMonomialSets@, generates a sample of size $N$ from the distribution $\mathcal B(n, D, p)$, where $n$ is the number of variables, $D$ is the 
    maximum degree, and $p$ is the probability of selecting any given monomial: 
