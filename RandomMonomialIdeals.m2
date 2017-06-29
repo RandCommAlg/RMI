@@ -362,7 +362,7 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
     if o.Verbose then
-     verString := concatenate("Average # of min gens: ",toString(expression(sub((1/(#ideals))*(sum numgensHist), RR)))," Average degree complexity: ", toString(expression(sub((1/(#ideals))*(sum complexityHist), RR))));
+     verString = concatenate("Average # of min gens: ", toString(expression(sub((1/(#ideals))*(sum numgensHist), RR))), " Average degree complexity: ", toString(expression(sub((1/(#ideals))*(sum complexityHist), RR))));
      stdio <<verString << endl; 
     ret = (numAvg, numStdDev, comAvg, comStdDev)
   )
