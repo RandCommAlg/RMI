@@ -433,6 +433,7 @@ doc ///
  Description
   Text
    {\em RandomMonomialIdeals} is a  package for sampling random monomial ideals from the Erdos-Renyi-type distribution, the graded version of it, and some extensions. 
+   It also introduces new objects, Sample and Model, to allow for streamlined handling of random objects and their statistics in Macaulay2. 
    Some of the models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
    (preprint available at **INSERT LINK** arXiv:1701.07130). The package also generalizes ....[fixed $M$ stuff, which isn't in the paper.]
    
