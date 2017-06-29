@@ -588,7 +588,7 @@ doc ///
    apply(L,i->betti res i)
    meanBetti
   Text 
-   Note that this method will work on a @TO List of any objects to which @TO betti@ @TO res@ can be applied. 
+   Note that this method will work on a @TO List@ of any objects to which @TO betti@ @TO res@ can be applied. 
 
   Text 
    If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
