@@ -183,6 +183,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
+
 bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false})
 bettiStats List :=  o-> (ideals) -> ( 
     if o.SaveBettis then (
@@ -218,31 +219,26 @@ bettiStats List :=  o-> (ideals) -> (
     -- compute the average (entry-wise) Betti table:
     betaSum := sum bettisHistogram; 
     bMean := mat2betti(1/#ideals*(sub(matrix(betaSum), RR)));
-{*  -- WORKING DRAFT WHICH IS NOT COMPILING DUE TO PROBLEM MENTIONED BELOW: 
     -- compute the standard deviation (entry-wise) of the Betti tables: 
----
--- (will clean up) -- we really don't have to save each of the following betti as new tables; but for convenience of tracking the formula let me keep it temporarily:
-    S := matrix betaSum;
-    apply(bettisHistogram, currentBetti -> (
-	    currentBettiMatrix = matrix currentBetti; 
-    	    apply(numrows S, i-> 
-		apply(numcols S, j->
+    bMeanMtx := matrix bMean;
+    betaVariance := 1/#ideals * sum apply(bettisHistogram, currentBetti -> (
+    	    mtemp := new MutableMatrix from bMeanMtx; 
+	    currentBettiMatrix := matrix currentBetti; 
+    	    apply(numrows currentBettiMatrix, i-> 
+		apply(numcols currentBettiMatrix, j->
 	    	    (
-			--compute  (bMean_(i,j) - bCurrent_(i,j))^2
-			print ( sub(S_j_i / #ideals , RR) - currentBettiMatrix_j_i ); -- need to square
-			-- PROBLEM: these tables are of all kinds of different sizes.
-			-- OK i need a better way to compute StdDev. 
+			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)): 
+			mtemp_(i,j) = mtemp_(i,j) - currentBettiMatrix_j_i
 			)
 	    	    )
-		)
-    	    )
+		);
+	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2: 
+    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
+    	    )	
 	);
---    betaSquareDev := sum_over_i (bettisHistogram_i - bMean)^2;
---    betaVariance := (1/#ideals*betaSquareDev); 
---    bStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
----
-*} 
-    return (bShapeMean,bMean)--,pure)
+    --    betaStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
+    bStdDev := matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
+    return (bShapeMean,bMean,bStdDev)--,pure)
     )
     
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
@@ -485,6 +481,23 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     return(nonzeroIdeals,numberOfZeroIdeals)
 )
 
+-- the following function is needed to fix the Boij-Soederberg "matrix BettiTally" method 
+-- that we can't use directly for StdDev computation, because we're working over RR not over ZZ:
+matrix(BettiTally, ZZ, ZZ) := opts -> (B,lowestDegree, highestDegree) -> (
+     c := pdim B + 1;
+     r := highestDegree - lowestDegree + 1;
+     --M := mutableMatrix(ZZ,r,c);
+     M := mutableMatrix(RR,r,c);
+     scan(pairs B, (i,v) -> (
+	       if v != 0 then
+	         M_(i_2-i_0-lowestDegree, i_0) = v;
+	       ));
+     matrix M
+     )
+
+
+
+
 --******************************************--
 -- DOCUMENTATION     	       	    	    -- 
 --******************************************--
@@ -569,9 +582,10 @@ doc ///
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
-   (meanBettiShape,meanBetti) = bettiStats L;
+   (meanBettiShape,meanBetti,stdDevBetti) = bettiStats L;
    meanBettiShape
    meanBetti
+   stdDevBetti
   Text
    For sample size $N$, the average Betti table {\em shape} simply considers nonzero Betti numbers. It is to be interpreted as follows:
    entry (i,j) encodes the following sum of indicators: 
