@@ -1061,7 +1061,7 @@ doc ///
      The default value is false. 
    Example
      n=3;D=3;p=0.0;N=3;
-     ideals = randomMonomialIdeals(n,D,p,N);
+     ideals = randomMonomialIdeals(n,D,p,N)
      regStats(ideals)
      CMStats(ideals)
    Text
@@ -1071,7 +1071,7 @@ doc ///
      regStats(ideals, Verbose => true)
      CMStats(ideals, Verbose => true)
    Text
-     Other methods that have this option are as follows (let us look at a nontrivial list of ideals): 
+     Other methods that have this option are as follows. Let us look at a nontrivial list of ideals to see more interesting statistics.
    Example
      n=3;D=3;p=0.1;N=3;
      ideals = randomMonomialIdeals(n,D,p,N)
