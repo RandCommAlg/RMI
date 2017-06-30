@@ -325,7 +325,7 @@ borelFixedStats (List) := RR => o -> (ideals) -> (
     for i from 0 to #ideals-1 do ( 
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
     if o.Verbose then (
-       numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+       numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"The list of monomial ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
        );
@@ -348,8 +348,7 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
 	numStdDev := 0;
 	comStdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
-	if o.Verbose then
-          stdio <<"This sample included only zero ideals." << endl);
+	if o.Verbose then stdio <<"This sample included only zero ideals." << endl;
 	ret = (-infinity, 0, -infinity, 0)
     )
     else (
