@@ -303,8 +303,8 @@ regStats List := o-> (listOfIdeals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
-CMStats = method(TypicalValue => RR, Options =>{Verbose => false})
-CMStats (List) := RR => o -> (listOfIdeals) -> (
+CMStats = method(TypicalValue => QQ, Options =>{Verbose => false})
+CMStats (List) := QQ => o -> (listOfIdeals) -> (
     cm := 0;
     N:= #listOfIdeals;
     R := ring(listOfIdeals#0);
@@ -315,11 +315,11 @@ CMStats (List) := RR => o -> (listOfIdeals) -> (
        stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl
        );
-   sub((cm)/N, RR)
+   cm/N
 )
 
-borelFixedStats = method(TypicalValue =>RR, Options =>{Verbose => false})
-borelFixedStats (List) := RR => o -> (ideals) -> (
+borelFixedStats = method(TypicalValue =>QQ, Options =>{Verbose => false})
+borelFixedStats (List) := QQ => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
     for i from 0 to #ideals-1 do ( 
@@ -329,7 +329,7 @@ borelFixedStats (List) := RR => o -> (ideals) -> (
        stdio <<"The list of monomial ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
        );
-    sub((bor)/N, RR)
+    bor/N
 )
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
 mingenStats (List) := Sequence => o -> (ideals) -> (
@@ -993,24 +993,23 @@ doc ///
 doc ///
  Key
   CMStats
-  (CMStats,List)
+  (CMStats, List)
  Headline
-  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
+  fraction of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
  Inputs
   ideals: List
     of @TO monomialIdeal@s
  Outputs
-  : RR
-   the percentage of Cohen-Macaulay ideals in the list
+  : QQ
+   the fraction of Cohen-Macaulay ideals in the list
  Description
   Text
    CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    R=ZZ/101[a,b,c];
+    ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
     CMStats(ideals)
   Text
     Note that the method can be run on a list of @TO Ideal@s, too.
@@ -1019,26 +1018,24 @@ doc ///
 doc ///
  Key
   borelFixedStats
-  (borelFixedStats ,List)
+  (borelFixedStats, List)
  Headline
-  percentage of Borel-fixed monomialIdeals in the given list
+  fraction of Borel-fixed monomialIdeals in the given list
  Usage
   borelFixedStats(List)
- 
  Inputs
   listOfIdeals: List
     of @TO monomialIdeal@s
  Outputs
-  : RR
-   the percentage of Borel-fixed monomialIdeals in the list
+  : QQ
+   the fraction of Borel-fixed monomialIdeals in the list
  Description
   Text
    borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    borelFixedStats(listOfIdeals)
+    R=ZZ/101[a,b,c];
+    ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
+    borelFixedStats(ideals)
 ///
 
 doc ///
@@ -1366,7 +1363,7 @@ TEST ///
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
  assert(.5==CMStats(listOfIdeals))
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
- assert(sub(2/3,RR)==CMStats(listOfIdeals))
+ assert(2/3==CMStats(listOfIdeals))
 ///
 
 --********************--
@@ -1382,7 +1379,7 @@ assert(0==borelFixedStats(listOfIdeals))
 listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
 assert(.5==borelFixedStats(listOfIdeals))
 listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
-assert(sub(2/3,RR)==borelFixedStats(listOfIdeals))
+assert(2/3==borelFixedStats(listOfIdeals))
 ///
 
 --***************--
