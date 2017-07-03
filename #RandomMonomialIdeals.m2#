@@ -1,3 +1,4 @@
+
 --**************************--
 -- -*- coding: utf-8 -*-
 newPackage(
@@ -50,7 +51,7 @@ newPackage(
 	    	Email => "ghummel1@hawk.iit.edu", 
 	    	HomePage => ""
 	    }
-          -- {Name=> "Contributing authors and collaborators: add any acknowledgments here", 
+          -- {Name=> "Contributing authors and collaborators: add any acknowledgements here", 
 	  -- Email=> "",
 	  -- HomePage=>""}      
 	},
@@ -404,7 +405,7 @@ toSymbol = (p) -> (
 extractNonzeroIdeals = ( ideals ) -> (
     nonzeroIdeals := select(ideals,i->i != 0);
     numberOfZeroIdeals := # ideals - # nonzeroIdeals;
-    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- since 0 is only included if the ideal = ideal{}, this is safe too
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
 )
 -- we may not need the next one for any of the methods in this file; we'll be able to determine this soon. keep for now.
@@ -415,7 +416,7 @@ extractNonzeroIdeals = ( ideals ) -> (
 extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     nonzeroIdeals := select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
     numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
-    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- since 0 is only included if the ideal = ideal{}, this is safe too
+    -- numberOfZeroIdeals = # positions(B,b-> b#0==0); -- sinze 0 is only included if the ideal = ideal{}, this is safe too
     return(nonzeroIdeals,numberOfZeroIdeals)
 )
 
@@ -466,7 +467,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
      or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of sets generated
@@ -506,7 +507,7 @@ doc ///
    listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
    degStats(listOfIdeals)
   Text
-   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+   The following expamples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
    degStats(listOfIdeals)
@@ -621,7 +622,7 @@ doc ///
   M: ZZ
      number of monomials in the set, 
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
      or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
   : List
@@ -718,7 +719,7 @@ doc ///
     of @TO monomialIdeal@s
  Outputs
   : Sequence
-    with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity. 
+    with the following entries: the average number of minimal generators, the standard deviation of the number of minimial generators, the average degree complexity, and the stadard deviation of the degree complexity. 
     If ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation. 
  Description
   Text
@@ -833,7 +834,7 @@ doc ///
    whose first entry is the average Krull dimension of a list of monomialIdeals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average and standard deviation of the Krull dimension for a list of monomialIdeals.   
+   dimStats finds the average and standard deviaation of the Krull dimension for a list of monomialIdeals.   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
