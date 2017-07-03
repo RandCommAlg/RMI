@@ -180,12 +180,12 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 )
 
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
-degStats List :=  o-> (listOfIdeals) -> (
-    N := #listOfIdeals;
+degStats List :=  o-> (ideals) -> (
+    N := #ideals;
     deg := 0;
     degHistogram:={};
-    apply(#listOfIdeals, i->( 
-        degi := degree listOfIdeals_i;
+    apply(#ideals, i->( 
+        degi := degree ideals_i;
         degHistogram = append(degHistogram, degi)
 	)
     );
@@ -216,12 +216,12 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 )
 
 dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-dimStats List := o-> (listOfIdeals) -> (
-    N := #listOfIdeals;
+dimStats List := o-> (ideals) -> (
+    N := #ideals;
     dims:=0;
     dimsHistogram:={};
-    apply(#listOfIdeals,i->( 
-        dimi := dim listOfIdeals_i;
+    apply(#ideals,i->( 
+        dimi := dim ideals_i;
     dimsHistogram = append(dimsHistogram, dimi)
     )
     );
@@ -237,9 +237,9 @@ dimStats List := o-> (listOfIdeals) -> (
 )
 
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-regStats List := o-> (listOfIdeals) -> (
-    N:=#listOfIdeals;
-    ideals := extractNonzeroIdeals(listOfIdeals);
+regStats List := o-> (ideals) -> (
+    N:=#ideals;
+    ideals := extractNonzeroIdeals(ideals);
     ideals = ideals_0;
     reg := 0;
     ret := ();
@@ -292,12 +292,12 @@ regStats List := o-> (listOfIdeals) -> (
 )
 --checks if each RMI is CM and prints the % CM as a real number
 CMStats = method(TypicalValue => RR)
-CMStats (List) :=  (listOfIdeals) -> (
+CMStats (List) :=  (ideals) -> (
     cm := 0;
-    N:= #listOfIdeals;
-    R := ring(listOfIdeals#0);
-    for i from 0 to #listOfIdeals-1 do (
-       if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
+    N:= #ideals;
+    R := ring(ideals#0);
+    for i from 0 to #ideals-1 do (
+       if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
      print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
    sub((cm)/N, RR)
 )
@@ -490,7 +490,7 @@ doc ///
  Usage
   degStats(List)
  Inputs
-  listOfIdeals: List
+  ideals: List
    of @TO monomialIdeal@s
  Outputs
   : Sequence
@@ -503,16 +503,16 @@ doc ///
   Example
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
-   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
-   degStats(listOfIdeals)
+   ideals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
+   degStats(ideals)
   Text
    The following expamples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   degStats(listOfIdeals)
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   degStats(ideals)
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   degStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3);
+   degStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
 ///
@@ -825,7 +825,7 @@ doc ///
   dimStats(List)
  
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
   
  Outputs
@@ -837,16 +837,16 @@ doc ///
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    dimStats(listOfIdeals)
+    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    dimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   dimStats(listOfIdeals)
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   dimStats(ideals)
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   dimStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3);
+   dimStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
 ///
@@ -882,12 +882,12 @@ doc ///
      L=randomMonomialSet(3,3,1.0);
      -- QUESTION: what is the purpose of using L here?! 
      R=ring(L#0);
-     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-     dimStats(listOfIdeals,ShowTally=>true)
-     mingenStats(listOfIdeals,ShowTally=>true)
-     degStats(listOfIdeals,ShowTally=>true)
-     regStats(listOfIdeals,ShowTally=>true)
-     pdimStats(listOfIdeals,ShowTally=>true)
+     ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+     dimStats(ideals,ShowTally=>true)
+     mingenStats(ideals,ShowTally=>true)
+     degStats(ideals,ShowTally=>true)
+     regStats(ideals,ShowTally=>true)
+     pdimStats(ideals,ShowTally=>true)
  SeeAlso
    dimStats
    mingenStats
@@ -925,8 +925,8 @@ doc ///
   Text
    The following example uses the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3)
-   pdimStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3)
+   pdimStats(ideals)
   Text
    Note that this function can be run with a list of @TO ideal@s as well. 
  SeeAlso
@@ -1003,7 +1003,7 @@ doc ///
   borelFixedStats(List)
  
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
  Outputs
   : RR
@@ -1014,8 +1014,8 @@ doc ///
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    borelFixedStats(listOfIdeals)
+    ideals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    borelFixedStats(ideals)
 ///
 
 --******************************************--
