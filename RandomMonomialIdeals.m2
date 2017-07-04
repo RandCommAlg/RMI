@@ -239,7 +239,7 @@ dimStats List := o-> (ideals) -> (
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
 regStats List := o-> (ideals) -> (
     N:=#ideals;
-    ideals := extractNonzeroIdeals(ideals);
+    ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
     reg := 0;
     ret := ();
@@ -256,7 +256,7 @@ regStats List := o-> (ideals) -> (
 	ret = (-infinity, 0)
     )
     else (
-	apply(#ideals,i->( 
+	apply(#ideals,i->(
               regi := regularity ideals_i;
               regHistogram = append(regHistogram, regi)
 	     ));
