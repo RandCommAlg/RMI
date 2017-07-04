@@ -75,7 +75,9 @@ export {
     "borelFixedStats",
     "ShowTally",
     "degStats",
+    "Verbose",
     "pdimStats"
+
 }
 
 --***************************************--
@@ -179,7 +181,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if B==={} then {0_R} else B
 )
 
-degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false})
+degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false, Verbose => false})
 degStats List :=  o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     deg := 0;
@@ -196,12 +198,16 @@ degStats List :=  o-> (listOfIdeals) -> (
     stdDev:= var^(1/2);
     if o.ShowTally
     	then(ret=(avg, stdDev,tally degHistogram); return ret;);
-    print "Average Degree:" expression(sub(1/N*(sum degHistogram), RR));
+    if o.Verbose then (
+	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	if numberOfZeroIdeals>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
+	);
     ret = (avg, stdDev)
 )
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets 
-idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true})
+idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true, Verbose => false})
 idealsFromGeneratingSets(List):= o -> (B) -> (
     N := # B;
     n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
@@ -210,12 +216,13 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	ideals = B / (b-> monomialIdeal b);
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
-    print(concatenate("There are ", toString(#B)," ideals in this sample."));
-    print(concatenate("Of those, ", toString numberOfZeroIdeals, " were the zero ideal."));
+    if o.Verbose then
+    verString := concatenate("There are ",toString(#B)," ideals in this sample. Of those, ", toString(numberOfZeroIdeals)," are the zero ideal.");
+     stdio <<verString<< endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
-dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
 dimStats List := o-> (listOfIdeals) -> (
     N := #listOfIdeals;
     dims:=0;
@@ -232,11 +239,15 @@ dimStats List := o-> (listOfIdeals) -> (
     stdDev:= var^(1/2);
     if o.ShowTally 
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
-    print "Average Krull dimension:" expression(sub(1/N*(sum dimsHistogram), RR));
+    if o.Verbose then (
+	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	if numberOfZeroIdeals>0 then stdio <<"The Krull dimension statistics do include those for the zero ideals."<< endl
+	);
     ret = (avg, stdDev)
 )
 
-regStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
+regStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
 regStats List := o-> (listOfIdeals) -> (
     N:=#listOfIdeals;
     ideals := extractNonzeroIdeals(listOfIdeals);
@@ -248,11 +259,11 @@ regStats List := o-> (listOfIdeals) -> (
 	regHistogram = N:-infinity;
 	stdDev := 0;
 	if o.ShowTally then(
-	    print "All ideals in this list are the zero ideal";
 	    ret=(-infinity, 0, tally regHistogram); 
 	    return ret;
 	    );
-	print "All ideals in this list are the zero ideal";
+	if o.Verbose then
+         stdio <<"All ideals in this list are the zero ideal." << endl;
 	ret = (-infinity, 0)
     )
     else (
@@ -266,7 +277,8 @@ regStats List := o-> (listOfIdeals) -> (
     	     stdDev = var^(1/2);
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
-	     print(concatenate(toString(N-#ideals), " zero ideals were extracted from this sample"));
+	     if o.Verbose then
+              stdio <<concatenate(toString(N-#ideals), " zero ideals were extracted from this sample, before reporting the regularity statistics.")<< endl;
     	     ret = (avg, stdDev)
          )
     
@@ -290,33 +302,40 @@ regStats List := o-> (listOfIdeals) -> (
  	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
---checks if each RMI is CM and prints the % CM as a real number
-CMStats = method(TypicalValue => RR)
-CMStats (List) :=  (listOfIdeals) -> (
+
+CMStats = method(TypicalValue => RR, Options =>{Verbose => false})
+CMStats (List) := RR => o -> (listOfIdeals) -> (
     cm := 0;
     N:= #listOfIdeals;
     R := ring(listOfIdeals#0);
     for i from 0 to #listOfIdeals-1 do (
        if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
-     print "Percent Cohen-Macaulay:" expression(sub((cm)/N, RR));
+    if o.Verbose then (
+       numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+       stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl
+       );
    sub((cm)/N, RR)
 )
 
---checks whether each RMI is Borel-fixed, 
---prints and returns % of Borel-fixed RMIs in sample (real number) 
-borelFixedStats = method()
-borelFixedStats (List) :=  (ideals) -> (
+borelFixedStats = method(TypicalValue =>RR, Options =>{Verbose => false})
+borelFixedStats (List) := RR => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
     for i from 0 to #ideals-1 do ( 
-        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);     
-    print "Percent Borel-fixed:" expression(sub((bor)/N, RR));
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
+    if o.Verbose then (
+       numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
+       stdio <<"The list of monomial ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
+       );
     sub((bor)/N, RR)
 )
-mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false})
-mingenStats (List) :=  o -> (ideals) -> (
+mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
+mingenStats (List) := Sequence => o -> (ideals) -> (
     N:=#ideals;
     ideals = extractNonzeroIdeals(ideals);
+    numberOfZeroIdeals := ideals_1;
     ideals = ideals_0;
     num := 0;
     numgensHist := {};
@@ -329,8 +348,7 @@ mingenStats (List) :=  o -> (ideals) -> (
 	numStdDev := 0;
 	comStdDev := 0;
 	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
-	print "Average # of min gens:" expression(-infinity);
-	print "Average degree complexity:" expression(-infinity);
+	if o.Verbose then stdio <<"This sample included only zero ideals." << endl;
 	ret = (-infinity, 0, -infinity, 0)
     )
     else (
@@ -351,20 +369,20 @@ mingenStats (List) :=  o -> (ideals) -> (
     numStdDev= numVar^(1/2);
     comStdDev= comVar^(1/2);
     if o.ShowTally 
-       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;); 
-    print "Average # of min gens:" expression(sub((1/(#ideals))*(sum numgensHist), RR));
-    print "Average degree complexity:" expression(sub((1/(#ideals))*(sum complexityHist), RR));
+       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+--    if o.Verbose then
+--     verString = concatenate("Average # of min gens: ", toString(expression(sub((1/(#ideals))*(sum numgensHist), RR))), " Average degree complexity: ", toString(expression(sub((1/(#ideals))*(sum complexityHist), RR))));
+--     stdio <<verString << endl; 
+    if o.Verbose then (
+	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
+	);
     ret = (numAvg, numStdDev, comAvg, comStdDev)
-    )
+  )
 )
--- example to run this^^ right now: 
--- L=randomMonomialIdeals(3,4,0.5,2)
--- (mu,reg) = mingenStats(L);
--- mu
--- reg
 
 
-pdimStats = method(TypicalValue=>Sequence, Options => {ShowTally => false})
+pdimStats = method(TypicalValue=>Sequence, Options => {ShowTally => false, Verbose => false})
 pdimStats (List) := o-> (ideals) -> (
     N:=#ideals;
     pdHist:={};
@@ -382,6 +400,11 @@ pdimStats (List) := o-> (ideals) -> (
     stdDev:= var^(1/2);
     if o.ShowTally 
          then(ret = (avg, stdDev, tally pdHist), return ret;);
+    if o.Verbose then (
+	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
+	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	if numberOfZeroIdeals>0 then stdio <<"The projective dimension statistics do include those for the zero ideals."<< endl
+	);
     ret=(avg, stdDev) 
 )
 
@@ -1018,6 +1041,58 @@ doc ///
     borelFixedStats(listOfIdeals)
 ///
 
+doc ///
+ Key
+   Verbose
+   [degStats, Verbose]
+   [dimStats, Verbose]
+   [idealsFromGeneratingSets, Verbose]
+   [regStats, Verbose]
+   [CMStats, Verbose]
+   [borelFixedStats, Verbose]
+   [mingenStats, Verbose]
+ Headline
+   optional input to request verbose feedback
+ Description
+   Text
+     Some of the methods that use this option by default exclude zero ideals when computing statistics on a set of ideals.
+     Others do not, but the user may wish to know how many ideals are, say, trivially Cohen-Macaulay. 
+     If {\tt Verbose => true}, then the methods will display an additional informational statement regarding the statistics in question.
+     The default value is false. 
+   Example
+     n=3;D=3;p=0.0;N=3;
+     ideals = randomMonomialIdeals(n,D,p,N)
+     regStats(ideals)
+     CMStats(ideals)
+   Text
+     In the examples above, one may wonder, for example, why 3 out of 3 ideals in the list are Cohen-Macaulay. 
+     In order to view the additional information, set {\tt Verbose => true}: 
+   Example
+     regStats(ideals, Verbose => true)
+     CMStats(ideals, Verbose => true)
+   Text
+     Other methods that have this option are as follows. Let us look at a nontrivial list of ideals to see more interesting statistics.
+   Example
+     n=3;D=3;p=0.1;N=3;
+     ideals = randomMonomialIdeals(n,D,p,N)
+     regStats(ideals, Verbose => true)
+     CMStats(ideals, Verbose => true)
+     degStats(ideals, Verbose => true)
+     dimStats(ideals, Verbose=>true)
+     borelFixedStats(ideals, Verbose => true)
+     mingenStats(ideals, Verbose=>true)          
+     M = randomMonomialSets(n,D,p,N);
+     idealsFromGeneratingSets(M, Verbose => true)
+ SeeAlso
+   borelFixedStats
+   CMStats
+   degStats
+   dimStats
+   idealsFromGeneratingSets 
+   mingenStats
+   regStats  
+   IncludeZeroIdeals 
+///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
 --******************************************--
