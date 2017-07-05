@@ -492,7 +492,7 @@ doc ///
   N: ZZ
     number of sets generated
  Outputs
-  B: List
+  : List
    random generating sets of monomials
  Description
   Text
