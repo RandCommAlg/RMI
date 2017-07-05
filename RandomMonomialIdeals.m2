@@ -217,12 +217,12 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     if o.Verbose then
-    verString := concatenate("There are ",toString(#B)," ideals in this sample. Of those, ", toString(numberOfZeroIdeals)," are the zero ideal.");
-     stdio <<verString<< endl;
+     stdio <<"There are "<<#B<<" ideals in this sample. Of those, "<<numberOfZeroIdeals<<" are the zero ideal."<< endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
-dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
+
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
 dimStats List := o-> (ideals) -> (
     N := #ideals;
     dims:=0;
@@ -309,7 +309,8 @@ CMStats (List) := RR => o -> (ideals) -> (
     N := #ideals;
     R := ring(ideals#0);
     for i from 0 to #ideals-1 do (
-       if isCM(R/ideals) == true then cm = cm + 1 else cm = cm);
+
+       if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
     if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
@@ -370,9 +371,6 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     comStdDev= comVar^(1/2);
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
---    if o.Verbose then
---     verString = concatenate("Average # of min gens: ", toString(expression(sub((1/(#ideals))*(sum numgensHist), RR))), " Average degree complexity: ", toString(expression(sub((1/(#ideals))*(sum complexityHist), RR))));
---     stdio <<verString << endl; 
     if o.Verbose then (
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
