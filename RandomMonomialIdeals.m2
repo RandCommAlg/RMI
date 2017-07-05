@@ -1003,7 +1003,7 @@ doc ///
    the fraction of Cohen-Macaulay ideals in the list
  Description
   Text
-   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
+   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the proportion that are.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
