@@ -182,12 +182,12 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 )
 
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false, Verbose => false})
-degStats List :=  o-> (listOfIdeals) -> (
-    N := #listOfIdeals;
+degStats List :=  o-> (ideals) -> (
+    N := #ideals;
     deg := 0;
     degHistogram:={};
-    apply(#listOfIdeals, i->( 
-        degi := degree listOfIdeals_i;
+    apply(#ideals, i->( 
+        degi := degree ideals_i;
         degHistogram = append(degHistogram, degi)
 	)
     );
@@ -199,7 +199,7 @@ degStats List :=  o-> (listOfIdeals) -> (
     if o.ShowTally
     	then(ret=(avg, stdDev,tally degHistogram); return ret;);
     if o.Verbose then (
-	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
 	);
@@ -217,18 +217,18 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
 	};
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     if o.Verbose then
-    verString := concatenate("There are ",toString(#B)," ideals in this sample. Of those, ", toString(numberOfZeroIdeals)," are the zero ideal.");
-     stdio <<verString<< endl;
+     stdio <<"There are "<<#B<<" ideals in this sample. Of those, "<<numberOfZeroIdeals<<" are the zero ideal."<< endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
 )
 
-dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
-dimStats List := o-> (listOfIdeals) -> (
-    N := #listOfIdeals;
+
+dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
+dimStats List := o-> (ideals) -> (
+    N := #ideals;
     dims:=0;
     dimsHistogram:={};
-    apply(#listOfIdeals,i->( 
-        dimi := dim listOfIdeals_i;
+    apply(#ideals,i->( 
+        dimi := dim ideals_i;
     dimsHistogram = append(dimsHistogram, dimi)
     )
     );
@@ -240,7 +240,7 @@ dimStats List := o-> (listOfIdeals) -> (
     if o.ShowTally 
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     if o.Verbose then (
-	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The Krull dimension statistics do include those for the zero ideals."<< endl
 	);
@@ -248,9 +248,9 @@ dimStats List := o-> (listOfIdeals) -> (
 )
 
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
-regStats List := o-> (listOfIdeals) -> (
-    N:=#listOfIdeals;
-    ideals := extractNonzeroIdeals(listOfIdeals);
+regStats List := o-> (ideals) -> (
+    N:=#ideals;
+    ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
     reg := 0;
     ret := ();
@@ -267,7 +267,7 @@ regStats List := o-> (listOfIdeals) -> (
 	ret = (-infinity, 0)
     )
     else (
-	apply(#ideals,i->( 
+	apply(#ideals,i->(
               regi := regularity ideals_i;
               regHistogram = append(regHistogram, regi)
 	     ));
@@ -278,7 +278,7 @@ regStats List := o-> (listOfIdeals) -> (
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
 	     if o.Verbose then
-              stdio <<concatenate(toString(N-#ideals), " zero ideals were extracted from this sample, before reporting the regularity statistics.")<< endl;
+              stdio <<toString(N-#ideals)<< " zero ideals were extracted from this sample, before reporting the regularity statistics."<< endl;
     	     ret = (avg, stdDev)
          )
     
@@ -304,14 +304,15 @@ regStats List := o-> (listOfIdeals) -> (
 )
 
 CMStats = method(TypicalValue => RR, Options =>{Verbose => false})
-CMStats (List) := RR => o -> (listOfIdeals) -> (
+CMStats (List) := RR => o -> (ideals) -> (
     cm := 0;
-    N:= #listOfIdeals;
-    R := ring(listOfIdeals#0);
-    for i from 0 to #listOfIdeals-1 do (
-       if isCM(R/listOfIdeals_i) == true then cm = cm + 1 else cm = cm);
+    N := #ideals;
+    R := ring(ideals#0);
+    for i from 0 to #ideals-1 do (
+
+       if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
     if o.Verbose then (
-       numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+       numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl
        );
@@ -370,9 +371,6 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     comStdDev= comVar^(1/2);
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
---    if o.Verbose then
---     verString = concatenate("Average # of min gens: ", toString(expression(sub((1/(#ideals))*(sum numgensHist), RR))), " Average degree complexity: ", toString(expression(sub((1/(#ideals))*(sum complexityHist), RR))));
---     stdio <<verString << endl; 
     if o.Verbose then (
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
@@ -513,7 +511,7 @@ doc ///
  Usage
   degStats(List)
  Inputs
-  listOfIdeals: List
+  ideals: List
    of @TO monomialIdeal@s
  Outputs
   : Sequence
@@ -526,16 +524,16 @@ doc ///
   Example
    L=randomMonomialSet(3,3,1.0);
    R=ring(L#0);
-   listOfIdeals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
-   degStats(listOfIdeals)
+   ideals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
+   degStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   degStats(listOfIdeals)
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   degStats(ideals)
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   degStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3);
+   degStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
 ///
@@ -848,7 +846,7 @@ doc ///
   dimStats(List)
  
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
   
  Outputs
@@ -860,16 +858,16 @@ doc ///
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    dimStats(listOfIdeals)
+    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    dimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
-   dimStats(listOfIdeals)
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   dimStats(ideals)
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3);
-   dimStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3);
+   dimStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
 ///
@@ -905,12 +903,12 @@ doc ///
      L=randomMonomialSet(3,3,1.0);
      -- QUESTION: what is the purpose of using L here?! 
      R=ring(L#0);
-     listOfIdeals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-     dimStats(listOfIdeals,ShowTally=>true)
-     mingenStats(listOfIdeals,ShowTally=>true)
-     degStats(listOfIdeals,ShowTally=>true)
-     regStats(listOfIdeals,ShowTally=>true)
-     pdimStats(listOfIdeals,ShowTally=>true)
+     ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+     dimStats(ideals,ShowTally=>true)
+     mingenStats(ideals,ShowTally=>true)
+     degStats(ideals,ShowTally=>true)
+     regStats(ideals,ShowTally=>true)
+     pdimStats(ideals,ShowTally=>true)
  SeeAlso
    dimStats
    mingenStats
@@ -948,8 +946,8 @@ doc ///
   Text
    The following example uses the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   listOfIdeals = randomMonomialIdeals(4,3,1.0,3)
-   pdimStats(listOfIdeals)
+   ideals = randomMonomialIdeals(4,3,1.0,3)
+   pdimStats(ideals)
   Text
    Note that this function can be run with a list of @TO ideal@s as well. 
  SeeAlso
@@ -1026,7 +1024,7 @@ doc ///
   borelFixedStats(List)
  
  Inputs
-  listOfIdeals: List
+  ideals: List
     of @TO monomialIdeal@s
  Outputs
   : RR
@@ -1037,8 +1035,8 @@ doc ///
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
-    listOfIdeals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
-    borelFixedStats(listOfIdeals)
+    ideals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    borelFixedStats(ideals)
 ///
 
 doc ///
