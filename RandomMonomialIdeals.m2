@@ -179,7 +179,7 @@ getData Sample := s -> (s.Data)
 
 writeSample = method()
 writeSample (Sample, String) := (s, filename) -> (
-    if fileExists filename then ( -- Should we warn?
+    if fileExists filename then ( -- Should we warn? -- I vote 'yes' -SP
         if not isDirectory filename then (
 	    removeFile filename;
 	    mkdir filename;
@@ -1262,7 +1262,7 @@ doc ///
     function over the data
  Outputs
   Stats: HashTable
-   Hash table containing statistics for the sample
+   containing statistics for the sample
  Description
   Text
    TODO
