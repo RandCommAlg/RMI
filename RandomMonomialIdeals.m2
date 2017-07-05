@@ -278,7 +278,7 @@ regStats List := o-> (ideals) -> (
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
 	     if o.Verbose then
-              stdio <<concatenate(toString(N-#ideals), " zero ideals were extracted from this sample, before reporting the regularity statistics.")<< endl;
+              stdio <<toString(N-#ideals)<< " zero ideals were extracted from this sample, before reporting the regularity statistics."<< endl;
     	     ret = (avg, stdDev)
          )
     
