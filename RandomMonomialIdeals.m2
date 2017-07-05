@@ -199,7 +199,7 @@ degStats List :=  o-> (ideals) -> (
     if o.ShowTally
     	then(ret=(avg, stdDev,tally degHistogram); return ret;);
     if o.Verbose then (
-	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
 	);
@@ -240,7 +240,7 @@ dimStats List := o-> (ideals) -> (
     if o.ShowTally 
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     if o.Verbose then (
-	numberOfZeroIdeals := (extractNonzeroIdeals(listOfIdeals))_1;
+	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The Krull dimension statistics do include those for the zero ideals."<< endl
 	);
