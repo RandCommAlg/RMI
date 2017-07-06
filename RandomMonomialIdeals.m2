@@ -796,7 +796,7 @@ doc ///
   Description
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
-      the function @TO randomMonomialSet@ or @TO randomMonomialSets@
+      the function @TO randomMonomialSet@, @TO randomMonomialSets@ or @TO randomMonomialIdeals@
     Example 
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
