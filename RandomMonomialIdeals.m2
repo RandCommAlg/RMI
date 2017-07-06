@@ -906,7 +906,7 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
+  statistics on the minimal generators of a list of monomial ideals: number and degree complexity 
  Usage
   mingenStats(List)
  Inputs
@@ -974,6 +974,10 @@ doc ///
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       randomMonomialSet(n,D,p,VariableName => y)
+  SeeAlso
+    randomMonomialSet
+    randomMonomialSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -1105,6 +1109,7 @@ doc ///
    mingenStats
    degStats
    regStats
+   pdimStats
 ///
 
 doc ///
@@ -1189,7 +1194,7 @@ doc ///
   CMStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s or of @TO ideal@s
+    of @TO monomialIdeal@s or any object to which @TO isCM@ can be applied
  Outputs
   : QQ
    the fraction of Cohen-Macaulay ideals in the list
@@ -1231,6 +1236,7 @@ doc ///
  Key
    Verbose
    [degStats, Verbose]
+   [pdimStats, Verbose]
    [dimStats, Verbose]
    [idealsFromGeneratingSets, Verbose]
    [regStats, Verbose]
@@ -1272,14 +1278,14 @@ doc ///
      M = randomMonomialSets(n,D,p,N);
      idealsFromGeneratingSets(M, Verbose => true)
  SeeAlso
-   borelFixedStats
-   CMStats
    degStats
+   pdimStats
    dimStats
-   idealsFromGeneratingSets 
-   mingenStats
-   regStats  
-   IncludeZeroIdeals 
+   idealsFromGeneratingSets
+   regStats
+   CMStats
+   borelFixedStats
+   mingenStats   
 ///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
