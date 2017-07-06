@@ -801,6 +801,10 @@ doc ///
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       randomMonomialSet(n,D,p,VariableName => y)
+  SeeAlso
+    randomMonomialSet
+    randomMonomialSets
+    randomMonomialIdeals
 ///
 
 doc ///
@@ -837,6 +841,9 @@ doc ///
      In the example below, in contrast, the list of ideals returned is empty since the single zero ideal generated is excluded:
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
+ SeeAlso
+   idealsFromGeneratingSets
+   randomMonomialIdeals
 ///
 doc ///
  Key
@@ -916,6 +923,7 @@ doc ///
    mingenStats
    degStats
    regStats
+   pdimStats
 ///
 
 doc ///
@@ -1082,15 +1090,14 @@ doc ///
      M = randomMonomialSets(n,D,p,N);
      idealsFromGeneratingSets(M, Verbose => true)
  SeeAlso
-   pdimStats
-   borelFixedStats
-   CMStats
    degStats
+   pdimStats
    dimStats
-   idealsFromGeneratingSets 
-   mingenStats
-   regStats  
-   IncludeZeroIdeals 
+   idealsFromGeneratingSets
+   regStats
+   CMStats
+   borelFixedStats
+   mingenStats   
 ///
 --******************************************--
 -- TESTS     	     	       	    	    -- 
