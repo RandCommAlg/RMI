@@ -400,7 +400,7 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
     if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
+       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl;
        stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        );
     bor/N
