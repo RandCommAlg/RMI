@@ -555,15 +555,15 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     probability to select a monomial in the ER model, 
-     or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
+     probability to select a monomial in the ER model, OR 
   M: ZZ
-     maximum number of monomials in each generating set for the ideal
+     maximum number of monomials in each generating set for the ideal, OR
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
-     or of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, OR
+  : List
+     of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
-    number of ideals generated
+    number of ideals to generate
  Outputs
   : List
    list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
