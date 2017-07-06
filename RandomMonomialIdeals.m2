@@ -919,7 +919,7 @@ doc ///
   mingenStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or @TO ideal@s
  Outputs
   : Sequence
     with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity. 
@@ -1130,7 +1130,7 @@ doc ///
   pdimStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or @TO ideal@s
  Outputs
   : Sequence 
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
