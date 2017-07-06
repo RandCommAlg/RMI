@@ -733,12 +733,12 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
+  statistics on the minimal generators of a list of monomial ideals: number and degree complexity 
  Usage
   mingenStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any object to which @TO degree@ and @TO numgens@ can be applied
  Outputs
   : Sequence
     with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity. 
