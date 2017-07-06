@@ -302,7 +302,8 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
 
 randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if #pOrM != D then error "pOrM expected to be a list of length D";
-    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
