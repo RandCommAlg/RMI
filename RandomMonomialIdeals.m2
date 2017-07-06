@@ -311,9 +311,10 @@ CMStats (List) := QQ => o -> (ideals) -> (
     for i from 0 to #ideals-1 do (
      if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
      if o.Verbose then (
+       stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
-       stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl
+       stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideals." << endl;
+       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
        );
    cm/N
 )
@@ -325,8 +326,9 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
     for i from 0 to #ideals-1 do ( 
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
     if o.Verbose then (
+       stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
-       stdio <<"The list of monomial ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+       stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
        );
     bor/N
