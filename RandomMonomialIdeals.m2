@@ -1437,6 +1437,15 @@ TEST///
    assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
    -- std of Betti table: 
    -- MISSING TEST.
+   b=stdDevBetti^{0}_{0};
+   assert(0 == b);
+   b=stdDevBetti^{2}_{2};
+   assert(0.5 == b);
+   
+   
+   
+   
+   
 ///
 
 
