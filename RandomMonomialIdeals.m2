@@ -1042,6 +1042,7 @@ doc ///
  Key
    Verbose
    [degStats, Verbose]
+   [pdimStats, Verbose]
    [dimStats, Verbose]
    [idealsFromGeneratingSets, Verbose]
    [regStats, Verbose]
@@ -1081,6 +1082,7 @@ doc ///
      M = randomMonomialSets(n,D,p,N);
      idealsFromGeneratingSets(M, Verbose => true)
  SeeAlso
+   pdimStats
    borelFixedStats
    CMStats
    degStats
