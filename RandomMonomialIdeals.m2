@@ -961,15 +961,15 @@ doc ///
   regStats
   (regStats, List)
  Headline
-  statistics on the regularities of a list of monomialIdeals
+  statistics on the regularities of a list of monomial ideals
  Usage
   regStats(List)
  Inputs
   : List
-   of @TO monomialIdeal@s
+   of @TO monomialIdeal@s or any object to which @TO regularity@ can be applied
  Outputs
   : Sequence
-   whose first entry is the mean regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally.
+   whose first entry is the mean regularity of a list of monomial ideals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally.
  Description
   Text
    regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
