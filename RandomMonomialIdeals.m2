@@ -50,17 +50,13 @@ newPackage(
 	    	Email => "ghummel1@hawk.iit.edu", 
 	    	HomePage => ""
 	    }
-          -- {Name=> "Contributing authors and collaborators: add any acknowledgments here", 
-	  -- Email=> "",
-	  -- HomePage=>""}      
 	},
     	Headline => "A package for generating Erdos-Renyi-type random monomial ideals",
     	DebuggingMode => false,
 	Reload => true
     	)
 needsPackage "Depth";
-
-needsPackage "BoijSoederberg"
+needsPackage "BoijSoederberg";
 
 export {
     "randomMonomialSets",
@@ -1392,6 +1388,8 @@ TEST///
    -- mean Betti shape: 
    b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
    assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
+   -- std of Betti table: 
+   -- MISSING TEST.
 ///
 
 
