@@ -1020,18 +1020,18 @@ doc ///
   borelFixedStats
   (borelFixedStats, List)
  Headline
-  fraction of Borel-fixed monomialIdeals in the given list
+  fraction of Borel-fixed monomial ideals in the given list
  Usage
   borelFixedStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any object to which @TO isBorel@ can be applied
  Outputs
   : QQ
-   the fraction of Borel-fixed monomialIdeals in the list
+   the fraction of Borel-fixed monomial ideals in the list
  Description
   Text
-   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
+   borelFixedStats takes a list of monomial ideals and returns the percentage of Borel-fixed ideals in the list of monomial ideals as a real number  
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
