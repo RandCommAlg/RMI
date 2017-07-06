@@ -928,7 +928,7 @@ doc ///
   pdimStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any object to which @TO pdim@ can be applied
  Outputs
   : Sequence 
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
