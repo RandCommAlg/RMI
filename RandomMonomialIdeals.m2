@@ -183,13 +183,18 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 )
 
 
-bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false, CountPure => false, Verbose => false})
+
+bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => "", CountPure => false, Verbose => false})
 bettiStats List :=  o-> (ideals) -> ( 
     N := #ideals; Z:=0;
-    if o.SaveBettis then (
-	basefilename:="stats"; fileNameExt:=concatenate(toString(N),"ideals");
-	filename1 := concatenate(basefilename,"Bettis",fileNameExt);
-	stdio<<"Using file' " << filename1 <<"' to store Betti tables"<<endl;
+    if o.SaveBettis != "" then (
+    	if fileExists o.SaveBettis then (
+	    stderr << "warning: filename already exists. Overwriting." << endl;
+	    removeFile o.SaveBettis;
+	    );
+--    	basefilename:="stats"; fileNameExt:=concatenate(toString(N),"ideals");
+--	filename1 := concatenate(basefilename,"Bettis",fileNameExt);
+--	stdio<<"Using file' " << filename1 <<"' to store Betti tables"<<endl;
 	);
     if not o.IncludeZeroIdeals then (
 	(ideals,Z) = extractNonzeroIdeals(ideals);
@@ -197,7 +202,7 @@ bettiStats List :=  o-> (ideals) -> (
     	if (Z>0 and not o.IncludeZeroIdeals) then stdio <<"The Betti statistics do not include those for the zero ideals."<< endl
 	);
     if (o.Verbose and o.IncludeZeroIdeals) then (
-	Z := (extractNonzeroIdeals(ideals))_1;
+	Z = (extractNonzeroIdeals(ideals))_1;
 	stdio << "There are "<<N<<" ideals in this sample. Of those, "<<Z<<" are the zero ideal." << endl;
 	if Z>0 then stdio <<"The Betti statistics do include those for the zero ideals."<< endl
 	);
@@ -209,7 +214,7 @@ bettiStats List :=  o-> (ideals) -> (
     apply(#ideals,i->( 
         resi := betti res ideals_i;
 	if o.CountPure then if isPure resi then pure = pure +1;
-        if o.SaveBettis then filename1 << resi << endl;
+        if o.SaveBettis != "" then o.SaveBettis << resi << endl;
     	bettisHistogram = append(bettisHistogram, resi); 
   	-- let's only keep a 1 in all spots where ther was a non-zero Betti number: 
 	beta1mtx := matrix(resi);
@@ -218,7 +223,7 @@ bettiStats List :=  o-> (ideals) -> (
 	betaShapes = betaShapes + beta1shape
 	)
     );
-    if o.SaveBettis then filename1 << close;
+    if o.SaveBettis != "" then o.SaveBettis << close;
     -- compute the average Betti table shape: 
     bShapeMean := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
     -- compute the average (entry-wise) Betti table:
@@ -644,7 +649,7 @@ doc ///
     Example 
      ZZ/101[a..e];
      L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
-     bettiStats (L,SaveBettis=>true)
+     bettiStats (L,SaveBettis=>"myBettiDiagrams")
   SeeAlso
     bettiStats
     CountPure
