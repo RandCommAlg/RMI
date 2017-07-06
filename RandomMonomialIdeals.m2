@@ -75,6 +75,7 @@ export {
     "degStats",
     "bettiStats",
     "SaveBettis",
+    "CountPure",
     "Verbose",
     "pdimStats"
 
@@ -182,27 +183,24 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 )
 
 
-bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false})
+bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false, CountPure => false})
 bettiStats List :=  o-> (ideals) -> ( 
+    N := #ideals; Z:=0;
     if o.SaveBettis then (
-	basefilename:="DELETEme"; fileNameExt:="GetRidOfThis";
-	filename1 := concatenate(basefilename,"bettis",fileNameExt)
+	basefilename:="stats"; fileNameExt:=concatenate(toString(N),"ideals");
+	filename1 := concatenate(basefilename,"Bettis",fileNameExt);
+	stdio<<"Using file' " << filename1 <<"' to store Betti tables"<<endl;
 	);
     -- sum of the betti tables and betti shapes: 
-    N := #ideals; Z:=0;
     if not o.IncludeZeroIdeals then (ideals,Z) = extractNonzeroIdeals(ideals);
---    betaSum := new BettiTally; 
     betaShapes := new BettiTally;
     bettisHistogram := {};
-    pure := 0; -- count pure Betti tables. THIS IS NOT CURRENTLY RETURNED BY THE METHOD. DECIDE. 
+    pure := 0; -- count pure Betti tables
     -- add up all the betti tables: 
     apply(#ideals,i->( 
         resi := betti res ideals_i;
-	if isPure resi then pure = pure +1; -- IS there a shorter way to do this? why can't i run "value(true)" and get 1? :-/
+	if isPure resi then pure = pure +1;
         if o.SaveBettis then filename1 << resi << endl;
---    	-- add Betti tables as we compute them, so as to not store an entire sample of Betti tables in memory:
---        betaSum = betaSum + resi;
---	-- SHOOT. I need the entire sample of Betti tables so as to compute stddev at the end! 
     	bettisHistogram = append(bettisHistogram, resi); 
   	-- let's only keep a 1 in all spots where ther was a non-zero Betti number: 
 	beta1mtx := matrix(resi);
@@ -236,7 +234,8 @@ bettiStats List :=  o-> (ideals) -> (
 	);
     --    betaStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
     bStdDev := matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
-    return (bShapeMean,bMean,bStdDev)--,pure)
+    if o.CountPure then return (bShapeMean,bMean,bStdDev,pure);
+    (bShapeMean,bMean,bStdDev)
     )
     
     
@@ -589,7 +588,7 @@ doc ///
   bettiStats(List)
  Inputs
   L: List
-   of @TO monomialIdeal@s
+   of @TO monomialIdeal@s, or any objects to which @TO betti@ @TO res@ can be applied. 
  Outputs
   : Sequence
    of BettyTallies, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt L}.
@@ -597,7 +596,7 @@ doc ///
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
    Namely, it computes the average shape of the Betti tables (where 1 is recorded in entry (ij) for each element if beta_{ij} is not zero), 
-   and it also computes the average Betti table (think of beta_{ij} as the mean value of beta_{ij} for all ideals in the sample). 
+   and it also computes the average Betti table (that is, the table whose (ij) entry is the mean value of beta_{ij} for all ideals in the sample). 
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
@@ -622,20 +621,48 @@ doc ///
    meanBetti
   Text 
    Note that this method will work on a @TO List@ of any objects to which @TO betti@ @TO res@ can be applied. 
+///
 
-  Text 
-   If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
-   In this case, use the optional input as follows: 
-  Example
-   L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
-   apply(L,i->betti res i)
-   bettiStats(L,IncludeZeroIdeals=>false)
-   
-  Text 
-   For now, the method also has an option to save all betti tables to a file (because they take forefer to compute for some ideals; this is how: 
-   [** but this is really going to move to option documentation, if we even decide to keep it. **] 
-  Example
-   bettiStats (L,SaveBettis=>true) -- saves 1 file (for now). 
+doc ///
+  Key
+    SaveBettis
+    [bettiStats, SaveBettis]
+  Headline
+    optional input to store all Betti tables computed
+  Description
+    Text
+     The method that computes statistics on Betti tables has an option to save all betti tables to a file. 
+     This may be useful if betti res computation, called from @TO bettiStats@, takes too long.
+    Example 
+     ZZ/101[a..e];
+     L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
+     bettiStats (L,SaveBettis=>true)
+  SeeAlso
+    bettiStats
+    CountPure
+    Verbose
+    IncludeZeroIdeals
+///
+
+doc ///
+  Key
+    CountPure
+    [bettiStats, CountPure]
+  Headline
+    optional input to show the number of objects in the list whose Betti tables are pure
+  Description
+    Text
+      Put {\tt CountPure => true} in @TO bettiStats@ to show this output: 
+    Example 
+     ZZ/101[a..c];
+     L={monomialIdeal"ab,bc", monomialIdeal"ab,bc3"}
+     (meanShape,meanBetti,stdevBetti,pure) = bettiStats (L,CountPure=>true);
+     pure
+  SeeAlso
+    bettiStats
+    SaveBettis
+    Verbose
+    IncludeZeroIdeals
 ///
 
 doc ///
@@ -692,10 +719,10 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     probability to select a monomial in the ER model, 
-     or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
+    probability to select a monomial in the ER model, 
+    or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
   M: ZZ
-     maximum number of monomials in each generating set for the ideal
+    maximum number of monomials in each generating set for the ideal
   N: ZZ
     number of ideals generated
  Outputs
@@ -973,11 +1000,19 @@ doc ///
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
    Text
-     When the option is used with the method @TO bettiStats@, ....
-     **** Need to move here the doc for [bettiStats, IncludeZeroIdeals] from the  bettiStats doc node. :) 
+     The option can also be used with the method @TO bettiStats@.
+     If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
+     In this case, use the optional input as follows: 
+   Example
+     R=ZZ/101[a..c]
+     L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
+     apply(L,i->betti res i)
+     bettiStats(L,IncludeZeroIdeals=>false)
  SeeAlso
    randomMonomialIdeals
    bettiStats
+   idealsFromGeneratingSets
+   Verbose
 ///
 doc ///
  Key
@@ -1614,7 +1649,6 @@ TEST ///
   assert(sub(((8/3)-(16/9))^(1/2),RR)==(pdimStats(listOfIdeals))_1)
 ///
 
-end
 
 --****************************--
 --  idealsFromGeneratingSets  --
