@@ -1213,10 +1213,12 @@ doc ///
   Key
     ModelName
   Headline
-    TODO
+    model name from Sample
   Description
     Text
-      TODO
+      Stores the name of the model from which the sample was generated from.
+    Example
+     (sample(ER(2,2,0.5),2)).ModelName
   SeeAlso
     sample
 ///
@@ -1225,10 +1227,12 @@ doc ///
   Key
     Parameters
   Headline
-    TODO
+    model parameters from Sample
   Description
     Text
-      TODO
+      Stores the paramters of the model from which the sample was generated from.
+    Example
+     (sample(ER(2,2,0.5),2)).Parameters
   SeeAlso
     sample
 ///
@@ -1237,10 +1241,10 @@ doc ///
   Key
     SampleSize
   Headline
-    TODO
+    size of the sample
   Description
-    Text
-      TODO
+    Example
+     (sample(ER(1,1,0.0),10)).SampleSize
   SeeAlso
     sample
 ///
@@ -1279,10 +1283,10 @@ doc ///
     to extract data from
  Outputs
   Data: List
-   all samples in object
+   of all samples in object
  Description
-  Text
-   TODO
+  Example
+   getData sample(ER(3,4,0.1),5)
 ///
 
 doc ///
@@ -1448,43 +1452,42 @@ doc ///
    containing statistics for the sample
  Description
   Text
-   TODO
+   Generates statistics for the sample via the given function. The function is applied
+   to each element in the sample, and its result is then used to calculate a mean, 
+   standard deviation, and histogram.
+  Example
+   s=sample(ER(6,3,0.2),15);
+   statistics(s, degree@@ideal)
 ///
 
 doc ///
   Key
     Mean
   Headline
-    TODO
+    return value for statistics
   Description
     Text
-      TODO
-  SeeAlso
-    statistics
+      Get the mean from the hash table returned by @TO statistics@.
 ///
 
 doc ///
   Key
     StdDev
   Headline
-    TODO
+    return value for statistics
   Description
     Text
-      TODO
-  SeeAlso
-    statistics
+      Get the standard deviation from the hash table returned by @TO statistics@.
 ///
 
 doc ///
   Key
     Histogram
   Headline
-    TODO
+    return value for statistics
   Description
     Text
-      TODO
-  SeeAlso
-    statistics
+      Get the histogram from the hash table returned by @TO statistics@.
 ///
 
 --******************************************--
