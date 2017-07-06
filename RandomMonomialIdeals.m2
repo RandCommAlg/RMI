@@ -1296,7 +1296,13 @@ doc ///
   model for sampling from the Erdos-Renyi type distribution on monomials
  Description
   Text
-   TODO
+   The Erdos-Renyi type model on monomials is a distribution over sets of monomials.
+   When generating a monomial set, each monomial considered is added to the set with a fixed probability.
+   The monomials are chosen from a given polynomial ring and are bounded by degree.
+  Example
+   "TODO"
+  Text
+   The graded version of the Erdos-Renyi model chooses monomials of degree $d$ with probability $p_d$.
 ///
 
 doc ///
