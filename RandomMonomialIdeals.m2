@@ -371,24 +371,23 @@ regStats List := o-> (ideals) -> (
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
-CMStats = method(TypicalValue => RR, Options =>{Verbose => false})
-CMStats (List) := RR => o -> (ideals) -> (
+CMStats = method(TypicalValue => QQ, Options =>{Verbose => false})
+CMStats (List) := QQ => o -> (ideals) -> (
     cm := 0;
     N := #ideals;
     R := ring(ideals#0);
     for i from 0 to #ideals-1 do (
-
-       if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
-    if o.Verbose then (
+     if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
+     if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl
        );
-   sub((cm)/N, RR)
+   cm/N
 )
 
-borelFixedStats = method(TypicalValue =>RR, Options =>{Verbose => false})
-borelFixedStats (List) := RR => o -> (ideals) -> (
+borelFixedStats = method(TypicalValue =>QQ, Options =>{Verbose => false})
+borelFixedStats (List) := QQ => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
     for i from 0 to #ideals-1 do ( 
@@ -398,7 +397,7 @@ borelFixedStats (List) := RR => o -> (ideals) -> (
        stdio <<"The list of monomial ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
        );
-    sub((bor)/N, RR)
+    bor/N
 )
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
 mingenStats (List) := Sequence => o -> (ideals) -> (
@@ -577,7 +576,7 @@ doc ///
   N: ZZ
     number of sets generated
  Outputs
-  B: List
+  : List
    random generating sets of monomials
  Description
   Text
@@ -679,18 +678,18 @@ doc ///
   degStats
   (degStats,List)
  Headline
-  statistics on the degrees of a list of monomialIdeals
+  statistics on the degrees of a list of monomial ideals
  Usage
   degStats(List)
  Inputs
   ideals: List
-   of @TO monomialIdeal@s
+   of @TO monomialIdeal@s or any objects to which @TO degree@ can be applied.
  Outputs
   : Sequence
-   whose first entry is the average degree of a list of monomialIdeals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
+   whose first entry is the average degree of a list of monomial ideals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats finds the average and the standard deviation of the degree of R/I for a list of monomialIdeals.
+   degStats finds the average and the standard deviation of the degree of R/I for a list of monomial ideals.
    The degree of each ideal is calculated using the @TO degree@ function.
    It has the optional input of ShowTally.
   Example
@@ -732,6 +731,10 @@ doc ///
     or @ofClass List@ of probabilities of selecting monomials in each degree for the graded ER model
   M: ZZ
     maximum number of monomials in each generating set for the ideal
+     maximum number of monomials in each generating set for the ideal
+  : List 
+     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
   N: ZZ
     number of ideals generated
  Outputs
@@ -966,7 +969,7 @@ doc ///
   Description
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
-      the function @TO randomMonomialSet@ or @TO randomMonomialSets@
+      the function @TO randomMonomialSet@, @TO randomMonomialSets@ or @TO randomMonomialIdeals@
     Example 
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
@@ -1029,20 +1032,20 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  statistics on the Krull dimension of a list of monomialIdeals 
+  statistics on the Krull dimension of a list of monomial ideals 
  Usage
   dimStats(List)
  
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any objects to which @TO dim@ can be applied.
   
  Outputs
   : Sequence 
-   whose first entry is the average Krull dimension of a list of monomialIdeals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
+   whose first entry is the average Krull dimension of a list of monomial ideals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average and standard deviation of the Krull dimension for a list of monomialIdeals.   
+   dimStats finds the average and standard deviation of the Krull dimension for a list of monomial ideals.   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
@@ -1147,15 +1150,15 @@ doc ///
   regStats
   (regStats, List)
  Headline
-  statistics on the regularities of a list of monomialIdeals
+  statistics on the regularities of a list of monomial ideals
  Usage
   regStats(List)
  Inputs
   : List
-   of @TO monomialIdeal@s
+   of @TO monomialIdeal@s or any object to which @TO regularity@ can be applied
  Outputs
   : Sequence
-   whose first entry is the mean regularity of a list of monomialIdeals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally.
+   whose first entry is the mean regularity of a list of monomial ideals, second entry is the standard deviation of the regularities, and third entry (if option is turned on) is the regularity tally.
  Description
   Text
    regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
@@ -1179,24 +1182,23 @@ doc ///
 doc ///
  Key
   CMStats
-  (CMStats,List)
+  (CMStats, List)
  Headline
-  percentage of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
+  fraction of monomia ideals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or of @TO ideal@s
  Outputs
-  : RR
-   the percentage of Cohen-Macaulay ideals in the list
+  : QQ
+   the fraction of Cohen-Macaulay ideals in the list
  Description
   Text
-   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the percentage that are.
+   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the proportion that are.
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    R=ZZ/101[a,b,c];
+    ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
     CMStats(ideals)
   Text
     Note that the method can be run on a list of @TO Ideal@s, too.
@@ -1205,25 +1207,23 @@ doc ///
 doc ///
  Key
   borelFixedStats
-  (borelFixedStats ,List)
+  (borelFixedStats, List)
  Headline
-  percentage of Borel-fixed monomialIdeals in the given list
+  fraction of Borel-fixed monomial ideals in the given list
  Usage
   borelFixedStats(List)
- 
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any object to which @TO isBorel@ can be applied
  Outputs
-  : RR
-   the percentage of Borel-fixed monomialIdeals in the list
+  : QQ
+   the fraction of Borel-fixed monomial ideals in the list
  Description
   Text
-   borelFixedStats takes a list of monomialIdeals and returns the percentage of Borel-fixed ideals in the list of monomialIdeals as a real number  
+   borelFixedStats takes a list of monomial ideals and returns the percentage of Borel-fixed ideals in the list of monomial ideals as a real number  
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    ideals = {monomialIdeal(R_0^3), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+    R=ZZ/101[a,b,c];
+    ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
     borelFixedStats(ideals)
 ///
 
@@ -1573,7 +1573,7 @@ TEST ///
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0)};
  assert(.5==CMStats(listOfIdeals))
  listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
- assert(sub(2/3,RR)==CMStats(listOfIdeals))
+ assert(2/3==CMStats(listOfIdeals))
 ///
 
 --********************--
@@ -1589,7 +1589,7 @@ assert(0==borelFixedStats(listOfIdeals))
 listOfIdeals = {monomialIdeal(R_0), monomialIdeal(R_0*R_1)};
 assert(.5==borelFixedStats(listOfIdeals))
 listOfIdeals = {monomialIdeal(0_R), monomialIdeal(R_0*R_1, R_2*R_0), monomialIdeal(R_0)};
-assert(sub(2/3,RR)==borelFixedStats(listOfIdeals))
+assert(2/3==borelFixedStats(listOfIdeals))
 ///
 
 --***************--
