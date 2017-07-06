@@ -843,20 +843,20 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  statistics on the Krull dimension of a list of monomialIdeals 
+  statistics on the Krull dimension of a list of monomial ideals 
  Usage
   dimStats(List)
  
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or any objects to which @TO dim@ can be applied.
   
  Outputs
   : Sequence 
-   whose first entry is the average Krull dimension of a list of monomialIdeals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
+   whose first entry is the average Krull dimension of a list of monomial ideals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average and standard deviation of the Krull dimension for a list of monomialIdeals.   
+   dimStats finds the average and standard deviation of the Krull dimension for a list of monomial ideals.   
   Example
     L=randomMonomialSet(3,3,1.0);
     R=ring(L#0);
