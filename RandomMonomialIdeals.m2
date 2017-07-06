@@ -94,8 +94,6 @@ needsPackage "Serialization"
 --  Exported methods 	     	     	 --
 --***************************************--
 
--- Write sample
-
 Sample = new Type of MutableHashTable
 Model = new Type of HashTable
 
@@ -1681,3 +1679,15 @@ viewHelp bettiStats
 
 check RandomMonomialIdeals 
 viewHelp RandomMonomialIdeals
+
+
+--****************************--
+--  statistics  --
+--****************************--
+
+TEST///
+  -- Check generated statistics
+  stat = statistics(sample(ER(5,5,1.0),10),x->#x);
+  assert(stat.Mean == 251)
+  assert(stat.StdDev == 0)
+///
