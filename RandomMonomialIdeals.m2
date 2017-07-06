@@ -81,9 +81,10 @@ export {
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     -- Model
+    "Model",
     "ER",
     "statistics",
-    "WriteWithName", "Mean", "StdDev", "Histogram", "Statistics"
+    "Mean", "StdDev", "Histogram"
 }
 
 
@@ -103,58 +104,78 @@ Generate = local Generate
 
 ER = method(TypicalValue => Model)
 ER (ZZ,ZZ,RR) := (n,D,p) -> (
-    -- Error checks
+    if n<1 then error "n expected to be a positive integer";
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     x := symbol x;
     R := QQ[x_1..x_n];
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(n,D,p),
-		    Generate=>()->randomMonomialSet(R,D,p)}
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,p);
+    tbl.Generate = ()->randomMonomialSet(R,D,p);
+    new Model from tbl
 )
 
 ER (PolynomialRing,ZZ,RR) := (R,D,p) -> (
-    -- Error checks
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(R,D,p),
-		    Generate=>()->randomMonomialSet(R,D,p)}
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,p);
+    tbl.Generate = ()->randomMonomialSet(R,D,p);
+    new Model from tbl
 )
 
 ER (ZZ,ZZ,ZZ) := (n,D,M) -> (
-    -- Error checks
+    if n<1 then error "n expected to be a positive integer";
     x := symbol x;
     R := QQ[x_1..x_n];
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(n,D,M),
-		    Generate=>()->randomMonomialSet(R,D,M)}
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,M);
+    tbl.Generate = ()->randomMonomialSet(R,D,M);
+    new Model from tbl
 )
 
 ER (PolynomialRing,ZZ,ZZ) := (R,D,M) -> (
-    -- Error checks
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(R,D,M),
-		    Generate=>()->randomMonomialSet(R,D,M)}
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,M);
+    tbl.Generate = ()->randomMonomialSet(R,D,M);
+    new Model from tbl
 )
 
 ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
-    -- Error checks
+    if n<1 then error "n expected to be a positive integer";
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
     x := symbol x;
     R := QQ[x_1..x_n];
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(n,D,pOrM),
-		    Generate=>()->randomMonomialSet(R,D,pOrM)}
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,pOrM);
+    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
+    new Model from tbl
 )
 
 ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
-    -- Error checks
-    new Model from {Name => "Erdos-Renyi",
-	            Parameters=>(R,D,pOrM),
-		    Generate=>()->randomMonomialSet(R,D,pOrM)}
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
+    if all(pOrM, q->instance(q,RR)) and any(pOrM,q-> q<0.0 or 1.0<q)
+      then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,pOrM);
+    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
+    new Model from tbl
 )
 
 sample = method(TypicalValue => Sample)
 sample (Model, ZZ) := (M,N) -> (
-    s:=new Sample from {ModelName=>M.Name,
-	                Parameters=>M.Parameters,
-		        SampleSize=>N};
+    s:=new Sample;
+    s.ModelName = M.Name;
+    s.Parameters = M.Parameters;
+    s.SampleSize = N;
     s.Data = apply(N,i->M.Generate());
     s
 )
@@ -163,9 +184,10 @@ sample String := filename -> (
     if not isDirectory filename then error "expected a directory";
     modelFile := realpath filename | "Model.txt";
     model := lines read openIn modelFile; -- catch errors
-    s := new Sample from {ModelName=> model#1,
-                          Parameters=>value toString stack drop(model,{0,1}),
-			  SampleSize=>value model#0};
+    s := new Sample;
+    s.ModelName = model#1;
+    s.Parameters = value toString stack drop(model,{0,1});
+    s.SampleSize = value model#0;
     dataFile := realpath filename | "Data.txt";
     s.Data = value read openIn dataFile;
     s
@@ -194,18 +216,14 @@ writeSample (Sample, String) := (s, filename) -> (
     realpath filename | "Data.txt" << serialize s.Data << close; -- Write other data
 )
 
---File << Sample := (file, s) -> () Can't check if File is directory or not
 
-statistics = method(TypicalValue => HashTable, Options => {Statistics=>{Mean,StdDev,Histogram},
-	                                                                WriteWithName=>""})
-statistics (Sample, Function) := HashTable => o -> (s,f) -> (
+statistics = method(TypicalValue => HashTable)
+statistics (Sample, Function) := HashTable => (s,f) -> (
     fData := apply(s.Data,f);
     mean := (sum fData)/s.SampleSize;
-    ret := {Mean=>mean,
-	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
-	    Histogram=>tally fData};
-    if #o.WriteWithName != 0 then s#(toSymbol o.WriteWithName) = ret;
-    ret
+    {Mean=>mean,
+     StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+     Histogram=>tally fData}
 )
 
 
