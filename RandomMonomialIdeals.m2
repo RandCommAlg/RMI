@@ -476,20 +476,21 @@ doc ///
   randomMonomialSets(PolynomialRing,ZZ,List,ZZ)
  Inputs
   n: ZZ
-    number of variables
+    number of variables, OR
   : PolynomialRing
-    the ring in which monomial sets are to live if n is not specified
+    the ring in which the monomials are to live if $n$ is not specified
   D: ZZ
     maximum degree
   p: RR
-     the probability of selecting a monomial, 
+     the probability of selecting a monomial, OR
   M: ZZ
-     number of monomials in the set, 
+     number of monomials in the set, up to the maximum number of monomials in $n$ variables of degree at most $D$  OR
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
-     or of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
+  : List
+     of integers whose $i$-th entry is the number of monomials of degree $i$ in each set, up to the maximum number of monomials in $n$ variables of degree exactly $i$
   N: ZZ
-    number of sets generated
+    number of sets to be generated
  Outputs
   : List
    random generating sets of monomials
@@ -557,13 +558,13 @@ doc ///
   p: RR
      probability to select a monomial in the ER model, OR 
   M: ZZ
-     maximum number of monomials in each generating set for the ideal, OR
+     the number of monomials, up to the maximum number of monomials in $n$ variables of degree at most $D$, used to generate each ideal, OR
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, OR
+     of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
   : List
-     of integers whose i-th entry is the number of monomials of degree i in each set
+     of integers whose $i$-th entry is the number of monomials of degree $i$ used to generate each ideal, up to the maximum number of monomials in $n$ variables of degree exactly $i$.
   N: ZZ
-    number of ideals to generate
+    the number of random monomial ideals to be generated
  Outputs
   : List
    list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
@@ -634,18 +635,19 @@ doc ///
   randomMonomialSet(PolynomialRing,ZZ,List)
  Inputs
   n: ZZ
-    number of variables
+    number of variables, OR
   : PolynomialRing
-    the ring in which monomial sets are to live if n is not specified
+    the ring in which monomials are to live if $n$ is not specified
   D: ZZ
     maximum degree
   p: RR
-     the probability of selecting a monomial, 
+     the probability of selecting a monomial, OR
   M: ZZ
-     number of monomials in the set, 
+     number of monomials in the set, up to the maximum number of monomials in $n$ variables of degree at most $D$  OR
   : List 
-     of real numbers whose i-th entry is the probability of selecting a monomial of degree i, 
-     or of integers whose i-th entry is the number of monomials of degree i in each set
+     of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
+  : List
+     of integers whose $i$-th entry is the number of monomials of degree $i$ in each set, up to the maximum number of monomials in $n$ variables of degree exactly $i$
  Outputs
   : List
    random set of monomials
