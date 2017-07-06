@@ -506,18 +506,18 @@ doc ///
   degStats
   (degStats,List)
  Headline
-  statistics on the degrees of a list of monomialIdeals
+  statistics on the degrees of a list of monomial ideals
  Usage
   degStats(List)
  Inputs
   ideals: List
-   of @TO monomialIdeal@s
+   of @TO monomialIdeal@s or any objects to which @TO degree@ can be applied.
  Outputs
   : Sequence
-   whose first entry is the average degree of a list of monomialIdeals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
+   whose first entry is the average degree of a list of monomial ideals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats finds the average and the standard deviation of the degree of R/I for a list of monomialIdeals.
+   degStats finds the average and the standard deviation of the degree of R/I for a list of monomial ideals.
    The degree of each ideal is calculated using the @TO degree@ function.
    It has the optional input of ShowTally.
   Example
