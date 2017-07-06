@@ -1173,9 +1173,7 @@ doc ///
   sample(Model,ZZ)
  Inputs
   M: Model
-    model to be sampled from
-  : String
-    filename where the sample is stored
+    to be sampled from
   N: ZZ
     number of samples generated
  Outputs
@@ -1199,7 +1197,7 @@ doc ///
   sample(String)
  Inputs
   FileName: String
-    file name where the sample is stored
+    where the sample is stored
  Outputs
   S: Sample
    Sample read from disk
