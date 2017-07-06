@@ -86,5 +86,6 @@ B= select(allMonomials, m->random(0.0,1.0)<=p)
 randomERlMonomialSet (3,-1,2,.2)
 
 -- start of graded model
+d = laurentMonomials(3,-2,1)
 D = sort values partition(m-> first degree m, d)
 
