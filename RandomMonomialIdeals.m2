@@ -169,6 +169,7 @@ ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
 
 sample = method(TypicalValue => Sample)
 sample (Model, ZZ) := (M,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
     s:=new Sample;
     s.ModelName = M.Name;
     s.Parameters = M.Parameters;
@@ -180,7 +181,7 @@ sample (Model, ZZ) := (M,N) -> (
 sample String := filename -> (
     if not isDirectory filename then error "expected a directory";
     modelFile := realpath filename | "Model.txt";
-    model := lines read openIn modelFile; -- catch errors
+    model := lines read openIn modelFile;
     s := new Sample;
     s.ModelName = model#1;
     s.Parameters = value toString stack drop(model,{0,1});
@@ -198,7 +199,8 @@ getData Sample := s -> (s.Data)
 
 writeSample = method()
 writeSample (Sample, String) := (s, filename) -> (
-    if fileExists filename then ( -- Should we warn? -- I vote 'yes' -SP
+    if fileExists filename then (
+	stderr << "warning: filename already exists. Overwriting." << endl;
         if not isDirectory filename then (
 	    removeFile filename;
 	    mkdir filename;
