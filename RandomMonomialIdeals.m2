@@ -733,12 +733,12 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomial ideals: number and degree complexity 
+  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
  Usage
   mingenStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s or any object to which @TO degree@ and @TO numgens@ can be applied
+    of @TO monomialIdeal@s
  Outputs
   : Sequence
     with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity. 
@@ -928,7 +928,7 @@ doc ///
   pdimStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s or any object to which @TO pdim@ can be applied
+    of @TO monomialIdeal@s
  Outputs
   : Sequence 
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
@@ -995,12 +995,12 @@ doc ///
   CMStats
   (CMStats, List)
  Headline
-  fraction of monomialIdeals in the given list whose quotient ring is Cohen-Macaulay
+  fraction of monomia ideals in the given list whose quotient ring is Cohen-Macaulay
  Usage
   CMStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s
+    of @TO monomialIdeal@s or of @TO ideal@s
  Outputs
   : QQ
    the fraction of Cohen-Macaulay ideals in the list
