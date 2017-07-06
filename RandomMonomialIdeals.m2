@@ -733,7 +733,7 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomialIdeals: number and degree complexity 
+  statistics on the minimal generators of a list of monomial ideals: number and degree complexity 
  Usage
   mingenStats(List)
  Inputs
