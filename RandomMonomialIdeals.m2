@@ -183,7 +183,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 )
 
 
-bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false, CountPure => false})
+bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => false, CountPure => false, Verbose => false})
 bettiStats List :=  o-> (ideals) -> ( 
     N := #ideals; Z:=0;
     if o.SaveBettis then (
@@ -191,15 +191,24 @@ bettiStats List :=  o-> (ideals) -> (
 	filename1 := concatenate(basefilename,"Bettis",fileNameExt);
 	stdio<<"Using file' " << filename1 <<"' to store Betti tables"<<endl;
 	);
-    -- sum of the betti tables and betti shapes: 
-    if not o.IncludeZeroIdeals then (ideals,Z) = extractNonzeroIdeals(ideals);
+    if not o.IncludeZeroIdeals then (
+	(ideals,Z) = extractNonzeroIdeals(ideals);
+	if o.Verbose then stdio <<"The list of ideals includes " << Z << " zero ideals." << endl;
+    	if (Z>0 and o.IncludeZeroIdeals) then stdio <<"The degree statistics do include those for the zero ideals."<< endl
+	);
+    if (o.Verbose and o.IncludeZeroIdeals) then (
+	Z := (extractNonzeroIdeals(ideals))_1;
+	stdio <<"The list of ideals includes " << Z << " zero ideals." << endl;
+	if Z>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
+	);
+    -- sum of the betti tables and betti shapes:     
     betaShapes := new BettiTally;
     bettisHistogram := {};
     pure := 0; -- count pure Betti tables
     -- add up all the betti tables: 
     apply(#ideals,i->( 
         resi := betti res ideals_i;
-	if isPure resi then pure = pure +1;
+	if o.CountPure then if isPure resi then pure = pure +1;
         if o.SaveBettis then filename1 << resi << endl;
     	bettisHistogram = append(bettisHistogram, resi); 
   	-- let's only keep a 1 in all spots where ther was a non-zero Betti number: 
@@ -1008,6 +1017,7 @@ doc ///
      L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
      apply(L,i->betti res i)
      bettiStats(L,IncludeZeroIdeals=>false)
+     bettiStats(L,IncludeZeroIdeals=>false,Verbose=>true)
  SeeAlso
    randomMonomialIdeals
    bettiStats
@@ -1227,6 +1237,7 @@ doc ///
    [CMStats, Verbose]
    [borelFixedStats, Verbose]
    [mingenStats, Verbose]
+   [bettiStats, Verbose]
  Headline
    optional input to request verbose feedback
  Description
@@ -1257,6 +1268,7 @@ doc ///
      dimStats(ideals, Verbose=>true)
      borelFixedStats(ideals, Verbose => true)
      mingenStats(ideals, Verbose=>true)          
+     bettiStats(ideals, Verbose => true) 
      M = randomMonomialSets(n,D,p,N);
      idealsFromGeneratingSets(M, Verbose => true)
  SeeAlso
@@ -1416,7 +1428,7 @@ TEST ///
 TEST///
    R = ZZ/101[a..c];
    L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3)};
-   (meanBettiShape,meanBetti) = bettiStats L;
+   (meanBettiShape,meanBetti,stdDevBetti) = bettiStats L;
    -- mean Betti table:
    b=new BettiTally from { (0,{0},0) => 2, (1,{2},2) => 2, (1,{3},3) => 1, (2,{4},4) => 1, (1,{4},4) => 1, (2,{5},5) =>1 }
    assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix b,RR))
