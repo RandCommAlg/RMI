@@ -1000,7 +1000,7 @@ doc ///
   CMStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s or of @TO ideal@s
+    of @TO monomialIdeal@s or any object to which @TO isCM@ can be applied
  Outputs
   : QQ
    the fraction of Cohen-Macaulay ideals in the list
