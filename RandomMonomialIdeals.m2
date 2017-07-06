@@ -81,7 +81,6 @@ export {
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     -- Model
-    "Model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -1166,12 +1165,10 @@ doc ///
  Key
   sample
   (sample,Model,ZZ)
-  (sample,String)
  Headline
   generates a Sample object sampling from the given Model
  Usage
   sample(Model,ZZ)
-  sample(String)
  Inputs
   M: Model
     model to be sampled from
@@ -1184,7 +1181,68 @@ doc ///
    Sample over specified Model with $N$ samples
  Description
   Text
-   TODO
+   Generate a sample by sampling $N$ times from the given Model.
+  Example
+   s=sample(ER(3,2,0.2),4);
+   getData s
+   statistics(s,degree@@ideal)
+///
+
+doc ///
+ Key
+  (sample,String)
+ Headline
+  creates a Sample object from a folder on disk
+ Usage
+  sample(String)
+ Inputs
+  FileName: String
+    file name where the sample is stored
+ Outputs
+  S: Sample
+   Sample read from disk
+ Description
+  Text
+   A Sample object is read from the specified filename
+ SeeAlso
+   sample
+   writeSample
+///
+
+doc ///
+  Key
+    ModelName
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    sample
+///
+
+doc ///
+  Key
+    Parameters
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    sample
+///
+
+doc ///
+  Key
+    SampleSize
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    sample
 ///
 
 doc ///
@@ -1197,12 +1255,15 @@ doc ///
   writeSample(Sample,String)
  Inputs
   S: Sample
-    Sample to write to file
+    to be written to file
   FileName: String
     file name to write sample to
  Description
   Text
-   TODO
+   Write a sample to disk. This creates a folder in which the model and data are stored.
+   The sample can then be read via the @TO (sample,String)@ function.
+ SeeAlso
+   (sample,String)
 ///
 
 doc ///
@@ -1215,10 +1276,10 @@ doc ///
   getData(Sample)
  Inputs
   S: Sample
-    Sample to extract data
+    to extract data from
  Outputs
   Data: List
-   List of all samples in object
+   all samples in object
  Description
   Text
    TODO
@@ -1227,33 +1288,114 @@ doc ///
 doc ///
  Key
   ER
-  (ER,ZZ,ZZ,RR)
-  (ER,PolynomialRing,ZZ,RR)
-  (ER,ZZ,ZZ,ZZ)
-  (ER,PolynomialRing,ZZ,ZZ)
-  (ER,ZZ,ZZ,List)
-  (ER,PolynomialRing,ZZ,List)
  Headline
-  creates a model for sampling from the Erdos-Renyi type distribution on monomials
+  model for sampling from the Erdos-Renyi type distribution on monomials
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,RR)
+ Headline
+  Erdos-Renyi type distribution on monomials over (n,D,p)
  Usage
   ER(ZZ,ZZ,RR)
-  ER(PolynomialRing,ZZ,RR)
-  ER(ZZ,ZZ,ZZ)
-  ER(PolynomialRing,ZZ,ZZ)
-  ER(ZZ,ZZ,List)
-  ER(PolynomialRing,ZZ,List)
  Inputs
   n: ZZ
     number of variables
-  : PolynomialRing
-    the ring in which monomial sets are to live if n is not specified
   D: ZZ
     maximum degree
   p: RR
-     the probability of selecting a monomial, 
+     the probability of selecting a monomial
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,RR)
+ Headline
+  Erdos-Renyi type distribution on monomials over (R,D,p)
+ Usage
+  ER(PolynomialRing,ZZ,RR)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  p: RR
+     the probability of selecting a monomial
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,ZZ)
+ Headline
+  Erdos-Renyi type distribution on monomials over (n,D,M)
+ Usage
+  ER(ZZ,ZZ,ZZ)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
   M: ZZ
-     number of monomials in the set, 
-  : List 
+     number of monomials in the set
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,ZZ)
+ Headline
+  Erdos-Renyi type distribution on monomials over (R,D,M)
+ Usage
+  ER(PolynomialRing,ZZ,ZZ)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  M: ZZ
+     number of monomials in the set
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,List)
+ Headline
+  Graded Erdos-Renyi type distribution on monomials over (n,D,L)
+ Usage
+  ER(ZZ,ZZ,List)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  L: List 
      of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
      or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
@@ -1263,6 +1405,30 @@ doc ///
   Text
    TODO
 ///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,List)
+ Headline
+  Graded Erdos-Renyi type distribution on monomials over (R,D,L)
+ Usage
+  ER(PolynomialRing,ZZ,List)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  L: List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
+ Outputs
+  M: Model
+   Erdos-Renyi type model
+ Description
+  Text
+   TODO
+///
+
 
 doc ///
  Key
@@ -1283,6 +1449,42 @@ doc ///
  Description
   Text
    TODO
+///
+
+doc ///
+  Key
+    Mean
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    statistics
+///
+
+doc ///
+  Key
+    StdDev
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    statistics
+///
+
+doc ///
+  Key
+    Histogram
+  Headline
+    TODO
+  Description
+    Text
+      TODO
+  SeeAlso
+    statistics
 ///
 
 --******************************************--
