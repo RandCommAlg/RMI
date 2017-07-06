@@ -193,12 +193,12 @@ bettiStats List :=  o-> (ideals) -> (
 	);
     if not o.IncludeZeroIdeals then (
 	(ideals,Z) = extractNonzeroIdeals(ideals);
-	if o.Verbose then stdio <<"The list of ideals includes " << Z << " zero ideals." << endl;
+	if o.Verbose then stdio << "There are "<<N<<" ideals in this sample. Of those, "<<Z<<" are the zero ideal." << endl;
     	if (Z>0 and not o.IncludeZeroIdeals) then stdio <<"The Betti statistics do not include those for the zero ideals."<< endl
 	);
     if (o.Verbose and o.IncludeZeroIdeals) then (
 	Z := (extractNonzeroIdeals(ideals))_1;
-	stdio <<"The list of ideals includes " << Z << " zero ideals." << endl;
+	stdio << "There are "<<N<<" ideals in this sample. Of those, "<<Z<<" are the zero ideal." << endl;
 	if Z>0 then stdio <<"The Betti statistics do include those for the zero ideals."<< endl
 	);
     -- sum of the betti tables and betti shapes:     
