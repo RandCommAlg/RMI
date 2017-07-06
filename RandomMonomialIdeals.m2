@@ -1646,8 +1646,6 @@ TEST ///
   assert(sub(((8/3)-(16/9))^(1/2),RR)==(pdimStats(listOfIdeals))_1)
 ///
 
-end
-
 --****************************--
 --  idealsFromGeneratingSets  --
 --****************************--
@@ -1670,17 +1668,6 @@ TEST ///
   assert (all(C#0,c->instance(c,MonomialIdeal)))
 ///
 
-end
-
-restart;
-uninstallPackage"RandomMonomialIdeals";
-installPackage"RandomMonomialIdeals";
-viewHelp bettiStats
-
-check RandomMonomialIdeals 
-viewHelp RandomMonomialIdeals
-
-
 --****************************--
 --  statistics  --
 --****************************--
@@ -1691,3 +1678,14 @@ TEST///
   assert(stat.Mean == 251)
   assert(stat.StdDev == 0)
 ///
+
+end
+
+
+restart;
+uninstallPackage"RandomMonomialIdeals";
+installPackage"RandomMonomialIdeals";
+viewHelp bettiStats
+
+check RandomMonomialIdeals 
+viewHelp RandomMonomialIdeals
