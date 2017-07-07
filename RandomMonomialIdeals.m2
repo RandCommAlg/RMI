@@ -192,9 +192,6 @@ bettiStats List :=  o-> (ideals) -> (
 	    stderr << "warning: filename already exists. Overwriting." << endl;
 	    removeFile o.SaveBettis;
 	    );
---    	basefilename:="stats"; fileNameExt:=concatenate(toString(N),"ideals");
---	filename1 := concatenate(basefilename,"Bettis",fileNameExt);
---	stdio<<"Using file' " << filename1 <<"' to store Betti tables"<<endl;
 	);
     if not o.IncludeZeroIdeals then (
 	(ideals,Z) = extractNonzeroIdeals(ideals);
@@ -273,7 +270,7 @@ degStats List :=  o-> (ideals) -> (
     	then(ret=(avg, stdDev,tally degHistogram); return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
-	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	stdio <<  "There are "<<N<<" ideals in this sample. Of those, "<< numberOfZeroIdeals <<" are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
 	);
     ret = (avg, stdDev)
@@ -314,7 +311,7 @@ dimStats List := o-> (ideals) -> (
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
-	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+	stdio <<  "There are "<<N<<" ideals in this sample. Of those, "<< numberOfZeroIdeals <<" are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The Krull dimension statistics do include those for the zero ideals."<< endl
 	);
     ret = (avg, stdDev)
@@ -350,8 +347,10 @@ regStats List := o-> (ideals) -> (
     	     stdDev = var^(1/2);
     	     if o.ShowTally
     	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
-	     if o.Verbose then
-              stdio <<toString(N-#ideals)<< " zero ideals were extracted from this sample, before reporting the regularity statistics."<< endl;
+	     if o.Verbose then (
+		 stdio << "There are "<<N<<" ideals in this sample. Of those, "<< toString(N-#ideals) <<" are the zero ideal." << endl;
+              	 stdio << "The zero ideals were extracted from the sample before reporting the regularity statistics."<< endl;
+		 );
     	     ret = (avg, stdDev)
          )
     
@@ -384,10 +383,10 @@ CMStats (List) := QQ => o -> (ideals) -> (
     for i from 0 to #ideals-1 do (
      if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
      if o.Verbose then (
-       stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
        if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
+       stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        );
    cm/N
 )
@@ -399,10 +398,10 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
     for i from 0 to #ideals-1 do ( 
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
     if o.Verbose then (
-       stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
+       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl;
+       stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        );
     bor/N
 )
@@ -446,8 +445,8 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     if o.ShowTally 
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
     if o.Verbose then (
-	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
-	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree complexity) do NOT include those for the zero ideals."<< endl
+        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
+	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
 	);
     ret = (numAvg, numStdDev, comAvg, comStdDev)
   )
@@ -474,7 +473,7 @@ pdimStats (List) := o-> (ideals) -> (
          then(ret = (avg, stdDev, tally pdHist), return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
-	stdio <<"The list of ideals includes " << numberOfZeroIdeals << " zero ideals." << endl;
+        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The projective dimension statistics do include those for the zero ideals."<< endl
 	);
     ret=(avg, stdDev) 
