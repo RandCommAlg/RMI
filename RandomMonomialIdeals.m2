@@ -2,52 +2,52 @@
 -- -*- coding: utf-8 -*-
 newPackage(
 	"RandomMonomialIdeals",
-    	Version => "1.0", 
+    	Version => "1.0",
     	Date => "May 5, 2017",
     	Authors => {
 	    {
-		Name => "Sonja Petrovic", 
-		Email => "sonja.petrovic@iit.edu", 
+		Name => "Sonja Petrovic",
+		Email => "sonja.petrovic@iit.edu",
 		HomePage => "http://math.iit.edu/~spetrov1/"
 	    },
 	    {
-		Name => "Despina Stasi", 
-		Email => "stasdes@iit.edu", 
+		Name => "Despina Stasi",
+		Email => "stasdes@iit.edu",
 		HomePage => "http://math.iit.edu/~stasdes/"
-	    },	
+	    },
 	    {
-		Name => "Dane Wilburne", 
-		Email => "dwilburn@hawk.iit.edu", 
+		Name => "Dane Wilburne",
+		Email => "dwilburn@hawk.iit.edu",
 		HomePage => "http://mypages.iit.edu/~dwilburn/"
-	    },	
+	    },
 	    {
-		Name => "Tanner Zielinski", 
-		Email => "tzielin1@hawk.iit.edu", 
+		Name => "Tanner Zielinski",
+		Email => "tzielin1@hawk.iit.edu",
 		HomePage => "https://www.linkedin.com/in/tannerzielinski/"
-	    },	
+	    },
 	    {
-		Name => "Daniel Kosmas", 
-		Email => "dkosmas@hawk.iit.edu", 
+		Name => "Daniel Kosmas",
+		Email => "dkosmas@hawk.iit.edu",
 		HomePage => "https://www.linkedin.com/in/daniel-kosmas-03160988/"
 	    },
 	    {
-		Name => "Parker Joncus", 
-		Email => "pjoncus@hawk.iit.edu", 
+		Name => "Parker Joncus",
+		Email => "pjoncus@hawk.iit.edu",
 		HomePage => ""
 	    },
 	    {
-		Name => "Richard Osborn", 
-		Email => "rosborn@hawk.iit.edu", 
+		Name => "Richard Osborn",
+		Email => "rosborn@hawk.iit.edu",
 		HomePage => ""
 	    },
 	    {
-	    	Name => "Monica Yun", 
-	    	Email => "myun1@hawk.iit.edu", 
+	    	Name => "Monica Yun",
+	    	Email => "myun1@hawk.iit.edu",
 	    	HomePage => ""
 	    },
 	    {
-	    	Name => "Genevieve Hummel", 
-	    	Email => "ghummel1@hawk.iit.edu", 
+	    	Name => "Genevieve Hummel",
+	    	Email => "ghummel1@hawk.iit.edu",
 	    	HomePage => ""
 	    }
 	},
@@ -185,7 +185,7 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
 
 
 bettiStats = method(TypicalValue =>Sequence, Options =>{IncludeZeroIdeals=>true, SaveBettis => "", CountPure => false, Verbose => false})
-bettiStats List :=  o-> (ideals) -> ( 
+bettiStats List :=  o-> (ideals) -> (
     N := #ideals; Z:=0;
     if o.SaveBettis != "" then (
     	if fileExists o.SaveBettis then (
@@ -203,17 +203,17 @@ bettiStats List :=  o-> (ideals) -> (
 	stdio << "There are "<<N<<" ideals in this sample. Of those, "<<Z<<" are the zero ideal." << endl;
 	if Z>0 then stdio <<"The Betti statistics do include those for the zero ideals."<< endl
 	);
-    -- sum of the betti tables and betti shapes:     
+    -- sum of the betti tables and betti shapes:
     betaShapes := new BettiTally;
     bettisHistogram := {};
     pure := 0; -- count pure Betti tables
-    -- add up all the betti tables: 
-    apply(#ideals,i->( 
+    -- add up all the betti tables:
+    apply(#ideals,i->(
         resi := betti res ideals_i;
 	if o.CountPure then if isPure resi then pure = pure +1;
         if o.SaveBettis != "" then o.SaveBettis << resi << endl;
-    	bettisHistogram = append(bettisHistogram, resi); 
-  	-- let's only keep a 1 in all spots where there was a non-zero Betti number: 
+    	bettisHistogram = append(bettisHistogram, resi);
+  	-- let's only keep a 1 in all spots where there was a non-zero Betti number:
 	beta1mtx := matrix(resi);
 	Rtemp := (ring ideals_i)^1/ideals_i;
 	beta1shape := new BettiTally from mat2betti  matrix pack(1+pdim(Rtemp), apply(flatten entries beta1mtx, i-> if i>0 then i=1 else i=0));
@@ -221,42 +221,42 @@ bettiStats List :=  o-> (ideals) -> (
 	)
     );
     if o.SaveBettis != "" then o.SaveBettis << close;
-    -- compute the average Betti table shape: 
+    -- compute the average Betti table shape:
     bShapeMean := mat2betti(1/#ideals*(sub(matrix(betaShapes), RR)));
     -- compute the average (entry-wise) Betti table:
-    betaSum := sum bettisHistogram; 
+    betaSum := sum bettisHistogram;
     bMean := mat2betti(1/#ideals*(sub(matrix(betaSum), RR)));
-    -- compute the standard deviation (entry-wise) of the Betti tables: 
+    -- compute the standard deviation (entry-wise) of the Betti tables:
     bMeanMtx := matrix bMean;
     betaVariance := 1/#ideals * sum apply(bettisHistogram, currentBetti -> (
-    	    mtemp := new MutableMatrix from bMeanMtx; 
-	    currentBettiMatrix := matrix currentBetti; 
-    	    apply(numrows currentBettiMatrix, i-> 
+    	    mtemp := new MutableMatrix from bMeanMtx;
+	    currentBettiMatrix := matrix currentBetti;
+    	    apply(numrows currentBettiMatrix, i->
 		apply(numcols currentBettiMatrix, j->
 	    	    (
-			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)): 
+			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
 			mtemp_(i,j) = mtemp_(i,j) - currentBettiMatrix_j_i
 			)
 	    	    )
 		);
-	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2: 
+	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
     	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
-    	    )	
+    	    )
 	);
     --    betaStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
     bStdDev := matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
     if o.CountPure then return (bShapeMean,bMean,bStdDev,pure);
     (bShapeMean,bMean,bStdDev)
     )
-    
-    
-    
+
+
+
 degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false, Verbose => false})
 degStats List :=  o-> (ideals) -> (
     N := #ideals;
     deg := 0;
     degHistogram:={};
-    apply(#ideals, i->( 
+    apply(#ideals, i->(
         degi := degree ideals_i;
         degHistogram = append(degHistogram, degi)
 	)
@@ -276,7 +276,7 @@ degStats List :=  o-> (ideals) -> (
     ret = (avg, stdDev)
 )
 
---creates a list of monomialIdeal objects from a list of monomial generating sets 
+--creates a list of monomialIdeal objects from a list of monomial generating sets
 idealsFromGeneratingSets =  method(TypicalValue => List, Options => {IncludeZeroIdeals => true, Verbose => false})
 idealsFromGeneratingSets(List):= o -> (B) -> (
     N := # B;
@@ -288,7 +288,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
     if o.Verbose then
      stdio <<"There are "<<#B<<" ideals in this sample. Of those, "<<numberOfZeroIdeals<<" are the zero ideal."<< endl;
-    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals); 
+    if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals);
 )
 
 
@@ -297,7 +297,7 @@ dimStats List := o-> (ideals) -> (
     N := #ideals;
     dims:=0;
     dimsHistogram:={};
-    apply(#ideals,i->( 
+    apply(#ideals,i->(
         dimi := dim ideals_i;
     dimsHistogram = append(dimsHistogram, dimi)
     )
@@ -307,7 +307,7 @@ dimStats List := o-> (ideals) -> (
     Ex2:=sub(1/N*(sum apply(elements(tally dimsHistogram), i->i^2)), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally 
+    if o.ShowTally
          then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
@@ -329,7 +329,7 @@ regStats List := o-> (ideals) -> (
 	regHistogram = N:-infinity;
 	stdDev := 0;
 	if o.ShowTally then(
-	    ret=(-infinity, 0, tally regHistogram); 
+	    ret=(-infinity, 0, tally regHistogram);
 	    return ret;
 	    );
 	if o.Verbose then
@@ -353,16 +353,16 @@ regStats List := o-> (ideals) -> (
 		 );
     	     ret = (avg, stdDev)
          )
-    
+
 )
 
  randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
-			
+
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
         B:={};
-        if all(pOrM,q->instance(q,RR)) then 
+        if all(pOrM,q->instance(q,RR)) then
 	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal")
-	else if all(pOrM,q->instance(q,ZZ)) then 
+	else if all(pOrM,q->instance(q,ZZ)) then
 	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
@@ -385,7 +385,7 @@ CMStats (List) := QQ => o -> (ideals) -> (
      if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
+       if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
        stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        );
    cm/N
@@ -395,12 +395,12 @@ borelFixedStats = method(TypicalValue =>QQ, Options =>{Verbose => false})
 borelFixedStats (List) := QQ => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
-    for i from 0 to #ideals-1 do ( 
+    for i from 0 to #ideals-1 do (
         if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
     if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl;
+       if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Borel-fixed monomial ideals."<< endl
        stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        );
     bor/N
@@ -426,11 +426,11 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
 	ret = (-infinity, 0, -infinity, 0)
     )
     else (
-        apply(#ideals,i->( 
+        apply(#ideals,i->(
             mingensi := gens gb ideals_i;
-            numgensi := numgens source mingensi; 
-            mi := max({degrees(mingensi)}#0#1); 
-	    numgensHist = append(numgensHist, numgensi); 
+            numgensi := numgens source mingensi;
+            mi := max({degrees(mingensi)}#0#1);
+	    numgensHist = append(numgensHist, numgensi);
 	    complexityHist = append(complexityHist, mi#0)
 	    )
         );
@@ -442,7 +442,7 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     comVar:= comEx2 - comAvg^2;
     numStdDev= numVar^(1/2);
     comStdDev= comVar^(1/2);
-    if o.ShowTally 
+    if o.ShowTally
        then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
     if o.Verbose then (
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
@@ -458,25 +458,25 @@ pdimStats (List) := o-> (ideals) -> (
     N:=#ideals;
     pdHist:={};
     R:=ring(ideals_0);
-    apply(#ideals,i-> 
+    apply(#ideals,i->
 	(
         pdimi := pdim(R^1/ideals_i);
 	pdHist = append(pdHist, pdimi)
 	)
-    );           
+    );
     ret:=();
     avg:=sub(((1/N)*(sum pdHist)),RR);
     Ex2:=sub(((1/N)*(sum apply(elements(tally pdHist), i->i^2))), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally 
+    if o.ShowTally
          then(ret = (avg, stdDev, tally pdHist), return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The projective dimension statistics do include those for the zero ideals."<< endl
 	);
-    ret=(avg, stdDev) 
+    ret=(avg, stdDev)
 )
 
 --**********************************--
@@ -492,9 +492,9 @@ toSymbol = (p) -> (
          error ("expected a string or symbol, but got: ", toString p))
 
 -- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
-    -- input list of ideals 
+    -- input list of ideals
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
--- (not exported, therefore no need to document) 
+-- (not exported, therefore no need to document)
 extractNonzeroIdeals = ( ideals ) -> (
     nonzeroIdeals := select(ideals,i->i != 0);
     numberOfZeroIdeals := # ideals - # nonzeroIdeals;
@@ -505,7 +505,7 @@ extractNonzeroIdeals = ( ideals ) -> (
 -- Internal method that takes as input list of generating sets and splits out the zero ideals, counting them:
     -- input list of generating sets
     -- output a sequence (list of non-zero ideals from the list , the number of zero ideals in the list)
--- (not exported, therefore no need to document) 
+-- (not exported, therefore no need to document)
 extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     nonzeroIdeals := select(generatingSets,i-> i#0 != 0_(ring i#0)); --ideal(0)*ring(i));
     numberOfZeroIdeals := # generatingSets - # nonzeroIdeals;
@@ -513,7 +513,7 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
     return(nonzeroIdeals,numberOfZeroIdeals)
 )
 
--- the following function is needed to fix the Boij-Soederberg "matrix BettiTally" method 
+-- the following function is needed to fix the Boij-Soederberg "matrix BettiTally" method
 -- that we can't use directly for StdDev computation, because we're working over RR not over ZZ:
 matrix(BettiTally, ZZ, ZZ) := opts -> (B,lowestDegree, highestDegree) -> (
      c := pdim B + 1;
@@ -531,7 +531,7 @@ matrix(BettiTally, ZZ, ZZ) := opts -> (B,lowestDegree, highestDegree) -> (
 
 
 --******************************************--
--- DOCUMENTATION     	       	    	    -- 
+-- DOCUMENTATION     	       	    	    --
 --******************************************--
 beginDocumentation()
 
@@ -542,7 +542,7 @@ doc ///
   A package for generating Erdos-Renyi-type random monomial ideals and variations.
  Description
   Text
-   {\em RandomMonomialIdeals} is a  package that... 
+   {\em RandomMonomialIdeals} is a  package that...
   -- Caveat
   -- Still trying to figure this out. [REMOVE ME]
 ///
@@ -576,7 +576,7 @@ doc ///
      the probability of selecting a monomial, OR
   M: ZZ
      number of monomials in the set, up to the maximum number of monomials in $n$ variables of degree at most $D$  OR
-  : List 
+  : List
      of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
   : List
      of integers whose $i$-th entry is the number of monomials of degree $i$ in each set, up to the maximum number of monomials in $n$ variables of degree exactly $i$
@@ -587,7 +587,7 @@ doc ///
    random generating sets of monomials
  Description
   Text
-   randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   randomMonomialSets creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables.
    It does so by calling @TO randomMonomialSet@ $N$ times.
  SeeAlso
   randomMonomialSet
@@ -603,15 +603,15 @@ doc ///
   bettiStats(List)
  Inputs
   L: List
-   of @TO monomialIdeal@s, or any objects to which @TO betti@ @TO res@ can be applied. 
+   of @TO monomialIdeal@s, or any objects to which @TO betti@ @TO res@ can be applied.
  Outputs
   : Sequence
    of BettiTallies, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt L}.
  Description
   Text
    For a sample of ideals stored as a List, this method computes some basic Betti table statistics of the sample.
-   Namely, it computes the average shape of the Betti tables (where 1 is recorded in entry (ij) for each element if beta_{ij} is not zero), 
-   and it also computes the average Betti table (that is, the table whose (ij) entry is the mean value of beta_{ij} for all ideals in the sample). 
+   Namely, it computes the average shape of the Betti tables (where 1 is recorded in entry (ij) for each element if beta_{ij} is not zero),
+   and it also computes the average Betti table (that is, the table whose (ij) entry is the mean value of beta_{ij} for all ideals in the sample).
   Example
    R = ZZ/101[a..e];
    L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
@@ -621,21 +621,21 @@ doc ///
    stdDevBetti
   Text
    For sample size $N$, the average Betti table {\em shape} simply considers nonzero Betti numbers. It is to be interpreted as follows:
-   entry (i,j) encodes the following sum of indicators: 
+   entry (i,j) encodes the following sum of indicators:
    $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
    the proportion of ideals with a nonzero beta_{ij}.
    Thus an entry of 0.33 means 33% of ideals have a non-zero Betti number there.
   Example
    apply(L,i->betti res i)
-   meanBettiShape   
-  Text 
-   For sample size $N$, the average Betti table is to be interpreted as follows: 
+   meanBettiShape
+  Text
+   For sample size $N$, the average Betti table is to be interpreted as follows:
    entry $(i,j)$ encodes  $\sum_{I\in ideals}beta_{ij}(R/I) / N$:
   Example
    apply(L,i->betti res i)
    meanBetti
-  Text 
-   Note that this method will work on a @TO List@ of any objects to which @TO betti@ @TO res@ can be applied. 
+  Text
+   Note that this method will work on a @TO List@ of any objects to which @TO betti@ @TO res@ can be applied.
 ///
 
 doc ///
@@ -646,9 +646,9 @@ doc ///
     optional input to store all Betti tables computed
   Description
     Text
-     The method that computes statistics on Betti tables has an option to save all betti tables to a file. 
+     The method that computes statistics on Betti tables has an option to save all betti tables to a file.
      This may be useful if betti res computation, called from @TO bettiStats@, takes too long.
-    Example 
+    Example
      ZZ/101[a..e];
      L={monomialIdeal"a2b,bc", monomialIdeal"ab,bc3",monomialIdeal"ab,ac,bd,be,ae,cd,ce,a3,b3,c3,d3,e3"}
      bettiStats (L,SaveBettis=>"myBettiDiagrams")
@@ -667,8 +667,8 @@ doc ///
     optional input to show the number of objects in the list whose Betti tables are pure
   Description
     Text
-      Put {\tt CountPure => true} in @TO bettiStats@ to show this output: 
-    Example 
+      Put {\tt CountPure => true} in @TO bettiStats@ to show this output:
+    Example
      ZZ/101[a..c];
      L={monomialIdeal"ab,bc", monomialIdeal"ab,bc3"}
      (meanShape,meanBetti,stdevBetti,pure) = bettiStats (L,CountPure=>true);
@@ -696,21 +696,18 @@ doc ///
    whose first entry is the average degree of a list of monomial ideals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats finds the average and the standard deviation of the degree of R/I for a list of monomial ideals.
-   The degree of each ideal is calculated using the @TO degree@ function.
-   It has the optional input of ShowTally.
+   degStats computes the degree of R/I for each ideal I in the list and computes the mean and statnadr deviation of the degrees. 
   Example
-   L=randomMonomialSet(3,3,1.0);
-   R=ring(L#0);
-   ideals={monomialIdeal(R_0^5*R_1^2,R_2),monomialIdeal(R_0,R_1,R_2),monomialIdeal(R_0^3*R_1^5,R_1^4*R_2,R_0^2*R_2^3)};
+   R=ZZ/101[a,b,c];
+   ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
    degStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3))
    degStats(ideals)
   Example
-   ideals = randomMonomialIdeals(4,3,1.0,3);
+   ideals = randomMonomialIdeals(4,3,1.0,3)
    degStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO degree@ can be applied.
@@ -734,10 +731,10 @@ doc ///
   D: ZZ
     maximum degree
   p: RR
-     probability to select a monomial in the ER model, OR 
+     probability to select a monomial in the ER model, OR
   M: ZZ
      the number of monomials, up to the maximum number of monomials in $n$ variables of degree at most $D$, used to generate each ideal, OR
-  : List 
+  : List
      of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
   : List
      of integers whose $i$-th entry is the number of monomials of degree $i$ used to generate each ideal, up to the maximum number of monomials in $n$ variables of degree exactly $i$.
@@ -748,18 +745,18 @@ doc ///
    list of randomly generated @TO monomialIdeal@, and the number of zero ideals removed, if any
  Description
   Text
-   randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables. 
-   If $p$ is a real number, it generates each of these ideals according to the Erdos-Renyi-type model: 
-   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$. 
+   randomMonomialIdeals creates $N$ random monomial ideals, with each monomial having degree $d$, $1\leq d\leq D$, in $n$ variables.
+   If $p$ is a real number, it generates each of these ideals according to the Erdos-Renyi-type model:
+   from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
    n=2; D=3; p=0.2; N=10;
    randomMonomialIdeals(n,D,p,N)
    randomMonomialIdeals(5,3,0.4,4)
   Text
-   Note that this model does not generate the monomial $1$: 
+   Note that this model does not generate the monomial $1$:
   Example
    randomMonomialIdeals(3,2,1.0,1)
-  Text 
+  Text
    If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the ideal from this set.
   Example
@@ -767,26 +764,26 @@ doc ///
    randomMonomialIdeals(n,D,M,N)
   Text
    Note that each generating set of each ideal has at most $M = 7$ monomials. If one monomial divides another monomial that was generated, it will not be in the generating set.
-  
+
    The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
-   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
-   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
-   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples:
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
    randomMonomialIdeals(2,3,{0.0, 1.0, 1.0},1)
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
- 
-  
+
+
    If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then randomMonomialIdeal creates a list of @TO MonomialIdeal@, where at most $M_d$ monomials are of degree $d$.
   Example
    randomMonomialIdeals(3,3,{1,1,1},1)
   Text
    Observe that there are at most one degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
  Caveat
-  Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed. 
+  Since the method returns a list of @TO MonomialIdeal@s, only the minimal generating set will be displayed.
   In contrast, @TO randomMonomialSet@ will display the full (not necessarily minimal) generating set produced by the model.
  SeeAlso
    randomMonomialSets
@@ -822,7 +819,7 @@ doc ///
      the probability of selecting a monomial, OR
   M: ZZ
      number of monomials in the set, up to the maximum number of monomials in $n$ variables of degree at most $D$  OR
-  : List 
+  : List
      of real numbers whose $i$-th entry is the probability of selecting a monomial of degree $i$, OR
   : List
      of integers whose $i$-th entry is the number of monomials of degree $i$ in each set, up to the maximum number of monomials in $n$ variables of degree exactly $i$
@@ -831,7 +828,7 @@ doc ///
    random set of monomials
  Description
   Text
-   randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables. 
+   randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables.
    If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model, that is, based on a Binomial distribution:
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
@@ -855,12 +852,12 @@ doc ///
   Example
    randomMonomialSet(2,2,10)
   Text
-   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from. 
+   returns 5 monomials in a generating set, and not 10, since there are fewer than 10 monomials to choose from.
 
    The input of type @TO List@ controls the number of monomials in the generating set of each degree for the graded ER model.
-   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is 
-   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative 
-   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples: 
+   Specifically, this input is either a list of real numbers between 0 and 1, inclusive, whose i-th entry is
+   the probability of including a monomial of degree i in the monomial set, or it is a list of nonnegative
+   integers whose i-th entry is the number of monomials of each degree to include in the monomial set. Consider the following two examples:
    If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then randomMonomialSet generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
@@ -873,7 +870,7 @@ doc ///
    randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1 monomials, one degree-2 monomial, and one degree-3 monomial.
-   
+
    Sometimes we are already working in a specific ring and would like the random sets of monomials to live in the same ring:
   Example
    D=3;p=.5; R=ZZ/101[a,b,c];
@@ -899,11 +896,13 @@ doc ///
     of @TO monomialIdeal@s
  Description
   Text
-   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal. It counts how many sets are given, and how many sets are converted to the zero ideal.
+   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal.
   Example
    n=4; D=2; p=1.0; N=3;
    B=randomMonomialSets(n,D,p,N); B/print
    idealsFromGeneratingSets(B)
+  Text
+   In case the {\tt IncludeZeroIdeals} is set to false, the method also counts how many sets are converted to the zero ideal.
  SeeAlso
   randomMonomialIdeals
 ///
@@ -913,7 +912,7 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomial ideals: number and degree complexity 
+  statistics on the minimal generators of a list of monomial ideals: number and degree complexity
  Usage
   mingenStats(List)
  Inputs
@@ -921,8 +920,8 @@ doc ///
     of @TO monomialIdeal@s or @TO ideal@s
  Outputs
   : Sequence
-    with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity. 
-    If ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation. 
+    with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity.
+    If ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation.
  Description
   Text
    mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for the number of minimal generators and degree complexity of the list of nonzero ideals.
@@ -952,8 +951,8 @@ doc ///
   Description
     Text
       Put {\tt Coefficients => r} for a choice of field r as an argument in
-      the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
-    Example 
+      the function @TO randomMonomialSet@ or @TO randomMonomialSets@.
+    Example
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       ring ideal oo
@@ -977,7 +976,7 @@ doc ///
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
       the function @TO randomMonomialSet@, @TO randomMonomialSets@ or @TO randomMonomialIdeals@
-    Example 
+    Example
       n=2; D=3; p=0.2;
       randomMonomialSet(n,D,p)
       randomMonomialSet(n,D,p,VariableName => y)
@@ -995,7 +994,7 @@ doc ///
     optional input to choose the strategy for generating the monomial set
   Description
     Text
-      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@ or @TO randomMonomialSets@. 
+      Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@ or @TO randomMonomialSets@.
       "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list.
 ///
 
@@ -1009,13 +1008,13 @@ doc ///
    optional input to choose whether or not zero ideals should be included
  Description
    Text
-     When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals. 
-     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them. 
+     When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals.
+     If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them.
    Example
      n=2;D=2;p=0.0;N=1;
      ideals = randomMonomialIdeals(n,D,p,N)
    Text
-     The 0 listed is the zero ideal: 
+     The 0 listed is the zero ideal:
    Example
      ideals_0
    Text
@@ -1024,8 +1023,8 @@ doc ///
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
    Text
      The option can also be used with the method @TO bettiStats@.
-     If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics. 
-     In this case, use the optional input as follows: 
+     If {\tt ideals} contains zero ideals, you may wish to exclude them from the Betti statistics.
+     In this case, use the optional input as follows:
    Example
      R=ZZ/101[a..c]
      L={monomialIdeal (a^2*b,b*c), monomialIdeal(a*b,b*c^3),monomialIdeal 0_R};
@@ -1043,35 +1042,34 @@ doc ///
   dimStats
   (dimStats,List)
  Headline
-  statistics on the Krull dimension of a list of monomial ideals 
+  statistics on the Krull dimension of a list of monomial ideals
  Usage
   dimStats(List)
- 
+
  Inputs
   ideals: List
     of @TO monomialIdeal@s or any objects to which @TO dim@ can be applied.
-  
+
  Outputs
-  : Sequence 
+  : Sequence
    whose first entry is the average Krull dimension of a list of monomial ideals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average and standard deviation of the Krull dimension for a list of monomial ideals.   
+   dimStats finds the average and standard deviation of the Krull dimension for a list of monomial ideals.
   Example
-    L=randomMonomialSet(3,3,1.0);
-    R=ring(L#0);
-    ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
+		R=ZZ/101[a,b,c];
+		ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
     dimStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
-   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3));
+   ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3))
    dimStats(ideals)
   Example
-   ideals = randomMonomialIdeals(4,3,1.0,3);
+   ideals = randomMonomialIdeals(4,3,1.0,3)
    dimStats(ideals)
   Text
-   Note that this function can be run with a list of any objects to which @TO dim@ can be applied. 
+   Note that this function can be run with a list of any objects to which @TO dim@ can be applied.
 ///
 
 
@@ -1084,28 +1082,23 @@ doc ///
    [regStats, ShowTally]
    [pdimStats, ShowTally]
  Headline
-   optional input to choose if the tally is to be returned 
+   optional input to choose if the tally is to be returned
  Description
    Text
-     If {\tt ShowTally => false} (the default value), then only the 2 basic statistics - mean and standard deviation - of the function will be returned. 
-     If {\tt ShowTally => true}, then both the statistics and the tally will be returned. 
-
+     If {\tt ShowTally => false} (the default value), then only the 2 basic statistics - mean and standard deviation - of the function will be returned.
+     If {\tt ShowTally => true}, then both the statistics and the tally will be returned.
    Example
-     n=3;D=3;p=0.0;N=3;
-     ideals = randomMonomialIdeals(n,D,p,N);
-     dimStats(ideals)
+	   R=ZZ/101[a,b,c];
+		 ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
+		 dimStats(ideals)
      mingenStats(ideals)
      degStats(ideals)
      pdimStats(ideals)
    Text
-     In the example above, only the statistics are outputted since by default {\tt ShowTally => false}. 
+     In the example above, only the statistics are outputted since by default {\tt ShowTally => false}.
    Text
-    In order to view the tally, ShowTally must be set to true ({\tt ShowTally => true}) when the function is called: 
+    In order to view the tally, ShowTally must be set to true ({\tt ShowTally => true}) when the function is called:
    Example
-     L=randomMonomialSet(3,3,1.0);
-     -- QUESTION: what is the purpose of using L here?! 
-     R=ring(L#0);
-     ideals = {monomialIdeal(R_0^3,R_1,R_2^2), monomialIdeal(R_0^3, R_1, R_0*R_2)};
      dimStats(ideals,ShowTally=>true)
      mingenStats(ideals,ShowTally=>true)
      degStats(ideals,ShowTally=>true)
@@ -1131,19 +1124,19 @@ doc ///
   ideals: List
     of @TO monomialIdeal@s or @TO ideal@s
  Outputs
-  : Sequence 
+  : Sequence
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\tt ideals}.
  Description
   Text
-   pdimStats finds the mean and standard deviation of the projective dimension of elements in the list: 
+   pdimStats finds the mean and standard deviation of the projective dimension of elements in the list:
   Example
-   R=ZZ/101[a,b,c]
+   R=ZZ/101[a,b,c];
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
-   pdimStats will also output the projective dimension Tally using the optional input ShowTally
+   pdimStats will also output the projective dimension tally using the optional input ShowTally
   Example
-   R=ZZ/101[a,b,c]
+   R=ZZ/101[a,b,c];
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
    pdimStats(ideals, ShowTally=>true)
   Text
@@ -1152,7 +1145,7 @@ doc ///
    ideals = randomMonomialIdeals(4,3,1.0,3)
    pdimStats(ideals)
   Text
-   Note that this function can be run with a list of @TO ideal@s as well. 
+   Note that this function can be run with a list of @TO ideal@s as well.
  SeeAlso
    ShowTally
 ///
@@ -1175,9 +1168,9 @@ doc ///
   Text
    regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the regularity of the list of nonzero ideals.
   Example
-   n=4; D=3; p={0.0,1.0,0.0}; N=2;
-   B=randomMonomialIdeals(n,D,p,N)
-   regStats(B)
+   R=ZZ/101[a,b,c];
+   ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
+   regStats(ideals)
   Text
    If the list given is a list of all zero ideals, regStats returns -infinity for the mean regularity.
   Example
@@ -1190,7 +1183,7 @@ doc ///
  SeeAlso
   ShowTally
  ///
- 
+
 doc ///
  Key
   CMStats
@@ -1232,7 +1225,7 @@ doc ///
    the fraction of Borel-fixed monomial ideals in the list
  Description
   Text
-   borelFixedStats takes a list of monomial ideals and returns the percentage of Borel-fixed ideals in the list of monomial ideals as a real number  
+   borelFixedStats computes the fraction of Borel-fixed ideals in the list of monomial ideals.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
@@ -1256,17 +1249,17 @@ doc ///
  Description
    Text
      Some of the methods that use this option by default exclude zero ideals when computing statistics on a set of ideals.
-     Others do not, but the user may wish to know how many ideals are, say, trivially Cohen-Macaulay. 
+     Others do not, but the user may wish to know how many ideals are, say, trivially Cohen-Macaulay.
      If {\tt Verbose => true}, then the methods will display an additional informational statement regarding the statistics in question.
-     The default value is false. 
+     The default value is false.
    Example
      n=3;D=3;p=0.0;N=3;
      ideals = randomMonomialIdeals(n,D,p,N)
      regStats(ideals)
      CMStats(ideals)
    Text
-     In the examples above, one may wonder, for example, why 3 out of 3 ideals in the list are Cohen-Macaulay. 
-     In order to view the additional information, set {\tt Verbose => true}: 
+     In the examples above, one may wonder, for example, why 3 out of 3 ideals in the list are Cohen-Macaulay.
+     In order to view the additional information, set {\tt Verbose => true}:
    Example
      regStats(ideals, Verbose => true)
      CMStats(ideals, Verbose => true)
@@ -1280,8 +1273,8 @@ doc ///
      degStats(ideals, Verbose => true)
      dimStats(ideals, Verbose=>true)
      borelFixedStats(ideals, Verbose => true)
-     mingenStats(ideals, Verbose=>true)          
-     bettiStats(ideals, Verbose => true) 
+     mingenStats(ideals, Verbose=>true)
+     bettiStats(ideals, Verbose => true)
      M = randomMonomialSets(n,D,p,N);
      idealsFromGeneratingSets(M, Verbose => true)
  SeeAlso
@@ -1292,10 +1285,10 @@ doc ///
    regStats
    CMStats
    borelFixedStats
-   mingenStats   
+   mingenStats
 ///
 --******************************************--
--- TESTS     	     	       	    	    -- 
+-- TESTS     	     	       	    	    --
 --******************************************--
 
 --************************--
@@ -1324,7 +1317,7 @@ TEST ///
     L = randomMonomialSets(n,D,1.0,3);
     assert (set L#0===set L#1)
     assert (set L#0===set L#2)
-    
+
 ///
 
 TEST ///
@@ -1445,14 +1438,14 @@ TEST///
    -- mean Betti table:
    b=new BettiTally from { (0,{0},0) => 2, (1,{2},2) => 2, (1,{3},3) => 1, (2,{4},4) => 1, (1,{4},4) => 1, (2,{5},5) =>1 }
    assert(1/2*sub(matrix lift(2*meanBetti,ZZ),RR) ==  1/2*sub(matrix b,RR))
-   -- mean Betti shape: 
+   -- mean Betti shape:
    b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
    assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
-   -- std of Betti table: 
+   -- std of Betti table:
    b=flatten entries(stdDevBetti^{0}_{0});
    assert(0 == b_0);
    b=flatten entries(stdDevBetti^{2}_{2});
-   assert(0.5 == b_0);   
+   assert(0.5 == b_0);
 ///
 
 
@@ -1486,7 +1479,7 @@ TEST///
    assert(sub(8/3,RR)==(degStats(listOfIdeals,ShowTally=>true))_0)
    assert((sub(14/9,RR))^(1/2)==(degStats(listOfIdeals,ShowTally=>true))_1)
    assert(3==sum(values(degStats(listOfIdeals,ShowTally=>true))_2))
- 
+
 ///
 
 --************************--
