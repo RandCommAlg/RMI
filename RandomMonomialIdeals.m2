@@ -387,7 +387,7 @@ CMStats (List) := QQ => o -> (ideals) -> (
        stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
+       if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
        );
    cm/N
 )
@@ -402,7 +402,7 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
        stdio << bor << " out of " << N << " monomial ideals in the given sample are Borel-fixed." << endl;
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
-       if numberOfZeroIdeals>0 then stdio <<"They are included in the reported count of Borel-fixed monomial ideals."<< endl
+       if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Borel-fixed monomial ideals."<< endl
        );
     bor/N
 )
@@ -697,12 +697,10 @@ doc ///
    whose first entry is the average degree of a list of monomial ideals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats finds the average and the standard deviation of the degree of R/I for a list of monomial ideals.
-   The degree of each ideal is calculated using the @TO degree@ function.
-   It has the optional input of ShowTally.
+   degStats computes the degree of R/I for each ideal I in the list and computes the mean and statnadr deviation of the degrees. 
   Example
-	 R=ZZ/101[a,b,c];
-	 ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
+   R=ZZ/101[a,b,c];
+   ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
    degStats(ideals)
   Text
    The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
@@ -899,11 +897,13 @@ doc ///
     of @TO monomialIdeal@s
  Description
   Text
-   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal. It counts how many sets are given, and how many sets are converted to the zero ideal.
+   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal.
   Example
    n=4; D=2; p=1.0; N=3;
    B=randomMonomialSets(n,D,p,N); B/print
    idealsFromGeneratingSets(B)
+  Text
+   In case the {\tt IncludeZeroIdeals} is set to false, the method also counts how many sets are converted to the zero ideal.
  SeeAlso
   randomMonomialIdeals
 ///
@@ -1135,7 +1135,7 @@ doc ///
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
-   pdimStats will also output the projective dimension Tally using the optional input ShowTally
+   pdimStats will also output the projective dimension tally using the optional input ShowTally
   Example
    R=ZZ/101[a,b,c];
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
@@ -1226,7 +1226,7 @@ doc ///
    the fraction of Borel-fixed monomial ideals in the list
  Description
   Text
-   borelFixedStats takes a list of monomial ideals and returns the fraction of Borel-fixed ideals in the list of monomial ideals as a rational number
+   borelFixedStats computes the fraction of Borel-fixed ideals in the list of monomial ideals.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
