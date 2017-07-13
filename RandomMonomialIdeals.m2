@@ -240,7 +240,7 @@ bettiStats List :=  o-> (ideals) -> (
     	    )
 	);
     --    betaStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
-    bStdDev := matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
+    bStdDev := mat2betti matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
     if o.CountPure then return (bShapeMean,bMean,bStdDev,pure);
     (bShapeMean,bMean,bStdDev)
     )
@@ -563,7 +563,8 @@ doc ///
    dimStats(ideals,ShowTally=>true)
   Text 
    The first entry in the output of  @TO dimStats@ is the mean Krull dimension of the sample, and the second entry is the standard deviation.
-   Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@:
+   Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@,
+   and the average Betti table shape, mean Betti table, and its standard deviation via @TO bettiStats@: 
   Example
    mingenStats ideals
    bettiStats ideals
