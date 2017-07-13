@@ -92,6 +92,7 @@ else if all(pOrM,q->instance(q,RR)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D));
         B = flatten apply(toList(1..D), d->select(allMonomials_(d-1),m->random(0.0,1.0)<=pOrM_(d-1)))
     );
+)
 randomMonomialSet(3,2,{2,1,0,1,2})
 randomMonomialSet(3,2,{.5,.2,.0,.2,.5})
 
@@ -105,6 +106,7 @@ else if all(pOrM,q->instance(q,RR)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,L,U));
         B = flatten apply(toList(1..(U-L)), d->select(allMonomials_(d-1),m->random(0.0,1.0)<=pOrM_(d-1)))
     );
+)
 randomMonomialSet(3,-1,2,{2,1,0,1,2})
 randomMonomialSet(3,-1,2,{.5,.2,.0,.2,.5})
 
