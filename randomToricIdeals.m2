@@ -25,7 +25,8 @@ apply(B,b->phi b)
 *}
 
 -- let's create a funciton for the above: 
-allLaurentMonomials = (n,D) -> (
+allLaurentMonomials = method();
+allLaurentMonomials(ZZ,ZZ) := (n,D) -> (
 -- input n 
 -- input D
 R:=ZZ/101[x_1..x_n,a_1..a_n];
@@ -38,7 +39,7 @@ apply(B,b->phi b)
 )
 allLaurentMonomials(3,2) 
 
-laurentMonomials = (n,L,U) -> (
+allLaurentMonomials(ZZ,ZZ,ZZ) := (n,L,U) -> (
 -- input n
 -- input L<0
 -- input U>0
@@ -50,42 +51,64 @@ phi:= map(K,F, matrix{join(toList(x_1..x_n), apply(toList(1..n),i->x_i^(-1)))});
 B:= delete(sub(1,F), flatten flatten flatten apply(toList(0..U), i->apply(toList(L..0),j->entries basis({i,j},F))));
 apply(B, b->phi b)
 )
+allLaurentMonomials(3,-2,2) 
 
-laurentMonomials(3,-2,2) 
-
-randomMLMonomialSet = (n,D,M) -> (
+randomMonomialSet = method();
+randomMonomialSet(ZZ,ZZ,ZZ) := (n,D,M) -> (
 -- fixed M model with L1 norm monomial generationg model
 allMonomials = allLaurentMonomials(n,D);
 B = take(random(allMonomials),M)
 )
+randomMonomialSet(3,2,8)
 
-randomMLMonomialSet(3,2,8)
-
-randomERLMonomialSet = (n,D,p) -> (
+randomMonomialSet(ZZ,ZZ,RR) := (n,D,p) -> (
 -- ER model with L1 norm monomial generating model
 allMonomials = allLaurentMonomials(n,D);
 B = select(allMonomials, m->random(0.0,1.0)<=p)
 )
+randomMonomialSet(3,2,.2)
 
-randomERLMonomialSet(3,2,.2)
-
-randomMlMonomialSet = (n,L,U,M) -> (
+randomMonomialSet(ZZ,ZZ,ZZ,ZZ) := (n,L,U,M) -> (
 -- fixed M model with positive degree sum/negative degree sum monomial generating model
-allMonomials = laurentMonomials(n,L,U);
+allMonomials = allLaurentMonomials(n,L,U);
 B = take(random(allMonomials),M)
 )
+randomMonomialSet(3,-2,1,5)
 
-randomMlMonomialSet(3,-2,1,5)
-
-randomERlMonomialSet = (n,L,U,p) -> (
+randomMonomialSet(ZZ,ZZ,ZZ,RR) := (n,L,U,p) -> (
 -- ER model with positive degree sum/negative degree sum monomial generating model
-allMonomials = laurentMonomials(n,L,U);
+allMonomials = allLaurentMonomials(n,L,U);
 B= select(allMonomials, m->random(0.0,1.0)<=p)
 )
+randomMonomialSet(3,-1,2,.2)
 
-randomERlMonomialSet (3,-1,2,.2)
-
+randomMonomialSet(ZZ,ZZ,List) := (n,D,pOrM) -> (
 -- start of graded model
-d = laurentMonomials(3,-2,1)
-D = sort values partition(m-> first degree m, d)
+if all(pOrM,q->instance(q,ZZ)) then (
+        allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D);
+        B = flatten apply(toList(1..D), d->take(random(allMonomials_(d-1)), pOrM_(d-1)));
+    )
+else if all(pOrM,q->instance(q,RR)) then (
+        allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D);
+        B = flatten apply(toList(1..D), d->select(allMonomials_(d-1),m->random(0.0,1.0)<=pOrM_(d-1)));
+    )
+randomMonomialSet(3,2,{2,1,0,1,2})
+randomMonomialSet(3,2,{.5,.2,.0,.2,.5})
+
+randomMonomialSet(ZZ,ZZ,ZZ,List) := (n,L,U,pOrM) -> (
+-- start of graded model
+if all(pOrM,q->instance(q,ZZ)) then (
+        allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,L,U);
+        B = flatten apply(toList(1..(U-L)), d->take(random(allMonomials_(d-1)), pOrM_(d-1)));
+    )
+else if all(pOrM,q->instance(q,RR)) then (
+        allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,L,U);
+        B = flatten apply(toList(1..(U-L)), d->select(allMonomials_(d-1),m->random(0.0,1.0)<=pOrM_(d-1)));
+    )
+randomMonomialSet(3,-1,2,{2,1,0,1,2})
+randomMonomialSet(3,-1,2,{.5,.2,.0,.2,.5})
+
+
+
+
 
