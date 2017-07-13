@@ -86,7 +86,7 @@ randomMonomialSet(ZZ,ZZ,List) := (n,D,pOrM) -> (
 -- start of graded model
 if all(pOrM,q->instance(q,ZZ)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D));
-        B = flatten apply(toList(1..(2*D+1), d->take(random(allMonomials_(d-1)), pOrM_(d-1)))
+        B = flatten apply(toList(1..(2*D+1)), d->take(random(allMonomials_(d-1)), pOrM_(d-1)))
     )
 else if all(pOrM,q->instance(q,RR)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D));
