@@ -566,8 +566,7 @@ doc ///
    Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@:
   Example
    mingenStats ideals
-   print("TO DO: need to uncomment bettiStats: it's the following line in example")
-   --bettiStats ideals -- to do: UNCOMMENT: will work once pull request merged, now it doesn' work
+   bettiStats ideals -- to do: UNCOMMENT: will work once pull request merged, now it doesn' work
   Text
    For developing other models and computing statistics on objects other than monomial ideals, the package also 
    defines a new Type: Sample, which allows for a convenient storage of statistics from a sample of algebraic objects and streamlines writing sample data into files.
