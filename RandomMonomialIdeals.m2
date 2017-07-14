@@ -1454,7 +1454,7 @@ doc ///
     number of samples generated
  Outputs
   S: Sample
-   Sample over specified Model with $N$ samples
+   Sample over specified Model with $N$ samples [Actually, it's 1 sample of size N.] 
  Description
   Text
    Generate a sample by sampling $N$ times from the given Model.
