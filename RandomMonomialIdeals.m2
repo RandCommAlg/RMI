@@ -78,11 +78,11 @@ export {
     "CountPure",
     "Verbose",
     "pdimStats",
-    -- Sample
+    --"Sample",
     "sample",
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
-    -- Model
+    --"Model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
