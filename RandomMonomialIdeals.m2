@@ -221,7 +221,7 @@ writeSample (Sample, String) := (s, filename) -> (
 statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
     fData := apply(s.Data,f);
-    mean := (sum fData)/s.SampleSize;
+    mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
     {Mean=>mean,
      StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
      Histogram=>tally fData}
