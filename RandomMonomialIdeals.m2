@@ -83,6 +83,7 @@ export {
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     --"Model",
+    "model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -168,6 +169,16 @@ ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
     tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
     new Model from tbl
 )
+
+-- ** this is just a draft: 
+model = method(TypicalValue => Model)
+model (String,List,FunctionClosure) := (name,params,generate) -> (
+    tbl := new MutableHashTable;
+    tbl.Name = name;
+    tbl.Parameters = params;
+    tbl.Generate = ()->generate;-- THIS IS **NOT** THE RIGHT WAY TO DO THIS. 
+    new Model from tbl
+    )
 
 sample = method(TypicalValue => Sample)
 sample (Model, ZZ) := (M,N) -> (
