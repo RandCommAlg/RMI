@@ -145,7 +145,7 @@ randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
 
 randomMonomialSet (PolynomialRing,ZZ,ZZ) := List => o -> (R,D,M) -> (
     if M<0 then stderr << "warning: M expected to be a nonnegative integer" << endl;
-    if o.Strategy === "Minimal" then error "Minimal not yet implemented for fixed size ER model";
+    if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
     allMonomials := flatten flatten apply(toList(1..D),d->entries basis(d,R));
     C := take(random(allMonomials), M);
     if C==={} then {0_R} else C
@@ -163,8 +163,15 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
-        if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
-        B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
+        if o.Strategy === "Minimal" then (
+            currentRingM := R;
+            apply(D, d->(
+                chosen := take(random(flatten entries basis(d+1, currentRingM)), pOrM_d);
+                B = flatten append(B, chosen/(i->sub(i, R)));
+                currentRingM = currentRingM/promote(ideal(chosen), currentRingM)
+            )))
+        else
+            B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
     )
     else if all(pOrM,q->instance(q,RR)) then (
         if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
@@ -356,14 +363,14 @@ regStats List := o-> (ideals) -> (
 
 )
 
- randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true})
+ randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true, Strategy => "ER"})
 
  randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
         B:={};
         if all(pOrM,q->instance(q,RR)) then
 	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal")
 	else if all(pOrM,q->instance(q,ZZ)) then
-	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
+	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName, Strategy=>o.Strategy);
 	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
  randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
