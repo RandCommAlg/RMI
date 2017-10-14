@@ -541,17 +541,22 @@ doc ///
    {\em RandomMonomialIdeals} is a  package for sampling random monomial ideals from the Erdos-Renyi-type distribution, the graded version of it, and some extensions. 
    It also introduces new objects, Sample and Model, to allow for streamlined handling of random objects and their statistics in Macaulay2. 
    Some of the models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
-   (preprint available at  @HREF"https://arxiv.org/abs/1701.07130"@). The package also generalizes .... ****TO DO **** [fixed $M$ stuff, which isn't in the paper.]
+   (@HREF"https://arxiv.org/abs/1701.07130"@). 
    
    The main method, @TO randomMonomialSets@, generates a sample of size $N$ from the distribution $\mathcal B(n, D, p)$, where $n$ is the number of variables, $D$ is the 
-   maximum degree, and $p$ is the probability of selecting any given monomial: 
+   maximum degree of a monomial, and $p$ is the probability of selecting any given monomial: 
   Example
    n=3; D=2; p=0.5; N=4; 
    L = randomMonomialSets(n,D,p,N)
   Text 
-   For detailed model definition, see Section 1 of @HREF"https://arxiv.org/abs/1701.07130"@.
-   
-   To sample from the graded model from Section 6 of @HREF"https://arxiv.org/abs/1701.07130"@, simply replace $p$ by a list of $D$ probabilities, one for each degree:
+   For formal definition of the model, see Section 1 of @HREF"https://arxiv.org/abs/1701.07130"@. 
+   To parallel random graphs with two variants of the model that fix either probability of an edge or total number of edges,
+   the package also includes the model with fixed {\em number} of monomials to be generated: 
+  Example
+    n=3; D=2; M=3; N=4;
+   L = randomMonomialSets(n,D,M,N)
+  Text
+   To sample from the {\em graded} model from Section 6 of @HREF"https://arxiv.org/abs/1701.07130"@, simply replace $p$ by a list of $D$ probabilities, one for each degree:
   Example
    randomMonomialSets(n,D,{0.0,1.0},N)
   Text
