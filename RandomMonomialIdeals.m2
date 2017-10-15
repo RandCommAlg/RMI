@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "July 14, 2017",
+    	Date => "October 14, 2017",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -1455,16 +1455,26 @@ doc ///
   M: Model
     to be sampled from
   N: ZZ
-    number of samples generated
+    sample size
  Outputs
-  S: Sample
-   Sample over specified Model with $N$ samples [Actually, it's 1 sample of size N.] 
+  : Sample
+   a sample of size $N$ from the given Model
  Description
   Text
-   Generate a sample by sampling $N$ times from the given Model.
+   The method generates $N$ realizations of the random variable that has the distribution specified by the given Model.
   Example
-   s=sample(ER(3,2,0.2),4);
+   s=sample(ER(3,2,0.2),4)
+  Text
+   One obtains the data from the Sample object (that is, the actual sample in the statistical sense) as follows:
+  Example
    getData s
+  Text
+   The actual sample contains more information than just the data itself:  
+  Example 
+   peek s
+  Text 
+   and one can easily obtain sample statistics: 
+  Example
    statistics(s,degree@@ideal)
 ///
 
@@ -1479,7 +1489,7 @@ doc ///
   FileName: String
     where the sample is stored
  Outputs
-  S: Sample
+  : Sample
    Sample read from disk
  Description
   Text
@@ -1557,7 +1567,7 @@ doc ///
  Headline
   get the underlying samples
  Usage
-  getData(Sample)
+  Data = getData(Sample)
  Inputs
   S: Sample
     to extract data from
@@ -1600,7 +1610,7 @@ doc ///
   p: RR
      the probability of selecting a monomial
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1622,7 +1632,7 @@ doc ///
   p: RR
      the probability of selecting a monomial
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1644,7 +1654,7 @@ doc ///
   M: ZZ
      number of monomials in the set
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1666,7 +1676,7 @@ doc ///
   M: ZZ
      number of monomials in the set
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1689,7 +1699,7 @@ doc ///
      of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
      or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1712,7 +1722,7 @@ doc ///
      of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
      or of integers whose i-th entry is the number of monomials of degree i in each set
  Outputs
-  M: Model
+  : Model
    Erdos-Renyi type model
  Description
   Text
@@ -1734,7 +1744,7 @@ doc ///
   f: Function
     function over the data
  Outputs
-  Stats: HashTable
+  : HashTable
    containing statistics for the sample
  Description
   Text
