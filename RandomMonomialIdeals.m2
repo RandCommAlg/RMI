@@ -78,12 +78,11 @@ export {
     "CountPure",
     "Verbose",
     "pdimStats",
-    --"Sample",
+    "Sample",
     "sample",
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     --"Model",
-    "model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -170,16 +169,6 @@ ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
     new Model from tbl
 )
 
--- ** this is just a draft: 
-model = method(TypicalValue => Model)
-model (String,List,FunctionClosure) := (name,params,generate) -> (
-    tbl := new MutableHashTable;
-    tbl.Name = name;
-    tbl.Parameters = params;
-    tbl.Generate = ()->generate;-- THIS IS **NOT** THE RIGHT WAY TO DO THIS. 
-    new Model from tbl
-    )
-
 sample = method(TypicalValue => Sample)
 sample (Model, ZZ) := (M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
@@ -207,9 +196,6 @@ sample String := filename -> (
 getData = method()
 getData Sample := s -> (s.Data)
 
--- TODO Prettyprint sample object
--- net Sample := s -> ()
-
 writeSample = method()
 writeSample (Sample, String) := (s, filename) -> (
     if fileExists filename then (
@@ -233,7 +219,7 @@ statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
     fData := apply(s.Data,f);
     mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
-    {Mean=>mean,
+    new HashTable from {Mean=>mean,
      StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
      Histogram=>tally fData}
 )
