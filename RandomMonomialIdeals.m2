@@ -1429,19 +1429,26 @@ doc ///
    mingenStats
 ///
 
-{*  HOW DO WE DOCUMENT A NEW TYPE? there is no input and output. look this up. 
 doc ///
  Key
   Sample
  Headline
   a type used to store a sample from a statistical model
- Text 
-  This type is used to store a sample from a given @TO Model@. 
-  To create a sample, use the @TO sample@ method. 
- SeeAlso
-  sample
+ Description
+  Text 
+   This type is used to store a sample from a given @TO Model@. 
+   To create a sample, use the @TO sample@ method. 
 ///
-*}
+
+doc ///
+ Key
+  Model
+ Headline
+  a type used to store a statistical model and its parameters
+ Description
+  Text 
+   This type is used to store the information about a model: model name, parameters, and generating function.
+///
 
 doc ///
  Key
