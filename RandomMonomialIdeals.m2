@@ -82,7 +82,7 @@ export {
     "sample",
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
-    --"Model",
+    "Model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -1429,6 +1429,20 @@ doc ///
    mingenStats
 ///
 
+{*  HOW DO WE DOCUMENT A NEW TYPE? there is no input and output. look this up. 
+doc ///
+ Key
+  Sample
+ Headline
+  a type used to store a sample from a statistical model
+ Text 
+  This type is used to store a sample from a given @TO Model@. 
+  To create a sample, use the @TO sample@ method. 
+ SeeAlso
+  sample
+///
+*}
+
 doc ///
  Key
   sample
@@ -1481,7 +1495,7 @@ doc ///
   Text
    A Sample object is read from the specified filename
  SeeAlso
-   sample
+   Sample
    writeSample
 ///
 
