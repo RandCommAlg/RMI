@@ -1590,10 +1590,10 @@ doc ///
  Key
   ER
  Headline
-  model for sampling from the Erdos-Renyi type distribution on monomials
+  model for sampling from Erdos-Renyi type distributions on monomials
  Description
   Text
-   The Erdos-Renyi type model on monomials is a distribution over sets of monomials.
+   An Erdos-Renyi type model on monomials is a distribution over sets of monomials.
    When generating a monomial set, each monomial considered is added to the set with a fixed probability.
    The monomials are chosen from a given polynomial ring and are bounded by degree.
   Example
@@ -1621,7 +1621,9 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates an ER-type model for sampling monomials in $n$ variables of degree at most $D$ independently with probability $p$.
+  Example
+   myModel = ER(3,4,0.1)
 ///
 
 doc ///
@@ -1643,7 +1645,9 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates an ER-type model for sampling monomials of degree at most $D$ from the ring $R$ independently with probability $p$.
+  Example
+   myModel = ER(ZZ/101[a..d],4,0.1)
 ///
 
 doc ///
@@ -1665,7 +1669,9 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates an ER-type model for sampling a set of $M$ monomials in $n$ variables of degree at most $D$.
+  Example
+   myModel = ER(3,4,5)
 ///
 
 doc ///
@@ -1687,7 +1693,9 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates an ER-type model for sampling a set of $M$ monomials of degree at most $D$ from the ring $R$.
+  Example
+   myModel = ER(ZZ/101[a..d],4,5)
 ///
 
 doc ///
@@ -1710,7 +1718,10 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
+  Example
+   myModel = ER(3,4,{0.1,0.2,0.3,0.4})
+   myModel = ER(3,4,{1,2,2,1})
 ///
 
 doc ///
@@ -1733,7 +1744,10 @@ doc ///
    Erdos-Renyi type model
  Description
   Text
-   TODO
+   Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
+  Example
+   myModel = ER(ZZ/101[a..d],4,{0.1,0.2,0.3,0.4})
+   myModel = ER(ZZ/101[a..d],4,{1,2,2,1})
 ///
 
 
