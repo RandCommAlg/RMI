@@ -1597,9 +1597,7 @@ doc ///
    When generating a monomial set, each monomial considered is added to the set with a fixed probability.
    The monomials are chosen from a given polynomial ring and are bounded by degree.
   Example
-   "TODO"
-  Text
-   The graded version of the Erdos-Renyi model chooses monomials of degree $d$ with probability $p_d$.
+   myModel = ER(4,8,0.05)
 ///
 
 doc ///
@@ -1720,8 +1718,8 @@ doc ///
   Text
    Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
   Example
-   myModel = ER(3,4,{0.1,0.2,0.3,0.4})
-   myModel = ER(3,4,{1,2,2,1})
+   myModel1 = ER(3,4,{0.1,0.2,0.3,0.4})
+   myModel2 = ER(3,4,{1,2,2,1})
 ///
 
 doc ///
@@ -1746,8 +1744,8 @@ doc ///
   Text
    Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
   Example
-   myModel = ER(ZZ/101[a..d],4,{0.1,0.2,0.3,0.4})
-   myModel = ER(ZZ/101[a..d],4,{1,2,2,1})
+   myModel1 = ER(ZZ/101[a..d],4,{0.1,0.2,0.3,0.4})
+   myModel2 = ER(ZZ/101[a..d],4,{1,2,2,1})
 ///
 
 
