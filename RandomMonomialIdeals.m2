@@ -1599,8 +1599,8 @@ doc ///
   Example
    n=4; D=8; p=0.05;
    myModel = ER(n,D,p)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1626,8 +1626,8 @@ doc ///
   Example
    n=3; D=4; p=0.1;
    myModel = ER(n,D,p)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1653,8 +1653,8 @@ doc ///
   Example
    D=4; p=0.1;
    myModel = ER(ZZ/101[a..d],D,p)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1680,8 +1680,8 @@ doc ///
   Example
    n=3; D=4; M=5;
    myModel = ER(n,D,M)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1707,8 +1707,8 @@ doc ///
   Example
    D=4; M=5;
    myModel = ER(ZZ/101[a..d],4,5)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1737,8 +1737,8 @@ doc ///
    n2=3; D2=4; L2={1,2,2,1};
    myModel1 = ER(n1,D1,L1)
    myModel2 = ER(n2,D2,L2)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 doc ///
@@ -1767,8 +1767,8 @@ doc ///
    D2=4; L2={1,2,2,1};
    myModel1 = ER(ZZ/101[a..d],D1,L1)
    myModel2 = ER(ZZ/101[a..d],D2,L2)
-  SeeAlso
-   randomMonomialSets
+ SeeAlso
+  randomMonomialSets
 ///
 
 
