@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "October 14, 2017",
+    	Date => "November 15, 2017",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -31,24 +31,20 @@ newPackage(
 		HomePage => "https://www.linkedin.com/in/daniel-kosmas-03160988/"
 	    },
 	    {
-		Name => "Parker Joncus",
-		Email => "pjoncus@hawk.iit.edu",
-		HomePage => ""
+		Name => "Parker Joncus", 
+		Email => "pjoncus@hawk.iit.edu"
 	    },
 	    {
-		Name => "Richard Osborn",
-		Email => "rosborn@hawk.iit.edu",
-		HomePage => ""
+		Name => "Richard Osborn", 
+		Email => "rosborn@hawk.iit.edu"
 	    },
 	    {
-	    	Name => "Monica Yun",
-	    	Email => "myun1@hawk.iit.edu",
-	    	HomePage => ""
+	    	Name => "Monica Yun", 
+	    	Email => "myun1@hawk.iit.edu"
 	    },
 	    {
-	    	Name => "Genevieve Hummel",
-	    	Email => "ghummel1@hawk.iit.edu",
-	    	HomePage => ""
+	    	Name => "Genevieve Hummel", 
+	    	Email => "ghummel1@hawk.iit.edu"
 	    }
 	},
     	Headline => "A package for generating Erdos-Renyi-type random monomial ideals",
@@ -385,7 +381,7 @@ bettiStats List :=  o-> (ideals) -> (
     	    )
 	);
     --    betaStdDev := betaVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
-    bStdDev := matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
+    bStdDev := mat2betti matrix pack(apply( flatten entries betaVariance,i->sqrt i), numcols betaVariance);
     if o.CountPure then return (bShapeMean,bMean,bStdDev,pure);
     (bShapeMean,bMean,bStdDev)
     )
@@ -680,12 +676,80 @@ doc ///
  Key
   RandomMonomialIdeals
  Headline
-  A package for generating Erdos-Renyi-type random monomial ideals and variations.
+  A package for generating Erdos-Renyi-type random monomial ideals and variations
  Description
   Text
-   {\em RandomMonomialIdeals} is a  package that...
-  -- Caveat
-  -- Still trying to figure this out. [REMOVE ME]
+   {\em RandomMonomialIdeals} is a  package for sampling random monomial ideals from an Erdos-Renyi-type distribution, the graded version of it, and some extensions. 
+   It also introduces new objects, Sample and Model, to allow for streamlined handling of random objects and their statistics in Macaulay2. 
+   Some of the models implemented are drawn from the paper {\em Random Monomial Ideals} by Jesus A. De Loera, Sonja Petrovic, Lily Silverstein, Despina Stasi, and Dane Wilburne 
+   (@HREF"https://arxiv.org/abs/1701.07130"@). 
+   
+   The main method, @TO randomMonomialSets@, generates a sample of size $N$ from the distribution $\mathcal B(n, D, p)$, where $n$ is the number of variables, $D$ is the 
+   maximum degree of a monomial, and $p$ is the probability of selecting any given monomial: 
+  Example
+   n=3; D=2; p=0.5; N=4; 
+   L = randomMonomialSets(n,D,p,N)
+  Text 
+   For a formal definition of the model, see Section 1 of @HREF"https://arxiv.org/abs/1701.07130"@. 
+   
+   This model was inspired by random graphs. To parallel the two variants of the E-R model for graphs - fixing either the probability of an edge or the total number of edges -
+   the package also includes the model with fixed {\em number} of monomials to be generated: 
+  Example
+    n=3; D=2; M=3; N=4;
+   L = randomMonomialSets(n,D,M,N)
+  Text
+   To sample from the {\em graded} model from Section 6 of @HREF"https://arxiv.org/abs/1701.07130"@, simply replace $p$ by a list of $D$ probabilities, one for each degree:
+  Example
+   randomMonomialSets(n,D,{0.0,1.0},N)
+  Text
+   Once a sample is generated, one can compute various statistics regarding algebraic properties of the sample. 
+   The methods in the package offer a way to compute and summarize statistics on some of the common properties, such as 
+   degree, dimension, projective dimension, Castelnuovo-Mumford regularity, etc. For example, we can use @TO dimStats@ to get the Krull dimension statistics: 
+  Example 
+   ideals=idealsFromGeneratingSets(L)
+   dimStats(ideals,ShowTally=>true)
+  Text 
+   The first entry in the output of  @TO dimStats@ is the mean Krull dimension of the sample. The second entry is the standard deviation.
+   Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@,
+   and the average Betti table shape, mean Betti table, and its standard deviation via @TO bettiStats@: 
+  Example
+   mingenStats ideals
+   bettiStats ideals
+  Text
+   For developing other models and computing statistics on objects other than monomial ideals, the package also 
+   defines a new Type, @TO Sample@, which allows for a convenient storage of statistics from a sample of algebraic objects and streamlines writing sample data into files.
+
+   For example, below we create a sample of size 10 over the Erdos-Renyi distribution $\mathcal B(n, D, p)$ on monomials over the ring $Q[x,y]$ with $D=4$, and $p=0.5$: 
+  Example 
+   sample(ER(QQ[x,y],4,0.5),10)
+  Text 
+   Next we create a sample of size 15 over the graded version of this distribution on monomials over the ring $Z/101[z_1..z_8]$ with $D=2$, and $p={0.25,0.5}$: 
+  Example
+   mySample = sample(ER(ZZ/101[z_1..z_8],2,{0.25,0.75}),15)
+   keys mySample
+   mySample.Parameters
+  Text 
+   We can also use the @TO Sample@ object to calculate the mean, standard deviation, and tally of the dimension of the ideals generated by the sample: 
+  Example
+   statistics(sample(ER(CC[z_1..z_8],5,0.1),100), degree@@ideal)
+  Text
+  
+   Most of the methods in this package offer various options, such as selecting a specific ring with which to work, or change variable names, coefficients, etc. Here is a simple example:
+  Example
+   R=ZZ/101[a..e];
+   randomMonomialSets(R,D,p,N)
+   randomMonomialSets(n,D,p,N,VariableName=>"t")
+  Text
+   In some cases, we may want to work directly with the sets randomly chosen monomials, while at other times it may be more convenient to pass directly to the random monomial ideals.
+   Both options induce the same distribution on monomial ideals:
+  Example
+   randomMonomialSets(3,4,1.0,1)
+   monomialIdeal flatten oo
+   randomMonomialIdeals(3,4,1.0,1)
+ SeeAlso
+  randomMonomialSet
+  Verbose
+  Sample
 ///
 
 doc ///
@@ -1983,6 +2047,7 @@ TEST///
    b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
    assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
    -- std of Betti table:
+   -- THE FOLLOWING TWO ASSERTIONS FAIL BECAUSE THE CODE ^{0}_{0} IS NOT RECOGNIZED. WHAT IS IT SUPPOSED TO BE? 
    b=flatten entries(stdDevBetti^{0}_{0});
    assert(0 == b_0);
    b=flatten entries(stdDevBetti^{2}_{2});
