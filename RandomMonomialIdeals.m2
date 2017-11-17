@@ -600,11 +600,9 @@ doc ///
    R=ZZ/101[a..e];
    randomMonomialSets(R,D,p,N)
    randomMonomialSets(n,D,p,N,VariableName=>"t")
-  Text 
-   **** TO DO (some leftover comments): *****
-   Make sure we mention why we are keeping both the option for the user to work with the random SETS as well as random IDEALS 
-   - to allow the user to work with both sets of monomials and ideals; 
-   they induce the same distribution on the ideals:
+  Text
+   In some cases, we may want to work directly with the sets randomly chosen monomials, while at other times it may be more convenient to pass directly to the random monomial ideals.
+   Both options induce the same distribution on monomial ideals:
   Example
    randomMonomialSets(3,4,1.0,1)
    randomMonomialIdeals(3,4,1.0,1)
