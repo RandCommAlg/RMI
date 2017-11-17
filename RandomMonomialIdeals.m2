@@ -1597,7 +1597,10 @@ doc ///
    When generating a monomial set, each monomial considered is added to the set with a fixed probability.
    The monomials are chosen from a given polynomial ring and are bounded by degree.
   Example
-   myModel = ER(4,8,0.05)
+   n=4; D=8; p=0.05;
+   myModel = ER(n,D,p)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1621,7 +1624,10 @@ doc ///
   Text
    Creates an ER-type model for sampling monomials in $n$ variables of degree at most $D$ independently with probability $p$.
   Example
-   myModel = ER(3,4,0.1)
+   n=3; D=4; p=0.1;
+   myModel = ER(n,D,p)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1645,7 +1651,10 @@ doc ///
   Text
    Creates an ER-type model for sampling monomials of degree at most $D$ from the ring $R$ independently with probability $p$.
   Example
-   myModel = ER(ZZ/101[a..d],4,0.1)
+   D=4; p=0.1;
+   myModel = ER(ZZ/101[a..d],D,p)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1669,7 +1678,10 @@ doc ///
   Text
    Creates an ER-type model for sampling a set of $M$ monomials in $n$ variables of degree at most $D$.
   Example
-   myModel = ER(3,4,5)
+   n=3; D=4; M=5;
+   myModel = ER(n,D,M)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1693,7 +1705,10 @@ doc ///
   Text
    Creates an ER-type model for sampling a set of $M$ monomials of degree at most $D$ from the ring $R$.
   Example
+   D=4; M=5;
    myModel = ER(ZZ/101[a..d],4,5)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1718,8 +1733,12 @@ doc ///
   Text
    Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
   Example
-   myModel1 = ER(3,4,{0.1,0.2,0.3,0.4})
-   myModel2 = ER(3,4,{1,2,2,1})
+   n1=3; D1=4; L1={0.1,0.2,0.3,0.4};
+   n2=3; D2=4; L2={1,2,2,1};
+   myModel1 = ER(n1,D1,L1)
+   myModel2 = ER(n2,D2,L2)
+  SeeAlso
+   randomMonomialSets
 ///
 
 doc ///
@@ -1744,8 +1763,12 @@ doc ///
   Text
    Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
   Example
-   myModel1 = ER(ZZ/101[a..d],4,{0.1,0.2,0.3,0.4})
-   myModel2 = ER(ZZ/101[a..d],4,{1,2,2,1})
+   D1=4; L1={0.1,0.2,0.3,0.4};
+   D2=4; L2={1,2,2,1};
+   myModel1 = ER(ZZ/101[a..d],D1,L1)
+   myModel2 = ER(ZZ/101[a..d],D2,L2)
+  SeeAlso
+   randomMonomialSets
 ///
 
 
