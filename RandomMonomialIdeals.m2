@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "May 5, 2017",
+    	Date => "October 14, 2017",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -77,13 +77,153 @@ export {
     "SaveBettis",
     "CountPure",
     "Verbose",
-    "pdimStats"
-
+    "pdimStats",
+    "Sample",
+    "sample",
+    "ModelName", "Parameters", "SampleSize", "getData",
+    "writeSample",
+    "Model",
+    "ER",
+    "statistics",
+    "Mean", "StdDev", "Histogram"
 }
+
+
+needsPackage "Serialization"
 
 --***************************************--
 --  Exported methods 	     	     	 --
 --***************************************--
+
+Sample = new Type of MutableHashTable
+Model = new Type of HashTable
+
+Data = local Data
+Generate = local Generate
+
+ER = method(TypicalValue => Model)
+ER (ZZ,ZZ,RR) := (n,D,p) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,p);
+    tbl.Generate = ()->randomMonomialSet(R,D,p);
+    new Model from tbl
+)
+
+ER (PolynomialRing,ZZ,RR) := (R,D,p) -> (
+    if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,p);
+    tbl.Generate = ()->randomMonomialSet(R,D,p);
+    new Model from tbl
+)
+
+ER (ZZ,ZZ,ZZ) := (n,D,M) -> (
+    if n<1 then error "n expected to be a positive integer";
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,M);
+    tbl.Generate = ()->randomMonomialSet(R,D,M);
+    new Model from tbl
+)
+
+ER (PolynomialRing,ZZ,ZZ) := (R,D,M) -> (
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,M);
+    tbl.Generate = ()->randomMonomialSet(R,D,M);
+    new Model from tbl
+)
+
+ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
+    if n<1 then error "n expected to be a positive integer";
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (n,D,pOrM);
+    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
+    new Model from tbl
+)
+
+ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
+    if #pOrM != D then error "pOrM expected to be a list of length D";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
+    if all(pOrM, q->instance(q,RR)) and any(pOrM,q-> q<0.0 or 1.0<q)
+      then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
+    tbl := new MutableHashTable;
+    tbl.Name = "Erdos-Renyi";
+    tbl.Parameters = (R,D,pOrM);
+    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
+    new Model from tbl
+)
+
+sample = method(TypicalValue => Sample)
+sample (Model, ZZ) := (M,N) -> (
+    if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    s:=new Sample;
+    s.ModelName = M.Name;
+    s.Parameters = M.Parameters;
+    s.SampleSize = N;
+    s.Data = apply(N,i->M.Generate());
+    s
+)
+
+sample String := filename -> (
+    if not isDirectory filename then error "expected a directory";
+    modelFile := realpath filename | "Model.txt";
+    model := lines read openIn modelFile;
+    s := new Sample;
+    s.ModelName = model#1;
+    s.Parameters = value toString stack drop(model,{0,1});
+    s.SampleSize = value model#0;
+    dataFile := realpath filename | "Data.txt";
+    s.Data = value read openIn dataFile;
+    s
+)
+
+getData = method()
+getData Sample := s -> (s.Data)
+
+writeSample = method()
+writeSample (Sample, String) := (s, filename) -> (
+    if fileExists filename then (
+	stderr << "warning: filename already exists. Overwriting." << endl;
+        if not isDirectory filename then (
+	    removeFile filename;
+	    mkdir filename;
+	);
+    ) else (
+        mkdir filename;
+    );
+    realpath filename | "Model.txt" <<
+	s.SampleSize << endl <<
+	s.ModelName << endl <<
+	serialize s.Parameters << close;
+    realpath filename | "Data.txt" << serialize s.Data << close; -- Write other data
+)
+
+
+statistics = method(TypicalValue => HashTable)
+statistics (Sample, Function) := HashTable => (s,f) -> (
+    fData := apply(s.Data,f);
+    mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
+    new HashTable from {Mean=>mean,
+     StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+     Histogram=>tally fData}
+)
+
 
 randomMonomialSets = method(TypicalValue => List, Options => {Coefficients => QQ,
 	                                                        VariableName => "x",
@@ -160,7 +300,8 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
 
 randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if #pOrM != D then error "pOrM expected to be a list of length D";
-    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR)) then error "pOrM must be a list of all integers or all real numbers";
+    if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
+      then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then error "Minimal not implemented for fixed size ER model";
@@ -1287,6 +1428,406 @@ doc ///
    borelFixedStats
    mingenStats
 ///
+
+doc ///
+ Key
+  Sample
+ Headline
+  a type used to store a sample from a statistical model
+ Description
+  Text 
+   This type is used to store a sample from a given @TO Model@. 
+   To create a sample, use the @TO sample@ method. 
+///
+
+doc ///
+ Key
+  Model
+ Headline
+  a type used to store a statistical model and its parameters
+ Description
+  Text 
+   This type is used to store the information about a model: model name, parameters, and generating function.
+///
+
+doc ///
+ Key
+  sample
+  (sample,Model,ZZ)
+ Headline
+  generates a Sample object sampling from the given Model
+ Usage
+  sample(Model,ZZ)
+ Inputs
+  M: Model
+    to be sampled from
+  N: ZZ
+    sample size
+ Outputs
+  : Sample
+   a sample of size $N$ from the given Model
+ Description
+  Text
+   The method generates $N$ realizations of the random variable that has the distribution specified by the given Model.
+  Example
+   s=sample(ER(3,2,0.2),4)
+  Text
+   One obtains the data from the Sample object (that is, the actual sample in the statistical sense) as follows:
+  Example
+   getData s
+  Text
+   The actual sample contains more information than just the data itself:  
+  Example 
+   peek s
+  Text 
+   and one can easily obtain sample statistics: 
+  Example
+   statistics(s,degree@@ideal)
+///
+
+doc ///
+ Key
+  (sample,String)
+ Headline
+  creates a Sample object from a folder on disk
+ Usage
+  sample(String)
+ Inputs
+  FileName: String
+    where the sample is stored
+ Outputs
+  : Sample
+   Sample read from disk
+ Description
+  Text
+   A Sample object is read from the specified filename
+ SeeAlso
+   Sample
+   writeSample
+///
+
+doc ///
+  Key
+    ModelName
+  Headline
+    model name from Sample
+  Description
+    Text
+      Stores the name of the model from which the sample was generated from.
+    Example
+     (sample(ER(2,2,0.5),2)).ModelName
+  SeeAlso
+    sample
+///
+
+doc ///
+  Key
+    Parameters
+  Headline
+    model parameters from Sample
+  Description
+    Text
+      Stores the paramters of the model from which the sample was generated from.
+    Example
+     (sample(ER(2,2,0.5),2)).Parameters
+  SeeAlso
+    sample
+///
+
+doc ///
+  Key
+    SampleSize
+  Headline
+    size of the sample
+  Description
+    Example
+     (sample(ER(1,1,0.0),10)).SampleSize
+  SeeAlso
+    sample
+///
+
+doc ///
+ Key
+  writeSample
+  (writeSample,Sample,String)
+ Headline
+  write sample to a file
+ Usage
+  writeSample(Sample,String)
+ Inputs
+  S: Sample
+    to be written to file
+  FileName: String
+    file name to write sample to
+ Description
+  Text
+   Write a sample to disk. This creates a folder in which the model and data are stored.
+   The sample can then be read via the @TO (sample,String)@ function.
+ SeeAlso
+   (sample,String)
+///
+
+doc ///
+ Key
+  getData
+  (getData,Sample)
+ Headline
+  get the underlying samples
+ Usage
+  Data = getData(Sample)
+ Inputs
+  S: Sample
+    to extract data from
+ Outputs
+  Data: List
+   of all samples in object
+ Description
+  Example
+   getData sample(ER(3,4,0.1),5)
+///
+
+doc ///
+ Key
+  ER
+ Headline
+  model for sampling from Erdos-Renyi type distributions on monomials
+ Description
+  Text
+   An Erdos-Renyi type model on monomials is a distribution over sets of monomials.
+   When generating a monomial set, each monomial considered is added to the set with a fixed probability.
+   The monomials are chosen from a given polynomial ring and are bounded by degree.
+  Example
+   n=4; D=8; p=0.05;
+   myModel = ER(n,D,p)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,RR)
+ Headline
+  Erdos-Renyi type distribution on monomials over (n,D,p)
+ Usage
+  ER(ZZ,ZZ,RR)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  p: RR
+     the probability of selecting a monomial
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates an ER-type model for sampling monomials in $n$ variables of degree at most $D$ independently with probability $p$.
+  Example
+   n=3; D=4; p=0.1;
+   myModel = ER(n,D,p)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,RR)
+ Headline
+  Erdos-Renyi type distribution on monomials over (R,D,p)
+ Usage
+  ER(PolynomialRing,ZZ,RR)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  p: RR
+     the probability of selecting a monomial
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates an ER-type model for sampling monomials of degree at most $D$ from the ring $R$ independently with probability $p$.
+  Example
+   D=4; p=0.1;
+   myModel = ER(ZZ/101[a..d],D,p)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,ZZ)
+ Headline
+  Erdos-Renyi type distribution on monomials over (n,D,M)
+ Usage
+  ER(ZZ,ZZ,ZZ)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  M: ZZ
+     number of monomials in the set
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates an ER-type model for sampling a set of $M$ monomials in $n$ variables of degree at most $D$.
+  Example
+   n=3; D=4; M=5;
+   myModel = ER(n,D,M)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,ZZ)
+ Headline
+  Erdos-Renyi type distribution on monomials over (R,D,M)
+ Usage
+  ER(PolynomialRing,ZZ,ZZ)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  M: ZZ
+     number of monomials in the set
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates an ER-type model for sampling a set of $M$ monomials of degree at most $D$ from the ring $R$.
+  Example
+   D=4; M=5;
+   myModel = ER(ZZ/101[a..d],4,5)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,ZZ,ZZ,List)
+ Headline
+  Graded Erdos-Renyi type distribution on monomials over (n,D,L)
+ Usage
+  ER(ZZ,ZZ,List)
+ Inputs
+  n: ZZ
+    number of variables
+  D: ZZ
+    maximum degree
+  L: List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
+  Example
+   n1=3; D1=4; L1={0.1,0.2,0.3,0.4};
+   n2=3; D2=4; L2={1,2,2,1};
+   myModel1 = ER(n1,D1,L1)
+   myModel2 = ER(n2,D2,L2)
+ SeeAlso
+  randomMonomialSets
+///
+
+doc ///
+ Key
+  (ER,PolynomialRing,ZZ,List)
+ Headline
+  Graded Erdos-Renyi type distribution on monomials over (R,D,L)
+ Usage
+  ER(PolynomialRing,ZZ,List)
+ Inputs
+  R: PolynomialRing
+    the ring in which monomials are chosen from
+  D: ZZ
+    maximum degree
+  L: List 
+     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+     or of integers whose i-th entry is the number of monomials of degree i in each set
+ Outputs
+  : Model
+   Erdos-Renyi type model
+ Description
+  Text
+   Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
+  Example
+   D1=4; L1={0.1,0.2,0.3,0.4};
+   D2=4; L2={1,2,2,1};
+   myModel1 = ER(ZZ/101[a..d],D1,L1)
+   myModel2 = ER(ZZ/101[a..d],D2,L2)
+ SeeAlso
+  randomMonomialSets
+///
+
+
+doc ///
+ Key
+  statistics
+  (statistics,Sample,Function)
+ Headline
+  generate statistics for a sample
+ Usage
+  statistics(Sample,Function)
+ Inputs
+  S: Sample
+    Sample to run statistics on
+  f: Function
+    function over the data
+ Outputs
+  : HashTable
+   containing statistics for the sample
+ Description
+  Text
+   Generates statistics for the sample via the given function. The function is applied
+   to each element in the sample, and its result is then used to calculate a mean, 
+   standard deviation, and histogram.
+  Example
+   s=sample(ER(6,3,0.2),15);
+   statistics(s, degree@@ideal)
+///
+
+doc ///
+  Key
+    Mean
+  Headline
+    return value for statistics
+  Description
+    Text
+      Get the mean from the hash table returned by @TO statistics@.
+///
+
+doc ///
+  Key
+    StdDev
+  Headline
+    return value for statistics
+  Description
+    Text
+      Get the standard deviation from the hash table returned by @TO statistics@.
+///
+
+doc ///
+  Key
+    Histogram
+  Headline
+    return value for statistics
+  Description
+    Text
+      Get the histogram from the hash table returned by @TO statistics@.
+///
+
 --******************************************--
 -- TESTS     	     	       	    	    --
 --******************************************--
@@ -1693,7 +2234,19 @@ TEST ///
   assert (all(C#0,c->instance(c,MonomialIdeal)))
 ///
 
+--****************************--
+--  statistics  --
+--****************************--
+
+TEST///
+  -- Check generated statistics
+  stat = statistics(sample(ER(5,5,1.0),10),x->#x);
+  assert(stat.Mean == 251)
+  assert(stat.StdDev == 0)
+///
+
 end
+
 
 restart;
 uninstallPackage"RandomMonomialIdeals";
