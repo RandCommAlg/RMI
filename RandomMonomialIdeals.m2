@@ -1095,7 +1095,7 @@ doc ///
   Example
    randomMonomialSet(2,3,{2,1,1})
   Text
-   Observe that there are two degree-1 monomial, one degree-2 monomial, and one degree-3 monomial.
+   Observe that there are two degree-1, one degree-2, and one degree-3 monomials.
 
    If Strategy=>"ER", the default setting for the graded fixed number of generators version of the method, the set of monomials is not necessarily minimal.
    Else if Strategy=> "Minimal" then the set of monomials constitutes a minimal generating set which is build up of $M_d$ monomials, or the maximum number possible, of total degree $d$, for $d$ from 1 to $D$, starting from $d=1$.
@@ -1103,7 +1103,7 @@ doc ///
   Example
    randomMonomialSet(3,3,{1,1,1}, Strategy=>"Minimal")
   Text
-   Observe that there are at most one degree-1 monomial, one degree-2 monomial, and one degree-3 monomial. Also observe that Strategy=>"Minimal" generally gives more generators than the default Strategy=>"ER".
+   Observe that there are at most one degree-1, one degree-2, and one degree-3 monomials. Also observe that Strategy=>"Minimal" generally gives more generators than the default Strategy=>"ER".
 
 
    Sometimes we are already working in a specific ring and would like the random sets of monomials to live in the same ring:
