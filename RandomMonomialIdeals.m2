@@ -698,7 +698,8 @@ doc ///
     n=3; D=2; M=3; N=4;
    L = randomMonomialSets(n,D,M,N)
   Text
-   To sample from the {\em graded} model from Section 6 of @HREF"https://arxiv.org/abs/1701.07130"@, simply replace $p$ by a list of $D$ probabilities, one for each degree:
+   To sample from the {\em graded} model from Section 6 of @HREF"https://arxiv.org/abs/1701.07130"@, simply replace $p$ by a list of $D$ probabilities, one for each degree. 
+   In the example below, monomials of degree 1 are not selected (probability = 0), while each monomial of degree 2 is selected with probability 1.
   Example
    randomMonomialSets(n,D,{0.0,1.0},N)
   Text
