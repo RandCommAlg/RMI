@@ -2047,11 +2047,8 @@ TEST///
    b=new BettiTally from { (0,{0},0) => 1, (1,{2},2) => 1, (1,{3},3) => 0.5, (2,{4},4) => 0.5, (1,{4},4) => 0.5, (2,{5},5) =>0.5 }
    assert(1/2*sub(matrix lift(2*meanBettiShape,ZZ),RR) ==  1/2*sub(matrix lift(2*b,ZZ),RR))
    -- std of Betti table:
-   -- THE FOLLOWING TWO ASSERTIONS FAIL BECAUSE THE CODE ^{0}_{0} IS NOT RECOGNIZED. WHAT IS IT SUPPOSED TO BE? 
-   b=flatten entries(stdDevBetti^{0}_{0});
-   assert(0 == b_0);
-   b=flatten entries(stdDevBetti^{2}_{2});
-   assert(0.5 == b_0);
+   assert(0 == stdDevBetti_(0, {0}, 0))
+   assert(0.5 == stdDevBetti_(1, {3}, 3))
 ///
 
 
