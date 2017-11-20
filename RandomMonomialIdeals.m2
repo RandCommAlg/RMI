@@ -1398,9 +1398,11 @@ doc ///
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
    pdimStats(ideals, ShowTally=>true)
   Text
-   The following example uses the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+   The following examples use the existing function @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    ideals = randomMonomialIdeals(4,3,1.0,3)
+   pdimStats(ideals)
+   ideals = randomMonomialIdeals(4,6,0.01,10)
    pdimStats(ideals)
   Text
    Note that this function can be run with a list of @TO ideal@s as well.
