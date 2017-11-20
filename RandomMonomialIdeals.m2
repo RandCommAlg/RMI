@@ -1244,7 +1244,7 @@ doc ///
     Text
       Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@, @TO randomMonomialSets@, or randomMonomialIdeals.
       "ER" draws random sets of monomials from the ER-type distribution B(n,D,p), while "Minimal" saves computation time by using quotient rings to exclude any non-minimal generators from the list. 
-      When the number of momomials of specific degrees are what the user requests, then {\tt Strategy => "Minimal"} in @TO randomMonomialSets@ will result in larger minimal generating sets.
+      For @TO randomMonomialSets@ with the number of generators of pre-specified degrees is the input, choosing {\tt Strategy => "Minimal"} will result in larger minimal generating sets.
 ///
 
 doc ///
