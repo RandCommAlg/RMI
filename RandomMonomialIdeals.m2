@@ -1317,6 +1317,15 @@ doc ///
   Example
    ideals = randomMonomialIdeals(4,3,1.0,3)
    dimStats(ideals)
+  Example
+   ideals = idealsFromGeneratingSets(randomMonomialSets(3,7,0.01,10))
+   dimStats(ideals)
+  Example
+   ideals = randomMonomialIdeals(5,7,0.05,8)
+   dimStats(ideals)
+  Example
+   ideals = idealsFromGeneratingSets(randomMonomialSets(5,7,1,10))
+   dimStats(ideals)
   Text
    Note that this function can be run with a list of any objects to which @TO dim@ can be applied.
 ///
