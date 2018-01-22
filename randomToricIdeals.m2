@@ -1,3 +1,14 @@
+-- back in business Jan 2018:
+-- hot to get toric ideal I_A from a matrix A: 
+loadPackage"FourTiTwo"
+help toricMarkov
+A= transpose matrix flatten apply(allLaurentMonomials(3,2) , m->exponents m)
+n=numcols A
+R=ZZ/101[x_1..x_n]
+toricMarkov (A,R)
+--dim oo
+--degree oo
+
 
 -- SP:
 -- here is an example of how to get all Laurent monomials 
