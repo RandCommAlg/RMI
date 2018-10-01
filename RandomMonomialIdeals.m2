@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "November 15, 2017",
+    	Date => "October 1, 2018",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -79,6 +79,7 @@ export {
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     "Model",
+    "model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -96,6 +97,18 @@ Model = new Type of HashTable
 
 Data = local Data
 Generate = local Generate
+
+model = method(TypicalValue => Model)
+model(ZZ,ZZ):=(n,D)->(
+    -- ZZ= num vars, 
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    tbl := new MutableHashTable; 
+    tbl.Name = "random polynomials of degree D in n variables";
+    tbl.Parameters = (n,D);
+    tbl.Generate = ()->random(D,R);
+    new Model from tbl    --tbl 
+)
 
 ER = method(TypicalValue => Model)
 ER (ZZ,ZZ,RR) := (n,D,p) -> (
