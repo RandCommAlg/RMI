@@ -99,6 +99,7 @@ Data = local Data
 Generate = local Generate
 
 model = method(TypicalValue => Model)
+{*
 model(ZZ,ZZ):=(n,D)->(
     -- ZZ= num vars, 
     x := symbol x;
@@ -108,7 +109,28 @@ model(ZZ,ZZ):=(n,D)->(
     tbl.Parameters = (n,D);
     tbl.Generate = ()->random(D,R);
     new Model from tbl    --tbl 
+) 
+-- sillyModel = model(2,3)
+-- sillyModel
+-- sample(sillyModel,1)
+*}
+model(ZZ,ZZ,FunctionClosure):=(n,D,f)->(
+    -- INPUT:
+    -- ZZ= num vars
+    -- Thing= the function to generate from model: -- f= (D,R)->random(D,R)
+    x := symbol x;
+    R := QQ[x_1..x_n];
+    tbl := new MutableHashTable; 
+    tbl.Name = "random polynomials of degree D in n variables";
+    tbl.Parameters = (n,D);
+    tbl.Generate = f; -- ()->random(D,R);-- f; 
+    new Model from tbl 
 )
+{* 
+f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
+ myModel = model(2,3,f)
+*}
+
 
 ER = method(TypicalValue => Model)
 ER (ZZ,ZZ,RR) := (n,D,p) -> (
