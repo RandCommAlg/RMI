@@ -72,7 +72,6 @@ export {
     "bettiStats",
     "SaveBettis",
     "CountPure",
-    "Verbose",
     "pdimStats",
     "Sample",
     "sample",
@@ -1494,7 +1493,6 @@ doc ///
 
 doc ///
  Key
-   Verbose
    [degStats, Verbose]
    [pdimStats, Verbose]
    [dimStats, Verbose]
