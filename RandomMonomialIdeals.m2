@@ -99,11 +99,11 @@ Generate = local Generate
 
 -- I want to add a generic model construct method like the ER ones below: 
 model = method(TypicalValue => Model)
-model(List,FunctionClosure):=(p,f)->(
+model(List,FunctionClosure,String):=(p,f,name)->(
     -- p = parametr list
     -- f = random generator from the model (predefined fn!)
     tbl := new MutableHashTable; 
-    tbl.Name = "random polynomials of degree D in n variables";
+    tbl.Name = name;
     tbl.Parameters = p; -- (n,D);
     tbl.Generate = ()->f(toSequence p); -- ()->random(D,R);-- f; 
     new Model from tbl 
@@ -112,7 +112,7 @@ model(List,FunctionClosure):=(p,f)->(
 -- make your own fn that constructs random objects, say: 
 f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
 -- create a model using this as the generating fn:
- myModel = model({1,2},f)
+ myModel = model({1,2},f,"random polynomials of degree D in n variables")
 -- get data from your new model: 
  sample(myModel,1); 
  peek oo
@@ -121,7 +121,6 @@ f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
  myPolys = getData mySample
  statistics(mySample,dim@@ideal) -- works!! 
  statistics(mySample,betti@@gens@@ideal) -- this is what the referee suggested we extend to.  
- betti gens ideal myPolys_0
 *}
 
 
@@ -242,12 +241,34 @@ writeSample (Sample, String) := (s, filename) -> (
 statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
     fData := apply(getData s,f);
-    --if not(class typicalValues#f  === ZZ) then (
     if not(class fData_0 === ZZ) then (
 	stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
 	your function applied to the sample data. If you want more information, such as mean and 
 	standard deviation, then ensure you use a function with numerical (ZZ) output." <<endl;
-	tally fData
+    	histogram := tally fData; 
+    	-- compute the average (entry-wise) tally table:
+	dataSum := sum histogram;
+        dataMean := mat2betti(1/#fData*(sub(matrix(dataSum), RR)));
+    	-- compute the standard deviation (entry-wise) of the Betti tables:
+    	dataMeanMtx := matrix dataMean;
+    	dataVariance := 1/#fData * sum apply(histogram, currentTally -> (
+    	    mtemp := new MutableMatrix from dataMeanMtx;
+	    currentTallyMatrix := matrix currentTally;
+    	    apply(numrows currentTallyMatrix, i->
+		apply(numcols currentTallyMatrix, j->
+	    	    (
+			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
+			mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
+			)
+	    	    )
+		);
+	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
+    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
+    	    )
+	);
+        --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
+    	dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
+	histogram
 	)
     else (
 	mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
@@ -1662,6 +1683,44 @@ doc ///
 ///
 
 doc ///
+ Key
+  (model,List,FunctionClosure,String)
+ Headline
+  creates a new model for random objects with a given list of parameters and generating function 
+ Usage
+  model(L,f,name)
+ Inputs
+  L: List
+    of parameter values chosen for the model
+  f: FunctionClosure
+    function that generates random elements in this model
+  name: String
+    of the model constructed
+ Outputs
+  : Model
+   with those fixed parameter values
+ Description
+  Text
+   To create your own model for random polynomials or other algebraic objects, use the model method as follows.
+   Suppose you wish to construct a set of N random polynomials in 3 variables of degree 2. You can
+   use Macaulay2's random function: 
+  Example
+   f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
+  Text 
+   To formalize the study of these random polynomials, embed this function into a Model object: 
+  Example
+   myModel = model({2,3},f,"random polynomials in 3 variables of degree 2")
+  Text
+   Now obtain the data about such random polynomials from the Sample object (that is, the actual sample in the statistical sense) as follows:
+  Example
+   N=10;
+   mySample = sample(myModel,N);
+   peek mySample
+ SeeAlso
+  statistics
+///
+
+doc ///
   Key
     ModelName
   Headline
@@ -1946,11 +2005,18 @@ doc ///
  Description
   Text
    Generates statistics for the sample via the given function. The function is applied
-   to each element in the sample, and its result is then used to calculate a mean, 
-   standard deviation, and histogram.
+   to each element in the sample, and -- provided that the function has numerical (ZZ) output --
+   its result is then used to calculate a mean, standard deviation, and a histogram.
   Example
    s=sample(ER(6,3,0.2),15);
    statistics(s, degree@@ideal)
+  Text
+   An adventurous user my wish to get statistics of non-numerical values, such as bettiTallys. 
+   This can be done, but it will simply tally the sample data: 
+  Example
+   statistics(s,betti@@gens@@ideal)
+ Caveat 
+   Anything that can be run through "tally" can be used as the input function f to this method. 
 ///
 
 doc ///
