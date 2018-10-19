@@ -97,49 +97,28 @@ Model = new Type of HashTable
 Data = local Data
 Generate = local Generate
 
--- I want to add a generic model construct method like the ER ones below, but keep running into issues I don't undrestand.
+-- I want to add a generic model construct method like the ER ones below: 
 model = method(TypicalValue => Model)
-{*
-model(ZZ,ZZ):=(n,D)->(
-    -- ZZ= num vars, 
-    x := symbol x;
-    R := QQ[x_1..x_n];
+model(List,FunctionClosure):=(p,f)->(
+    -- p = parametr list
+    -- f = random generator from the model (predefined fn!)
     tbl := new MutableHashTable; 
     tbl.Name = "random polynomials of degree D in n variables";
-    tbl.Parameters = (n,D);
-    tbl.Generate = ()->random(D,R);
-    new Model from tbl    --tbl 
-) 
--- testing: it works: 
- sillyModel = model(2,3)
- sillyModel
- sample(sillyModel,1)
-*}
-model(ZZ,ZZ,FunctionClosure):=(n,D,f)->(
-    -- INPUT:
-    -- ZZ= num vars
-    -- Thing= the function to generate from model: -- f= (D,R)->random(D,R)
-    x := symbol x;
-    R := QQ[x_1..x_n];
-    tbl := new MutableHashTable; 
-    tbl.Name = "random polynomials of degree D in n variables";
-    tbl.Parameters = (n,D);
-    tbl.Generate = f; -- ()->random(D,R);-- f; 
+    tbl.Parameters = p; -- (n,D);
+    tbl.Generate = ()->f(toSequence p); -- ()->random(D,R);-- f; 
     new Model from tbl 
 )
 {* 
+-- make your own fn that constructs random objects, say: 
 f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
-f=()->{R=QQ[x_1..x_n];random(D,R)}
- myModel = model(2,3,f)
-    -- the following produces an error: 
- sample(myModel,1)
- -- this is supposed to work:
- myModel.Generate()
- -- but instead I sometimes get this: 
- myModel.Generate -- error needs 2 args got 0.
- -- HOWEVER THIS WORKS:
-  myModel.Generate(2,3)
- -- so this means our sample function isn't passing the parameters....
+-- create a model using this as the generating fn:
+ myModel = model({1,2},f)
+-- get data from your new model: 
+ sample(myModel,1); 
+ peek oo
+ mySample = sample(myModel,10);
+ peek mySample
+ statistics()
 *}
 
 
