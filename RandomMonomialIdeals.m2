@@ -118,7 +118,7 @@ f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
  peek oo
  mySample = sample(myModel,10);
  peek mySample
- statistics()
+ statistics(mySample.Data,dim@@ideal)
 *}
 
 
