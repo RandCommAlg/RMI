@@ -118,7 +118,9 @@ f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
  peek oo
  mySample = sample(myModel,10);
  peek mySample
- statistics(mySample.Data,dim@@ideal)
+ myPolys = getData mySample
+ statistics(mySample,dim@@ideal) -- works!! 
+ statistics(mySample,betti@@gens@@ideal) -- this is what the referee suggested we extend to.  
 *}
 
 
@@ -197,7 +199,7 @@ sample (Model, ZZ) := (M,N) -> (
     s.ModelName = M.Name;
     s.Parameters = M.Parameters;
     s.SampleSize = N;
-    s.Data = apply(N,i->M.Generate());
+    s.Data = flatten apply(N,i->M.Generate());
     s
 )
 
