@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "October 1, 2018",
+    	Date => "October 19, 2018",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -121,6 +121,7 @@ f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
  myPolys = getData mySample
  statistics(mySample,dim@@ideal) -- works!! 
  statistics(mySample,betti@@gens@@ideal) -- this is what the referee suggested we extend to.  
+ betti gens ideal myPolys_0
 *}
 
 
@@ -240,11 +241,20 @@ writeSample (Sample, String) := (s, filename) -> (
 
 statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
-    fData := apply(s.Data,f);
-    mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
-    new HashTable from {Mean=>mean,
-     StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
-     Histogram=>tally fData}
+    fData := apply(getData s,f);
+    --if not(class typicalValues#f  === ZZ) then (
+    if not(class fData_0 === ZZ) then (
+	stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
+	your function applied to the sample data. If you want more information, such as mean and 
+	standard deviation, then ensure you use a function with numerical (ZZ) output." <<endl;
+	tally fData
+	)
+    else (
+	mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
+    	new HashTable from {Mean=>mean,
+     	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+     	    Histogram=>tally fData}
+	)
 )
 
 
