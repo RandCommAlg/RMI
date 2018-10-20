@@ -199,7 +199,7 @@ sample (Model, ZZ) := (M,N) -> (
     s.ModelName = M.Name;
     s.Parameters = M.Parameters;
     s.SampleSize = N;
-    s.Data = flatten apply(N,i->M.Generate());
+    s.Data =  apply(N,i->M.Generate());
     s
 )
 
@@ -241,40 +241,47 @@ writeSample (Sample, String) := (s, filename) -> (
 statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
     fData := apply(getData s,f);
+    histogram := tally fData; 
     if not(class fData_0 === ZZ) then (
-	stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
-	your function applied to the sample data. If you want more information, such as mean and 
-	standard deviation, then ensure you use a function with numerical (ZZ) output." <<endl;
-    	histogram := tally fData; 
-    	-- compute the average (entry-wise) tally table:
-	dataSum := sum histogram;
-        dataMean := mat2betti(1/#fData*(sub(matrix(dataSum), RR)));
-    	-- compute the standard deviation (entry-wise) of the Betti tables:
-    	dataMeanMtx := matrix dataMean;
-    	dataVariance := 1/#fData * sum apply(histogram, currentTally -> (
-    	    mtemp := new MutableMatrix from dataMeanMtx;
-	    currentTallyMatrix := matrix currentTally;
-    	    apply(numrows currentTallyMatrix, i->
-		apply(numcols currentTallyMatrix, j->
-	    	    (
-			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
-			mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
-			)
-	    	    )
+	-- in case the data is actually a BettiTally type, then we are able to get the mean and stddev of the tables:
+	if (class fData_0 === BettiTally) then (
+    	    -- compute the average (entry-wise) tally table:
+	    dataSum := sum histogram;
+            dataMean := mat2betti(1/s.SampleSize *(sub(matrix(dataSum), RR)));
+    	    -- compute the standard deviation (entry-wise) of the Betti tables:
+    	    dataMeanMtx := matrix dataMean;
+    	    dataVariance := 1/s.SampleSize * sum apply(fData, currentTally -> (
+    	    	    mtemp := new MutableMatrix from dataMeanMtx;
+	    	    currentTallyMatrix := matrix currentTally;
+    	    	    apply(numrows currentTallyMatrix, i->
+			apply(numcols currentTallyMatrix, j->
+	    	    	    (
+				--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
+				mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
+				)
+	    	    	    )
+			);
+	    	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
+    	    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
+    	    	    )
 		);
-	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
-    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
-    	    )
-	);
-        --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
-    	dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
-	histogram
+            --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
+    	    dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
+	    new HashTable from {Mean=>mat2betti dataMeanMtx, 
+		                StdDev=>dataStdDev,
+				Histogram=>histogram}
+	) else ( 
+	        stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
+		your function applied to the sample data. If you want more information, such as mean and 
+		standard deviation, then ensure you use a function with numerical (ZZ) or BettiTally output." <<endl;
+		histogram
+	) 
 	)
     else (
-	mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
+	mean := (sum fData)/s.SampleSize; 
     	new HashTable from {Mean=>mean,
-     	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
-     	    Histogram=>tally fData}
+     	                    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+    	                    Histogram=>histogram}
 	)
 )
 
