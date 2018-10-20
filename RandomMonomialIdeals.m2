@@ -97,31 +97,16 @@ Model = new Type of HashTable
 Data = local Data
 Generate = local Generate
 
--- I want to add a generic model construct method like the ER ones below: 
 model = method(TypicalValue => Model)
 model(List,FunctionClosure,String):=(p,f,name)->(
     -- p = parametr list
     -- f = random generator from the model (predefined fn!)
     tbl := new MutableHashTable; 
     tbl.Name = name;
-    tbl.Parameters = p; -- (n,D);
-    tbl.Generate = ()->f(toSequence p); -- ()->random(D,R);-- f; 
+    tbl.Parameters = p;
+    tbl.Generate = ()->f(toSequence p); 
     new Model from tbl 
 )
-{* 
--- make your own fn that constructs random objects, say: 
-f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
--- create a model using this as the generating fn:
- myModel = model({1,2},f,"random polynomials of degree D in n variables")
--- get data from your new model: 
- sample(myModel,1); 
- peek oo
- mySample = sample(myModel,10);
- peek mySample
- myPolys = getData mySample
- statistics(mySample,dim@@ideal) -- works!! 
- statistics(mySample,betti@@gens@@ideal) -- this is what the referee suggested we extend to.  
-*}
 
 
 ER = method(TypicalValue => Model)
@@ -1666,6 +1651,8 @@ doc ///
    and one can easily obtain sample statistics: 
   Example
    statistics(s,degree@@ideal)
+ SeeAlso
+  statistics
 ///
 
 doc ///
@@ -1724,6 +1711,7 @@ doc ///
    mySample = sample(myModel,N);
    peek mySample
  SeeAlso
+  sample
   statistics
 ///
 
@@ -2000,15 +1988,15 @@ doc ///
  Headline
   generate statistics for a sample
  Usage
-  statistics(Sample,Function)
+  statistics(S,f)
  Inputs
   S: Sample
-    Sample to run statistics on
+    of randomly generated objects from a @TO Model@ 
   f: Function
-    function over the data
+    that is computed for each data point in the sample S
  Outputs
   : HashTable
-   containing statistics for the sample
+   containing the basic statistics for the function f applied to the sample s
  Description
   Text
    Generates statistics for the sample via the given function. The function is applied
