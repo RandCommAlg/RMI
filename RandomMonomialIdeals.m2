@@ -1678,6 +1678,7 @@ doc ///
 
 doc ///
  Key
+  model
   (model,List,FunctionClosure,String)
  Headline
   creates a new model for random objects with a given list of parameters and generating function 
@@ -2000,18 +2001,25 @@ doc ///
  Description
   Text
    Generates statistics for the sample via the given function. The function is applied
-   to each element in the sample, and -- provided that the function has numerical (ZZ) output --
+   to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
    its result is then used to calculate a mean, standard deviation, and a histogram.
   Example
    s=sample(ER(6,3,0.2),15);
    statistics(s, degree@@ideal)
   Text
-   An adventurous user my wish to get statistics of non-numerical values, such as bettiTallys. 
-   This can be done, but it will simply tally the sample data: 
+   The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
+   The same output is produced by the following statistics: 
   Example
+   s=sample(ER(2,2,0.8),10)
    statistics(s,betti@@gens@@ideal)
+  Text
+   In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
+   An adventurous user my wish to get statistics of other functions applied to the sample. 
+   If the output of f is not ZZ or BettiTally, the method will simply tally the sample data: 
+  Example 
+   statistics(s,mingens@@ideal)
  Caveat 
-   Anything that can be run through "tally" can be used as the input function f to this method. 
+   In fact, anything that can be run through "tally" can be used as the input function f to this method. 
 ///
 
 doc ///
