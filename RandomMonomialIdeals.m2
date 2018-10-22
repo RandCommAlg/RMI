@@ -1697,18 +1697,18 @@ doc ///
  Description
   Text
    To create your own model for random polynomials or other algebraic objects, use the model method as follows.
-   Suppose you wish to construct a set of N random polynomials in 3 variables of degree 2. You can
+   Suppose you wish to construct a set of M random polynomials in 3 variables of degree 2. You can
    use Macaulay2's random function: 
   Example
-   f=(D,n)->{R=QQ[x_1..x_n];random(D,R)}
+   f=(D,n,M)->(R=QQ[x_1..x_n];apply(M,i->random(D,R)))
   Text 
    To formalize the study of these random polynomials, embed this function into a Model object: 
   Example
-   myModel = model({2,3},f,"random polynomials in 3 variables of degree 2")
+   myModel = model({2,3,4},f,"rand(D,n,M): M random polynomials in n variables of degree D")
   Text
    Now obtain the data about such random polynomials from the Sample object (that is, the actual sample in the statistical sense) as follows:
   Example
-   N=10;
+   N=2;
    mySample = sample(myModel,N);
    peek mySample
  SeeAlso
