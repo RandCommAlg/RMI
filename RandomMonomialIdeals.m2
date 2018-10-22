@@ -3,7 +3,7 @@
 newPackage(
 	"RandomMonomialIdeals",
     	Version => "1.0",
-    	Date => "November 15, 2017",
+    	Date => "October 19, 2018",
     	Authors => {
 	    {
 		Name => "Sonja Petrovic",
@@ -78,6 +78,7 @@ export {
     "ModelName", "Parameters", "SampleSize", "getData",
     "writeSample",
     "Model",
+    "model",
     "ER",
     "statistics",
     "Mean", "StdDev", "Histogram"
@@ -95,6 +96,18 @@ Model = new Type of HashTable
 
 Data = local Data
 Generate = local Generate
+
+model = method(TypicalValue => Model)
+model(List,FunctionClosure,String):=(p,f,name)->(
+    -- p = parametr list
+    -- f = random generator from the model (predefined fn!)
+    tbl := new MutableHashTable; 
+    tbl.Name = name;
+    tbl.Parameters = p;
+    tbl.Generate = ()->f(toSequence p); 
+    new Model from tbl 
+)
+
 
 ER = method(TypicalValue => Model)
 ER (ZZ,ZZ,RR) := (n,D,p) -> (
@@ -171,7 +184,7 @@ sample (Model, ZZ) := (M,N) -> (
     s.ModelName = M.Name;
     s.Parameters = M.Parameters;
     s.SampleSize = N;
-    s.Data = apply(N,i->M.Generate());
+    s.Data =  apply(N,i->M.Generate());
     s
 )
 
@@ -212,11 +225,49 @@ writeSample (Sample, String) := (s, filename) -> (
 
 statistics = method(TypicalValue => HashTable)
 statistics (Sample, Function) := HashTable => (s,f) -> (
-    fData := apply(s.Data,f);
-    mean := (sum fData)/s.SampleSize; -- <- should the mean be returned as RR? 
-    new HashTable from {Mean=>mean,
-     StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
-     Histogram=>tally fData}
+    fData := apply(getData s,f);
+    histogram := tally fData; 
+    if not(class fData_0 === ZZ) then (
+	-- in case the data is actually a BettiTally type, then we are able to get the mean and stddev of the tables:
+	if (class fData_0 === BettiTally) then (
+    	    -- compute the average (entry-wise) tally table:
+	    dataSum := sum histogram;
+            dataMean := mat2betti(1/s.SampleSize *(sub(matrix(dataSum), RR)));
+    	    -- compute the standard deviation (entry-wise) of the Betti tables:
+    	    dataMeanMtx := matrix dataMean;
+    	    dataVariance := 1/s.SampleSize * sum apply(fData, currentTally -> (
+    	    	    mtemp := new MutableMatrix from dataMeanMtx;
+	    	    currentTallyMatrix := matrix currentTally;
+    	    	    apply(numrows currentTallyMatrix, i->
+			apply(numcols currentTallyMatrix, j->
+	    	    	    (
+				--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
+				mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
+				)
+	    	    	    )
+			);
+	    	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
+    	    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
+    	    	    )
+		);
+            --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
+    	    dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
+	    new HashTable from {Mean=>mat2betti dataMeanMtx, 
+		                StdDev=>dataStdDev,
+				Histogram=>histogram}
+	) else ( 
+	        stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
+		your function applied to the sample data. If you want more information, such as mean and 
+		standard deviation, then ensure you use a function with numerical (ZZ) or BettiTally output." <<endl;
+		histogram
+	) 
+	)
+    else (
+	mean := (sum fData)/s.SampleSize; 
+    	new HashTable from {Mean=>mean,
+     	                    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+    	                    Histogram=>histogram}
+	)
 )
 
 
@@ -1600,6 +1651,8 @@ doc ///
    and one can easily obtain sample statistics: 
   Example
    statistics(s,degree@@ideal)
+ SeeAlso
+  statistics
 ///
 
 doc ///
@@ -1621,6 +1674,46 @@ doc ///
  SeeAlso
    Sample
    writeSample
+///
+
+doc ///
+ Key
+  model
+  (model,List,FunctionClosure,String)
+ Headline
+  creates a new model for random objects with a given list of parameters and generating function 
+ Usage
+  model(L,f,name)
+ Inputs
+  L: List
+    of parameter values chosen for the model
+  f: FunctionClosure
+    function that generates random elements in this model
+  name: String
+    of the model constructed
+ Outputs
+  : Model
+   with those fixed parameter values
+ Description
+  Text
+   To create your own model for random polynomials or other algebraic objects, use the model method as follows.
+   Suppose you wish to construct a set of M random polynomials in 3 variables of degree 2. You can
+   use Macaulay2's random function: 
+  Example
+   f=(D,n,M)->(R=QQ[x_1..x_n];apply(M,i->random(D,R)))
+  Text 
+   To formalize the study of these random polynomials, embed this function into a Model object: 
+  Example
+   myModel = model({2,3,4},f,"rand(D,n,M): M random polynomials in n variables of degree D")
+  Text
+   Now obtain the data about such random polynomials from the Sample object (that is, the actual sample in the statistical sense) as follows:
+  Example
+   N=2;
+   mySample = sample(myModel,N);
+   peek mySample
+ SeeAlso
+  sample
+  statistics
 ///
 
 doc ///
@@ -1896,23 +1989,37 @@ doc ///
  Headline
   generate statistics for a sample
  Usage
-  statistics(Sample,Function)
+  statistics(S,f)
  Inputs
   S: Sample
-    Sample to run statistics on
+    of randomly generated objects from a @TO Model@ 
   f: Function
-    function over the data
+    that is computed for each data point in the sample S
  Outputs
   : HashTable
-   containing statistics for the sample
+   containing the basic statistics for the function f applied to the sample s
  Description
   Text
    Generates statistics for the sample via the given function. The function is applied
-   to each element in the sample, and its result is then used to calculate a mean, 
-   standard deviation, and histogram.
+   to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
+   its result is then used to calculate a mean, standard deviation, and a histogram.
   Example
    s=sample(ER(6,3,0.2),15);
    statistics(s, degree@@ideal)
+  Text
+   The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
+   The same output is produced by the following statistics: 
+  Example
+   s=sample(ER(2,2,0.8),10)
+   statistics(s,betti@@gens@@ideal)
+  Text
+   In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
+   An adventurous user my wish to get statistics of other functions applied to the sample. 
+   If the output of f is not ZZ or BettiTally, the method will simply tally the sample data: 
+  Example 
+   statistics(s,mingens@@ideal)
+ Caveat 
+   In fact, anything that can be run through "tally" can be used as the input function f to this method. 
 ///
 
 doc ///
