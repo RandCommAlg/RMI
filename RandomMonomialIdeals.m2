@@ -1037,8 +1037,8 @@ doc ///
   Example
    randomMonomialIdeals(3,2,1.0,1)
   Text
-   If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial ideals of size at most $M$:
-   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the ideal from this set.
+   If $M$ is an integer, then randomMonomialIdeals creates $N$ random monomial with $M$ (not necessarily minimal) generators:
+   randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, then generate the corresponding ideal.
   Example
    n=8; D=4; M=7; N=3;
    randomMonomialIdeals(n,D,M,N)
