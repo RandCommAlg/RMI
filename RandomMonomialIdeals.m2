@@ -788,7 +788,7 @@ doc ///
    bettiStats ideals
   Text
    For developing other models and computing statistics on objects other than monomial ideals, the package also 
-   defines a new Type, @TO Sample@, which allows for a convenient storage of statistics from a sample of algebraic objects and streamlines writing sample data into files.
+   defines two new Types, @TO Model@ and @TO Sample@, which allow for a convenient storage of statistics from a sample of algebraic objects and streamlines writing sample data into files.
 
    For example, below we create a sample of size 10 over the Erdos-Renyi distribution $\mathcal B(n, D, p)$ on monomials over the ring $Q[y,w]$ with $D=4$, and $p=0.5$, and 
    then a sample of size 15 over the graded version of this distribution on monomials over the ring $Z/101[z_1..z_8]$ with $D=2$, and $p={0.25,0.5}$: 
@@ -824,7 +824,8 @@ doc ///
  SeeAlso
   randomMonomialSet
   Verbose
-  Sample
+  sample
+  model
 ///
 
 doc ///
