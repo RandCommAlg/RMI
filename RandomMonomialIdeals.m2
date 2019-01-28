@@ -75,7 +75,7 @@ export {
     "pdimStats",
     "Sample",
     "sample",
-    "ModelName", "Parameters", "SampleSize", "getData",
+    "ModelName", "Parameters", "Generate", "SampleSize", "getData",
     "writeSample",
     "Model",
     "model",
@@ -95,7 +95,7 @@ Sample = new Type of MutableHashTable
 Model = new Type of HashTable
 
 Data = local Data
-Generate = local Generate
+--Generate = local Generate
 
 model = method(TypicalValue => Model)
 model(List,FunctionClosure,String):=(p,f,name)->(
@@ -104,7 +104,7 @@ model(List,FunctionClosure,String):=(p,f,name)->(
     new Model from { 
 	Name => name,
 	Parameters => p,
-	Generate => () -> f toSequence p;
+	Generate => () -> f toSequence p
 	}
 )
 
@@ -807,13 +807,13 @@ doc ///
    statistics(sample(ER(CC[z_1..z_8],5,0.1),100), degree@@ideal)
   Text
   
-   Most of the methods in this package offer various options, such as selecting a specific ring with which to work, or change variable names, coefficients, etc. Here is a simple example:
+   Most of the methods in this package offer various options, such as selecting a specific ring with which to work, or specifying variable names, coefficients, etc. Here is a simple example:
   Example
    R=ZZ/101[a..e];
    randomMonomialSets(R,D,p,N)
    randomMonomialSets(n,D,p,N,VariableName=>"t")
   Text
-   In some cases, we may want to work directly with the sets of randomly chosen monomials, while at other times it may be more convenient to pass directly to the random monomial ideals.
+   In some cases, we may want to work directly with the sets of randomly chosen monomials, while at other times it may be more convenient to pass directly to the corresponding random monomial ideals.
    Both options induce the same distribution on monomial ideals:
   Example
    randomMonomialSets(3,4,1.0,1)
@@ -1736,9 +1736,9 @@ doc ///
     model parameters from Sample
   Description
     Text
-      Stores the paramters of the model from which the sample was generated from.
+      Stores the parameters of the model from which the sample was generated from.
     Example
-     (sample(ER(2,2,0.5),2)).Parameters
+      (sample(ER(2,2,0.5),2)).Parameters
   SeeAlso
     sample
 ///
