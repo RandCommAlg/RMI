@@ -115,39 +115,39 @@ ER (ZZ,ZZ,RR) := (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     x := symbol x;
     R := QQ[x_1..x_n];
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (n,D,p);
-    tbl.Generate = ()->randomMonomialSet(R,D,p);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi", 
+    	Parameters => (n,D,p), 
+    	Generate => ()->randomMonomialSet(R,D,p)
+	}
 )
 
 ER (PolynomialRing,ZZ,RR) := (R,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (R,D,p);
-    tbl.Generate = ()->randomMonomialSet(R,D,p);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi", 
+    	Parameters => (R,D,p), 
+    	Generate => ()->randomMonomialSet(R,D,p)
+    	}
 )
 
 ER (ZZ,ZZ,ZZ) := (n,D,M) -> (
     if n<1 then error "n expected to be a positive integer";
     x := symbol x;
     R := QQ[x_1..x_n];
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (n,D,M);
-    tbl.Generate = ()->randomMonomialSet(R,D,M);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi",
+    	Parameters => (n,D,M),
+	Generate => ()->randomMonomialSet(R,D,M)
+	}
 )
 
 ER (PolynomialRing,ZZ,ZZ) := (R,D,M) -> (
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (R,D,M);
-    tbl.Generate = ()->randomMonomialSet(R,D,M);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi",
+    	Parameters => (R,D,M),
+	Generate => ()->randomMonomialSet(R,D,M)
+	}
 )
 
 ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
@@ -157,11 +157,11 @@ ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
       then error "pOrM must be a list of all integers or all real numbers";
     x := symbol x;
     R := QQ[x_1..x_n];
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (n,D,pOrM);
-    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi",
+	Parameters => (n,D,pOrM),
+	Generate => ()->randomMonomialSet(R,D,pOrM)
+	}
 )
 
 ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
@@ -170,11 +170,11 @@ ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
       then error "pOrM must be a list of all integers or all real numbers";
     if all(pOrM, q->instance(q,RR)) and any(pOrM,q-> q<0.0 or 1.0<q)
       then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
-    tbl := new MutableHashTable;
-    tbl.Name = "Erdos-Renyi";
-    tbl.Parameters = (R,D,pOrM);
-    tbl.Generate = ()->randomMonomialSet(R,D,pOrM);
-    new Model from tbl
+    new Model from {
+	Name => "Erdos-Renyi",
+	Parameters => (R,D,pOrM),
+	Generate => ()->randomMonomialSet(R,D,pOrM)
+	}
 )
 
 sample = method(TypicalValue => Sample)
@@ -1741,6 +1741,22 @@ doc ///
       (sample(ER(2,2,0.5),2)).Parameters
   SeeAlso
     sample
+///
+
+
+doc ///
+  Key
+    Generate
+  Headline
+    model construct function
+  Description
+    Text
+      Function that generates random elements according to the given model
+    Example
+      myModel = ER(2,2,0.5)
+      myModel.Generate
+  SeeAlso
+    model
 ///
 
 doc ///

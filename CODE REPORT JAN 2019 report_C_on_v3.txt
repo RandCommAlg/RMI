@@ -21,11 +21,13 @@ Instead, just do this:
 *** DONE (duh!). but it breaks the doc example. :( 
 I think the issue is the “;” after the last thing in the list. 
 I changed that; but now another issue seems that “Generate” is a local variable (why??) so I can’t access it when I define myModel in documentation.
-By the way the same type of code appears in all of the ER methods — we should not be constructing the intermediate table tbl (no point!). 
+By the way the same type of code appears in all of the ER methods (lines 111-178)!!!
+— that is, we should not be constructing the intermediate table tbl (no point!). 
 ** I have made this last change now. 
 RESULT: 
 Generate is now exported; it needs a documentation node. 
-*** TO DO.  ^^^^ 
+*** DONE. 
+
 
 In this code:
 
