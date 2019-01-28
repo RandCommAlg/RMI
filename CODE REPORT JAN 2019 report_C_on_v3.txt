@@ -1,0 +1,489 @@
+technical report on "Random Monomial Ideals Macaulay2 Package",
+by Sonja Petrović, Despina Stasi, and Dane Wilburne
+version 3
+
+=============================================================================
+
+comments on the code:
+
+There is no reason to make an intermediate hash table here:
+    tbl := new MutableHashTable; 
+    tbl.Name = name;
+    tbl.Parameters = p;
+    tbl.Generate = ()->f(toSequence p); 
+    new Model from tbl 
+Instead, just do this:
+	new Model from { 
+	    Name => name,
+	    Parameters => p,
+	    Generate => () -> f toSequence p;
+	    }
+*** DONE (duh!) 
+
+In this code:
+
+    ideals := {};
+    for i from 0 to #B-1 do {
+	ideals = B / (b-> monomialIdeal b);
+	};
+
+you are doing the same thing #B times, needlessly!  Replace it with
+
+    ideals := B / (b-> monomialIdeal b);
+*** DONE 
+
+
+Fix all bad indentation, such as here:
+
+    dimsHistogram:={};
+    apply(#ideals,i->(
+        dimi := dim ideals_i;
+    dimsHistogram = append(dimsHistogram, dimi)
+    )
+    );
+    ret:= ();
+
+and here:
+
+    for i from 0 to #ideals-1 do (
+     if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
+     if o.Verbose then (
+       numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
+       stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
+       if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
+       stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
+       );
+*** NOT DONE YET 
+
+
+Here you create a list by appending one element to it at a time:
+
+    dimsHistogram:={};
+    apply(#ideals,i->(
+        dimi := dim ideals_i;
+    dimsHistogram = append(dimsHistogram, dimi)
+    )
+    );
+
+That is very slow!  Find all such code and eliminate it.  Use "apply" or "for"
+instead.
+
+
+Probably all uses of "sub(...,RR)" can be eliminated.  For example, instead of
+
+	 sub(1/N*(sum dimsHistogram), RR);
+
+write
+
+	 1./N*sum dimsHistogram;
+
+The point is that 1. is of class RR, so the result of the arithmetic operations will
+also be of class RR.
+*** 
+
+Why not change such needless assignments as this
+
+     ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret
+
+to
+
+     return (-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist)
+
+?
+*** BECAUSE WERE WERE SILLY. WILL CHANGE SOON! 
+
+Here's another one:
+
+	    ret = (numAvg, numStdDev, comAvg, comStdDev)
+	  )
+	)
+
+It could be simply this:
+
+	    (numAvg, numStdDev, comAvg, comStdDev)
+	  )
+	)
+
+Fix all similar things.  If you assign a value to a variable, you should use the assigned value later.
+
+
+
+In this code:
+
+	toSymbol = (p) -> (
+	     if instance(p,Symbol)
+		 then p
+	     else if instance(p,String)
+		 then getSymbol p
+	     else
+		 error ("expected a string or symbol, but got: ", toString p))
+
+it would be better to use a method function, like this:
+
+   	 toSymbol = method()
+	 toSymbol Symbol := ...
+	 toSymbol String := ...
+
+
+
+The code
+
+	matrix(BettiTally, ZZ, ZZ) := opts -> (B,lowestDegree, highestDegree) -> (
+	     c := pdim B + 1;
+	     r := highestDegree - lowestDegree + 1;
+	     --M := mutableMatrix(ZZ,r,c);
+	     M := mutableMatrix(RR,r,c);
+	     scan(pairs B, (i,v) -> (
+		       if v != 0 then
+			 M_(i_2-i_0-lowestDegree, i_0) = v;
+		       ));
+	     matrix M
+	     )
+
+differs from the code for the same types of inputs that is defined in the
+BoijSoederberg package.  If a user loads both your package and that one, then
+the code in one of the packages may be broken by the loading of the other one.
+That can be a serious conflict.  It would be better to have this code defined
+in the core of Macaulay2, in such a way that it would work in the context of
+either package.  This can be taken care of later...
+
+*** WE AGREE. But we didn’t know how to take care of it otherwise; and felt that using a different names would have been bad. We do load the BoijSoederberg package, and things don’t seem to break, but clearly the user has access only to the one that was loaded later, right? Anyway. we are happy with another solution if M2 is proposing now. 
+
+=============================================================================
+
+comments on the documentation:
+
+change
+	It also introduces new objects, Sample and Model,
+to
+	It also introduces new types of objects, Sample and Model,
+*** DONE
+
+Italicize Macaulay2 by changing things like
+	  	    and their statistics in Macaulay2. 
+to
+	  	    and their statistics in {\em Macaulay2}. 
+*** DONE (I don’t think we use “macaualy2” on any other doc page? double-check this at the very end.) 
+
+
+remove the comma from
+       sets of monomials of degree at most $D$, on $n$ variables
+*** DONE
+
+
+this is confusing:
+       This model was inspired by random graphs.
+Do you mean it was inspired by a particular method for generating random graphs?
+*** 
+
+In
+	To parallel the two variants
+you use "parallel" as a verb, but it's an adjective or a noun.
+*** I looked it up; it can be used as a verb too. ? 
+
+Change
+	 the model with fixed number of monomials to be generated
+to
+	 a model that generates a fixed number of monomials
+*** DONE
+
+remove the comma from
+       Finally we can request the monomial sets generated by the graded model
+       with fixed number of monomials, to be minimal generating sets.
+*** DONE
+
+change
+	with fixed number of monomials
+to
+	with a fixed number of monomials
+*** DONE
+
+Change
+	 for a couple of the other versions 
+to
+	 for a couple of other versions 
+*** DONE
+
+
+change
+	statistics regarding algebraic properties of the sample
+to
+	statistics of algebraic properties of the sample
+*** DONE
+
+change
+	summarize statistics on some of the common properties
+to
+	summarize statistics of some of the common properties
+*** DONE
+
+change
+	defines two new Types, @TO Model@ and @TO Sample@, which
+to
+	defines two new types of object, @TO Model@ and @TO Sample@, which
+*** DONE
+
+change
+	which allow for a convenient storage
+to
+	which allow for convenient storage
+*** DONE
+
+change
+	The output is a hashtable with 4 entries
+to
+	The output is a hash table with 4 entries
+*** DONE
+
+change
+	We can also use the @TO Sample@ object
+to
+	We can also use the object of type @TO Sample@
+*** DONE
+
+Wherever you say "Sample object" you should say instead "object of type Sample" or "sample".  Similarly
+for "Model object".
+*** DONE
+
+change
+	such as selecting a specific ring with which to work, or change variable names
+to
+	such as selecting a specific ring with which to work, or specifying variable names
+*** DONE
+
+change
+	to pass directly to the random monomial ideals
+to
+	to pass directly to random monomial ideals
+or to
+	to pass directly to the corresponding random monomial ideals
+*** DONE
+
+This is strange for two reasons:
+
+        of @TO monomialIdeal@s
+
+The first is that monomialIdeal is not a type.  You must have meant MonomialIdeal.  The second is
+that monomialIdeal (and MonomialIdeal) is not an English word.  Never use a Macaulay2 identifier in
+an English sentence as though it were an English word.  This must be fixed in many places.
+The same remark applies to
+
+   	   will work on a @TO List@ of
+*** THIS IS actually LOT OF WORK ….. NOT DONE YET. 
+
+
+Always begin a sentence with an English word, not with a Macaulay2 identifier:
+
+	borelFixedStats computes the fraction of Borel-fixed ideals in the list of monomial ideals.
+
+Also here:
+
+        degStats computes the degree of R/I for each ideal I in the list and computes the mean and statnadr deviation of the degrees. 
+
+Find all such instances and fix.
+
+
+The misuse of "simply" should be eliminated.  In this context:
+
+    the method will simply tally the sample data
+
+it is superfluous and conveys no information.
+
+
+remove the comma from
+
+       arithmetically Cohen-Macaulay, and returns the proportion that are.
+
+
+This places too much demand on the reader:
+
+       Put {\tt CountPure => true} in @TO bettiStats@ to show this output:
+
+Instead, say what the option does.
+
+
+Does "trivially" have a meaning in 
+
+	how many ideals are, say, trivially Cohen-Macaulay.
+
+?  If so, what?
+
+
+Probably change
+	 Let us look at a nontrivial list of ideals
+to
+	 Let us look at a list of nontrivial ideals
+?
+
+
+This is too cryptic:
+
+     This type is used to store the information about a model: model name, parameters, and generating function.
+
+It would be good to say what a "model" is here.  Also, this:
+
+   This type is used to store a sample from a given Model. To create a sample, use the sample method.
+
+It would be good to say what a "sample" is.  Also change
+
+   from a given Model
+
+to
+
+   from a given model
+
+
+
+The documentation for getData has no text saying what it does (except the headline, which is not enough).
+
+Similarly for SampleSize.
+
+
+
+This documentation is opaque:
+
+	doc ///
+	  Key
+	    Histogram
+	  Headline
+	    return value for statistics
+	  Description
+	    Text
+	      Get the histogram from the hash table returned by @TO statistics@.
+	///
+
+Apparently the symbol Histogram is used as a key in some hash tables, but the documentation doesn't reveal it.
+
+Same remark about this one:
+
+	doc ///
+	  Key
+	    StdDev
+	  Headline
+	    return value for statistics
+	  Description
+	    Text
+	      Get the standard deviation from the hash table returned by @TO statistics@.
+	///
+
+And this one:
+
+	doc ///
+	  Key
+	    Mean
+	  Headline
+	    return value for statistics
+	  Description
+	    Text
+	      Get the mean from the hash table returned by @TO statistics@.
+	///
+
+
+Change
+	whether or not
+to
+	whether
+
+
+Change
+	 from which the sample was generated from.
+to
+	 from which the sample was generated.
+in more than one place.
+
+
+This is confusing:
+
+	doc ///
+	  Key
+	    ModelName
+	  Headline
+	    model name from Sample
+	  Description
+	    Text
+	      Stores the name of the model from which the sample was generated from.
+
+because the symbol ModelName doesn't store anything.  Probably you meant to say that
+ModelName is used as a key in certain hash tables.  Similarly here:
+
+      Stores the paramters of the model from which the sample was generated from.
+
+And spell that word correctly, too.
+
+
+change
+    from the given Model
+to
+    from the given model
+
+Search for all such needlessly capitalized English words and fix them.
+
+
+change
+	Note that the degree-1 monomials were not generated, 
+to
+	Note that no monomials of degree 1 were generated, 
+
+
+change "folder" to "directory", everywhere
+
+
+This is confusing:
+
+	doc ///
+	 Key
+	  (sample,String)
+	 Headline
+	  creates a Sample object from a folder on disk
+	 Usage
+	  sample(String)
+	 Inputs
+	  FileName: String
+	    where the sample is stored
+
+Is the argument the name of a fie or the name of a directory?
+
+
+
+English prose should use English words:
+
+        This may be useful if betti res computation, ...
+
+
+
+"outputted" is not a word, because "output" is a noun
+
+
+This sentence needs a subject:
+
+	    Generates statistics for the sample via the given function. 
+
+Find all such sentences and fix them.
+
+
+
+
+=============================================================================
+
+comments on the paper:
+
+All uses of "Macaulay2" should be set in italic, not in typewriter font, which
+is reserved for identifiers.
+
+Change
+	All of degree-3 monomials were selected,
+to
+	All monomials of degree 3 were selected,
+
+
+English sentences should use English words, so change such things as
+	Given a list of monomialIdeals, the 
+to
+	Given a list of monomial ideals, the 
+
+
+Don't capitalize English words needlessly, as here:
+
+      		 the String is the filename
+
+=============================================================================
