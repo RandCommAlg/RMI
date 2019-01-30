@@ -141,7 +141,7 @@ it would be better to use a method function, like this:
    	 toSymbol = method()
 	 toSymbol Symbol := ...
 	 toSymbol String := ...
-*** 
+*** OK, SOUNDS GOOD, BUT HOW DO I HANDLE THE LAST BIT WHERE I TELL THE USER HEY, YOU NEED STRING OR SYMBOL? 
 
 
 The code
