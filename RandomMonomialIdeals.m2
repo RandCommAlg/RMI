@@ -872,7 +872,7 @@ doc ///
    meanBetti
    stdDevBetti
   Text
-   For sample size $N$, the average Betti table {\em shape} simply considers nonzero Betti numbers. It is to be interpreted as follows:
+   For sample size $N$, the average Betti table {\em shape} considers nonzero Betti numbers. It is to be interpreted as follows:
    entry (i,j) encodes the following sum of indicators:
    $\sum_{all ideals} 1_{beta_{ij}>0} / N$; that is,
    the proportion of ideals with a nonzero beta_{ij}.
@@ -919,7 +919,8 @@ doc ///
     optional input to show the number of objects in the list whose Betti tables are pure
   Description
     Text
-      Put {\tt CountPure => true} in @TO bettiStats@ to show this output:
+      Putting the option {\tt CountPure => true} in @TO bettiStats@ returns the number of pure Betti tables in the Betti table statistics. 
+      In the following example, exactly one of the ideals (the first one) has a pure Betti table: 
     Example
      ZZ/101[a..c];
      L={monomialIdeal"ab,bc", monomialIdeal"ab,bc3"}
@@ -1109,7 +1110,7 @@ doc ///
   Text
    Note that it returns a set with $M = 4$ monomials.
   Text
-   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the method will simply return all those monomials (and not $M$ of them). For example:
+   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the method will return all those monomials (and not $M$ of them). For example:
   Example
    randomMonomialSet(2,2,10)
   Text
@@ -1276,7 +1277,7 @@ doc ///
    [randomMonomialIdeals, IncludeZeroIdeals]
    [bettiStats, IncludeZeroIdeals]
  Headline
-   optional input to choose whether or not zero ideals should be included
+   optional input to choose whether zero ideals should be included
  Description
    Text
      When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), then zero ideals will be included in the list of random monomial ideals.
@@ -1482,7 +1483,7 @@ doc ///
    the fraction of Cohen-Macaulay ideals in the list
  Description
   Text
-   CMStats simply checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay, and returns the proportion that are.
+   CMStats checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay and returns the proportion that are.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
@@ -1545,7 +1546,7 @@ doc ///
      regStats(ideals, Verbose => true)
      CMStats(ideals, Verbose => true)
    Text
-     Other methods that have this option are as follows. Let us look at a nontrivial list of ideals to see more interesting statistics.
+     Other methods that have this option are as follows. Let us look at a list of nontrivial ideals to see more interesting statistics.
    Example
      n=3;D=3;p=0.1;N=3;
      ideals = randomMonomialIdeals(n,D,p,N)
@@ -1695,7 +1696,7 @@ doc ///
     model name from Sample
   Description
     Text
-      Stores the name of the model from which the sample was generated from.
+      Stores the name of the model from which the sample was generated.
     Example
      (sample(ER(2,2,0.5),2)).ModelName
   SeeAlso
@@ -1709,7 +1710,7 @@ doc ///
     model parameters from Sample
   Description
     Text
-      Stores the parameters of the model from which the sample was generated from.
+      Stores the parameters of the model from which the sample was generated.
     Example
       (sample(ER(2,2,0.5),2)).Parameters
   SeeAlso
@@ -2003,7 +2004,7 @@ doc ///
   Text
    In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
    An adventurous user my wish to get statistics of other functions applied to the sample. 
-   If the output of f is not ZZ or BettiTally, the method will simply tally the sample data: 
+   If the output of f is not ZZ or BettiTally, the method will tally the sample data: 
   Example 
    statistics(s,mingens@@ideal)
  Caveat 

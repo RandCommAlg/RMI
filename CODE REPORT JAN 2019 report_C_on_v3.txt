@@ -197,7 +197,7 @@ Do you mean it was inspired by a particular method for generating random graphs?
 In
 	To parallel the two variants
 you use "parallel" as a verb, but it's an adjective or a noun.
-*** I looked it up; it can be used as a verb too. ? 
+*** I looked it up; it can be used as a verb too. OK? 
 
 Change
 	 the model with fixed number of monomials to be generated
@@ -277,6 +277,7 @@ or to
 	to pass directly to the corresponding random monomial ideals
 *** DONE
 
+
 This is strange for two reasons:
 
         of @TO monomialIdeal@s
@@ -306,11 +307,13 @@ The misuse of "simply" should be eliminated.  In this context:
     the method will simply tally the sample data
 
 it is superfluous and conveys no information.
+*** DONE
 
 
 remove the comma from
 
        arithmetically Cohen-Macaulay, and returns the proportion that are.
+*** DONE
 
 
 This places too much demand on the reader:
@@ -318,6 +321,7 @@ This places too much demand on the reader:
        Put {\tt CountPure => true} in @TO bettiStats@ to show this output:
 
 Instead, say what the option does.
+*** DONE
 
 
 Does "trivially" have a meaning in 
@@ -325,6 +329,7 @@ Does "trivially" have a meaning in
 	how many ideals are, say, trivially Cohen-Macaulay.
 
 ?  If so, what?
+***
 
 
 Probably change
@@ -332,6 +337,7 @@ Probably change
 to
 	 Let us look at a list of nontrivial ideals
 ?
+*** DONE
 
 
 This is too cryptic:
@@ -401,6 +407,7 @@ Change
 	whether or not
 to
 	whether
+*** DONE
 
 
 Change
@@ -408,7 +415,7 @@ Change
 to
 	 from which the sample was generated.
 in more than one place.
-
+*** DONE 
 
 This is confusing:
 
