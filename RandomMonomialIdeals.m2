@@ -232,20 +232,20 @@ statistics (Sample, Function) := HashTable => (s,f) -> (
     	    -- compute the standard deviation (entry-wise) of the Betti tables:
     	    dataMeanMtx := matrix dataMean;
     	    dataVariance := 1/s.SampleSize * sum apply(fData, currentTally -> (
-    	    	    mtemp := new MutableMatrix from dataMeanMtx;
-	    	    currentTallyMatrix := matrix currentTally;
-    	    	    apply(numrows currentTallyMatrix, i->
-			apply(numcols currentTallyMatrix, j->
-	    	    	    (
-				--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
-				mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
-				)
-	    	    	    )
-			);
-	    	    --square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
-    	    	    mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
-    	    	    )
-		);
+	    	mtemp := new MutableMatrix from dataMeanMtx;
+		currentTallyMatrix := matrix currentTally;
+		apply(numrows currentTallyMatrix, i->
+		    apply(numcols currentTallyMatrix, j->
+			(
+			    --compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
+			    mtemp_(i,j) = mtemp_(i,j) - currentTallyMatrix_j_i
+			    )
+			)
+		    );
+		--square entries of mtemp, to get (bMean_(i,j) - bCurrent_(i,j))^2:
+		mtemp = matrix pack(apply( flatten entries mtemp,i->i^2), numcols mtemp)
+		)
+	    );
             --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
     	    dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
 	    new HashTable from {
@@ -267,7 +267,7 @@ statistics (Sample, Function) := HashTable => (s,f) -> (
 	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
 	    Histogram=>histogram
 	    }
-	)
+    )
 )
 
 
@@ -451,25 +451,19 @@ degStats = method(TypicalValue =>Sequence, Options =>{ShowTally => false, Verbos
 degStats List :=  o-> (ideals) -> (
     N := #ideals;
     deg := 0;
-    degHistogram:={};
-    apply(#ideals, i->(
-        degi := degree ideals_i;
-        degHistogram = append(degHistogram, degi)
-	)
-    );
+    degHistogram := apply(ideals, i-> degree i);
     ret:=();
-    avg:=sub(1/N*(sum degHistogram), RR);
-    Ex2:=sub(1/N*(sum apply(elements(tally degHistogram), i->i^2)), RR);
+    avg:=1./N*(sum degHistogram);
+    Ex2:=1./N*(sum apply(elements(tally degHistogram), i->i^2));
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally
-    	then(ret=(avg, stdDev,tally degHistogram); return ret;);
+    if o.ShowTally then return (avg, stdDev, tally degHistogram);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<  "There are "<<N<<" ideals in this sample. Of those, "<< numberOfZeroIdeals <<" are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The degree statistics do include those for the zero ideals."<< endl
 	);
-    ret = (avg, stdDev)
+    (avg, stdDev)
 )
 
 --creates a list of monomialIdeal objects from a list of monomial generating sets
@@ -490,11 +484,11 @@ dimStats List := o-> (ideals) -> (
     dims:=0;
     dimsHistogram := apply(ideals, i-> dim i); 
     ret:= ();
-    avg:=sub(1/N*(sum dimsHistogram), RR);
-    Ex2:=sub(1/N*(sum apply(elements(tally dimsHistogram), i->i^2)), RR);
+    avg:=1./N*(sum dimsHistogram);
+    Ex2:=1./N*(sum apply(elements(tally dimsHistogram), i->i^2));
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
+    if o.ShowTally then return (avg, stdDev, tally dimsHistogram);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<  "There are "<<N<<" ideals in this sample. Of those, "<< numberOfZeroIdeals <<" are the zero ideal." << endl;
@@ -509,37 +503,27 @@ regStats List := o-> (ideals) -> (
     ideals = extractNonzeroIdeals(ideals);
     ideals = ideals_0;
     reg := 0;
-    ret := ();
     regHistogram:={};
     if set {} === set ideals then (
 	regHistogram = N:-infinity;
 	stdDev := 0;
-	if o.ShowTally then(
-	    ret=(-infinity, 0, tally regHistogram);
-	    return ret;
-	    );
-	if o.Verbose then
-         stdio <<"All ideals in this list are the zero ideal." << endl;
+	if o.ShowTally then return (-infinity, 0, tally regHistogram);
+	if o.Verbose then stdio <<"All ideals in this list are the zero ideal." << endl;
 	(-infinity, 0)
     )
     else (
-	apply(#ideals,i->(
-              regi := regularity ideals_i;
-              regHistogram = append(regHistogram, regi)
-	     ));
-             avg := sub(1/#ideals*(sum regHistogram), RR);
-    	     Ex2 := sub((1/(#ideals))*(sum apply(elements(tally regHistogram), i->i^2)), RR);
-    	     var := Ex2-avg^2;
-    	     stdDev = var^(1/2);
-    	     if o.ShowTally
-    	        then(ret=(avg, stdDev,tally regHistogram); return ret;);
-	     if o.Verbose then (
-		 stdio << "There are "<<N<<" ideals in this sample. Of those, "<< toString(N-#ideals) <<" are the zero ideal." << endl;
-              	 stdio << "The zero ideals were extracted from the sample before reporting the regularity statistics."<< endl;
-		 );
-    	     (avg, stdDev)
-         )
-
+	regHistogram = apply(ideals, i-> regularity i);
+    	avg := 1./#ideals*(sum regHistogram);
+    	Ex2 := (1./(#ideals))*(sum apply(elements(tally regHistogram), i->i^2));
+    	var := Ex2-avg^2;
+    	stdDev = var^(1/2);
+    	if o.ShowTally then return (avg, stdDev,tally regHistogram);
+    	if o.Verbose then (
+	    stdio << "There are "<<N<<" ideals in this sample. Of those, "<< toString(N-#ideals) <<" are the zero ideal." << endl;
+	    stdio << "The zero ideals were extracted from the sample before reporting the regularity statistics."<< endl;
+	    );
+    	(avg, stdDev)
+    )
 )
 
 randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true, Strategy => "ER"})
@@ -591,6 +575,7 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
        );
     bor/N
 )
+
 mingenStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose =>false})
 mingenStats (List) := Sequence => o -> (ideals) -> (
     N:=#ideals;
@@ -607,9 +592,9 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
 	complexityHist = N:-infinity;
 	numStdDev := 0;
 	comStdDev := 0;
-	if o.ShowTally then(ret=(-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist); return ret;);
+	if o.ShowTally then return (-infinity, 0, tally numgensHist, -infinity, 0, tally complexityHist);
 	if o.Verbose then stdio <<"This sample included only zero ideals." << endl;
-	ret = (-infinity, 0, -infinity, 0)
+	(-infinity, 0, -infinity, 0)
     )
     else (
         apply(#ideals,i->(
@@ -628,34 +613,27 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     comVar:= comEx2 - comAvg^2;
     numStdDev= numVar^(1/2);
     comStdDev= comVar^(1/2);
-    if o.ShowTally then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+    if o.ShowTally then return (numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist);
     if o.Verbose then (
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
 	);
     (numAvg, numStdDev, comAvg, comStdDev)
-  )
+    )
 )
 
 
 pdimStats = method(TypicalValue=>Sequence, Options => {ShowTally => false, Verbose => false})
 pdimStats (List) := o-> (ideals) -> (
     N:=#ideals;
-    pdHist:={};
     R:=ring(ideals_0);
-    apply(#ideals,i->
-	(
-        pdimi := pdim(R^1/ideals_i);
-	pdHist = append(pdHist, pdimi)
-	)
-    );
+    pdHist := apply(ideals, i-> pdim(R^1/i));
     ret:=();
     avg:=sub(((1/N)*(sum pdHist)),RR);
     Ex2:=sub(((1/N)*(sum apply(elements(tally pdHist), i->i^2))), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally
-         then(ret = (avg, stdDev, tally pdHist), return ret;);
+    if o.ShowTally then return (avg, stdDev, tally pdHist);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
@@ -2407,12 +2385,12 @@ TEST ///
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
   assert (sub(n,RR)===C_0)
-  assert (sub(0,RR)===C_1)
+  assert (0.===C_1)
   p={0.0,1.0,0.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
-  assert (sub(10,RR)===E_0)
-  assert (sub(0,RR)===E_1)
+  assert (10.===E_0)
+  assert (0.===E_1)
 ///
 
 TEST ///
@@ -2420,13 +2398,13 @@ TEST ///
   n=3; D=5; p=1.0; N=5;
   B = randomMonomialIdeals(n,D,p,N);
   C = mingenStats(B);
-  assert(sub(1,RR)===C_2)
-  assert(sub(0,RR)===C_3)
+  assert(1.===C_2)
+  assert(0.===C_3)
   p={0.0,0.0,0.0,0.0,1.0};
   D = randomMonomialIdeals(n,D,p,N);
   E = mingenStats(D);
-  assert(sub(5,RR)===E_2)
-  assert(sub(0,RR)===E_3)
+  assert(5.===E_2)
+  assert(0.===E_3)
 ///
 
 TEST ///
@@ -2450,17 +2428,17 @@ TEST ///
   L=randomMonomialSet(3,3,1.0);
   R=ring(L#0);
   listOfIdeals={monomialIdeal(0_R)};
-  assert(sub(0,RR)==(pdimStats(listOfIdeals))_0)
-  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  assert(0.==(pdimStats(listOfIdeals))_0)
+  assert(0.==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0,R_1,R_2)};
-  assert(sub(3,RR)==(pdimStats(listOfIdeals))_0)
-  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  assert(3.==(pdimStats(listOfIdeals))_0)
+  assert(0.==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(0_R),monomialIdeal(R_0*R_1^2,R_1^3,R_2)};
-  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_0)
-  assert(sub(1.5,RR)==(pdimStats(listOfIdeals))_1)
+  assert(1.5==(pdimStats(listOfIdeals))_0)
+  assert(1.5==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0^2*R_1,R_2)};
-  assert(sub(2,RR)==(pdimStats(listOfIdeals))_0)
-  assert(sub(0,RR)==(pdimStats(listOfIdeals))_1)
+  assert(2.==(pdimStats(listOfIdeals))_0)
+  assert(0.==(pdimStats(listOfIdeals))_1)
   listOfIdeals={monomialIdeal(R_0,R_2),monomialIdeal(0_R),monomialIdeal(R_0^2*R_1,R_1^2)};
   assert(sub(4/3,RR)==(pdimStats(listOfIdeals))_0)
   assert(sub(((8/3)-(16/9))^(1/2),RR)==(pdimStats(listOfIdeals))_1)
