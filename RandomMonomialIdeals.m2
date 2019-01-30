@@ -95,7 +95,6 @@ Sample = new Type of MutableHashTable
 Model = new Type of HashTable
 
 Data = local Data
---Generate = local Generate
 
 model = method(TypicalValue => Model)
 model(List,FunctionClosure,String):=(p,f,name)->(
@@ -167,9 +166,9 @@ ER (ZZ,ZZ,List) := (n,D,pOrM) -> (
 ER (PolynomialRing,ZZ,List) := (R,D,pOrM) -> (
     if #pOrM != D then error "pOrM expected to be a list of length D";
     if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
-      then error "pOrM must be a list of all integers or all real numbers";
+        then error "pOrM must be a list of all integers or all real numbers";
     if all(pOrM, q->instance(q,RR)) and any(pOrM,q-> q<0.0 or 1.0<q)
-      then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
+        then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
     new Model from {
 	Name => "Erdos-Renyi",
 	Parameters => (R,D,pOrM),
@@ -215,10 +214,7 @@ writeSample (Sample, String) := (s, filename) -> (
     ) else (
         mkdir filename;
     );
-    realpath filename | "Model.txt" <<
-	s.SampleSize << endl <<
-	s.ModelName << endl <<
-	serialize s.Parameters << close;
+    realpath filename | "Model.txt" << s.SampleSize << endl << s.ModelName << endl << serialize s.Parameters << close;
     realpath filename | "Data.txt" << serialize s.Data << close; -- Write other data
 )
 
@@ -252,28 +248,34 @@ statistics (Sample, Function) := HashTable => (s,f) -> (
 		);
             --    dataStdDev := dataVariance^(1/2); -- <--need to compute entry-wise for the matrix(BettyTally)
     	    dataStdDev := mat2betti matrix pack(apply( flatten entries dataVariance,i->sqrt i), numcols dataVariance); 
-	    new HashTable from {Mean=>mat2betti dataMeanMtx, 
-		                StdDev=>dataStdDev,
-				Histogram=>histogram}
+	    new HashTable from {
+		Mean=>mat2betti dataMeanMtx, 
+		StdDev=>dataStdDev,
+		Histogram=>histogram
+		}
 	) else ( 
 	        stderr << "Warning: the statistics method is returning only the Tally of the outputs of 
 		your function applied to the sample data. If you want more information, such as mean and 
 		standard deviation, then ensure you use a function with numerical (ZZ) or BettiTally output." <<endl;
 		histogram
 	) 
-	)
+    )
     else (
 	mean := (sum fData)/s.SampleSize; 
-    	new HashTable from {Mean=>mean,
-     	                    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
-    	                    Histogram=>histogram}
+    	new HashTable from {
+	    Mean=>mean,
+	    StdDev=>sqrt(sum apply(fData, x-> (mean-x)^2)/s.SampleSize),
+	    Histogram=>histogram
+	    }
 	)
 )
 
 
-randomMonomialSets = method(TypicalValue => List, Options => {Coefficients => QQ,
-	                                                        VariableName => "x",
-								Strategy => "ER"})
+randomMonomialSets = method(TypicalValue => List, Options => {
+	Coefficients => QQ,
+	VariableName => "x",
+	Strategy => "ER"
+	})
 randomMonomialSets (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomMonomialSets(n,D,toList(D:p),N,o)
@@ -309,9 +311,11 @@ randomMonomialSets (PolynomialRing,ZZ,List,ZZ) := List => o -> (R,D,pOrM,N) -> (
     apply(N,i-> randomMonomialSet(R,D,pOrM,o))
 )
 
-randomMonomialSet = method(TypicalValue => List, Options => {Coefficients => QQ,
-	                                                       VariableName => "x",
-							       Strategy => "ER"})
+randomMonomialSet = method(TypicalValue => List, Options => {
+	Coefficients => QQ,
+	VariableName => "x",
+	Strategy => "ER"
+	})
 randomMonomialSet (ZZ,ZZ,RR) := List => o -> (n,D,p) -> (
     if p<0.0 or 1.0<p then error "p expected to be a real number between 0.0 and 1.0";
     randomMonomialSet(n,D,toList(D:p),o)
@@ -347,7 +351,7 @@ randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
 randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
     if #pOrM != D then error "pOrM expected to be a list of length D";
     if not all(pOrM, q->instance(q, ZZ)) and not all(pOrM, q->instance(q,RR))
-      then error "pOrM must be a list of all integers or all real numbers";
+        then error "pOrM must be a list of all integers or all real numbers";
     B := {};
     if all(pOrM,q->instance(q,ZZ)) then (
         if o.Strategy === "Minimal" then (
@@ -356,11 +360,10 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
                 chosen := take(random(flatten entries basis(d+1, currentRingM)), pOrM_d);
                 B = flatten append(B, chosen/(i->sub(i, R)));
                 currentRingM = currentRingM/promote(ideal(chosen), currentRingM)
-            )))
-        else
-            B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
-    )
-    else if all(pOrM,q->instance(q,RR)) then (
+		)
+	    )
+	) else B = flatten apply(toList(1..D), d->take(random(flatten entries basis(d,R)), pOrM_(d-1)));
+    ) else if all(pOrM,q->instance(q,RR)) then (
         if any(pOrM,q-> q<0.0 or 1.0<q) then error "pOrM expected to be a list of real numbers between 0.0 and 1.0";
         if o.Strategy === "Minimal" then (
             currentRing := R;
@@ -368,10 +371,10 @@ randomMonomialSet (PolynomialRing,ZZ,List) := List => o -> (R,D,pOrM) -> (
                 chosen := select(flatten entries basis(d+1, currentRing), m->random(0.0,1.0)<=pOrM_d);
                 B = flatten append(B, chosen/(i->sub(i, R)));
                 currentRing = currentRing/promote(ideal(chosen), currentRing)
-            )))
-        else
-            B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
-	);
+		)
+	    )
+	) else B = flatten apply(toList(1..D),d-> select(flatten entries basis(d,R),m-> random(0.0,1.0)<=pOrM_(d-1)));
+    );
     B = apply(B,m->sub(m,R));
     if B==={} then {0_R} else B
 )
@@ -423,11 +426,10 @@ bettiStats List :=  o-> (ideals) -> (
     -- compute the standard deviation (entry-wise) of the Betti tables:
     bMeanMtx := matrix bMean;
     betaVariance := 1/#ideals * sum apply(bettisHistogram, currentBetti -> (
-    	    mtemp := new MutableMatrix from bMeanMtx;
+	    mtemp := new MutableMatrix from bMeanMtx;
 	    currentBettiMatrix := matrix currentBetti;
     	    apply(numrows currentBettiMatrix, i->
-		apply(numcols currentBettiMatrix, j->
-	    	    (
+		apply(numcols currentBettiMatrix, j->(
 			--compute  mtemp_(i,j) := (bMean_(i,j) - bCurrent_(i,j)):
 			mtemp_(i,j) = mtemp_(i,j) - currentBettiMatrix_j_i
 			)
@@ -477,8 +479,7 @@ idealsFromGeneratingSets(List):= o -> (B) -> (
     n := numgens ring ideal B#0; -- ring of the first monomial in the first gen set
     ideals := B / (b-> monomialIdeal b);
     (nonzeroIdeals,numberOfZeroIdeals) := extractNonzeroIdeals(ideals);
-    if o.Verbose then
-     stdio <<"There are "<<#B<<" ideals in this sample. Of those, "<<numberOfZeroIdeals<<" are the zero ideal."<< endl;
+    if o.Verbose then stdio <<"There are "<<#B<<" ideals in this sample. Of those, "<<numberOfZeroIdeals<<" are the zero ideal."<< endl;
     if o.IncludeZeroIdeals then return ideals else return (nonzeroIdeals,numberOfZeroIdeals);
 )
 
@@ -487,25 +488,19 @@ dimStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verb
 dimStats List := o-> (ideals) -> (
     N := #ideals;
     dims:=0;
-    dimsHistogram:={};
-    apply(#ideals,i->(
-        dimi := dim ideals_i;
-    dimsHistogram = append(dimsHistogram, dimi)
-    )
-    );
+    dimsHistogram := apply(ideals, i-> dim i); 
     ret:= ();
     avg:=sub(1/N*(sum dimsHistogram), RR);
     Ex2:=sub(1/N*(sum apply(elements(tally dimsHistogram), i->i^2)), RR);
     var:= Ex2 - avg^2;
     stdDev:= var^(1/2);
-    if o.ShowTally
-         then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
+    if o.ShowTally then(ret = (avg, stdDev, tally dimsHistogram), return ret;);
     if o.Verbose then (
 	numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
 	stdio <<  "There are "<<N<<" ideals in this sample. Of those, "<< numberOfZeroIdeals <<" are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The Krull dimension statistics do include those for the zero ideals."<< endl
 	);
-    ret = (avg, stdDev)
+    (avg, stdDev)
 )
 
 regStats = method(TypicalValue => Sequence, Options => {ShowTally => false, Verbose => false})
@@ -525,7 +520,7 @@ regStats List := o-> (ideals) -> (
 	    );
 	if o.Verbose then
          stdio <<"All ideals in this list are the zero ideal." << endl;
-	ret = (-infinity, 0)
+	(-infinity, 0)
     )
     else (
 	apply(#ideals,i->(
@@ -542,28 +537,26 @@ regStats List := o-> (ideals) -> (
 		 stdio << "There are "<<N<<" ideals in this sample. Of those, "<< toString(N-#ideals) <<" are the zero ideal." << endl;
               	 stdio << "The zero ideals were extracted from the sample before reporting the regularity statistics."<< endl;
 		 );
-    	     ret = (avg, stdDev)
+    	     (avg, stdDev)
          )
 
 )
 
- randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true, Strategy => "ER"})
+randomMonomialIdeals = method(TypicalValue => List, Options => {Coefficients => QQ, VariableName => "x", IncludeZeroIdeals => true, Strategy => "ER"})
 
- randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
-        B:={};
-        if all(pOrM,q->instance(q,RR)) then
-	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal")
-	else if all(pOrM,q->instance(q,ZZ)) then
-	    B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName, Strategy=>o.Strategy);
-	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+randomMonomialIdeals (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
+    B:={};
+    if all(pOrM,q->instance(q,RR)) then B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal")
+    else if all(pOrM,q->instance(q,ZZ)) then B=randomMonomialSets(n,D,pOrM,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName, Strategy=>o.Strategy);
+    idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
- randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
- 	B:=randomMonomialSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
-	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+randomMonomialIdeals (ZZ,ZZ,RR,ZZ) := List => o -> (n,D,p,N) -> (
+    B:=randomMonomialSets(n,D,p,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName,Strategy=>"Minimal");
+    idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
- randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
- 	B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
-	idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
+randomMonomialIdeals (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
+    B:=randomMonomialSets(n,D,M,N,Coefficients=>o.Coefficients,VariableName=>o.VariableName);
+    idealsFromGeneratingSets(B,IncludeZeroIdeals=>o.IncludeZeroIdeals)
 )
 
 CMStats = method(TypicalValue => QQ, Options =>{Verbose => false})
@@ -572,14 +565,15 @@ CMStats (List) := QQ => o -> (ideals) -> (
     N := #ideals;
     R := ring(ideals#0);
     for i from 0 to #ideals-1 do (
-     if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm);
-     if o.Verbose then (
+	if isCM(R/ideals_i) == true then cm = cm + 1 else cm = cm
+	);
+    if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
        if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
        stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        );
-   cm/N
+    cm/N
 )
 
 borelFixedStats = method(TypicalValue =>QQ, Options =>{Verbose => false})
@@ -587,7 +581,8 @@ borelFixedStats (List) := QQ => o -> (ideals) -> (
     bor := 0;
     N:=#ideals;
     for i from 0 to #ideals-1 do (
-        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor);
+        if isBorel((ideals_i)) == true then bor = bor + 1 else bor = bor
+	);
     if o.Verbose then (
        numberOfZeroIdeals := (extractNonzeroIdeals(ideals))_1;
        stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
@@ -633,13 +628,12 @@ mingenStats (List) := Sequence => o -> (ideals) -> (
     comVar:= comEx2 - comAvg^2;
     numStdDev= numVar^(1/2);
     comStdDev= comVar^(1/2);
-    if o.ShowTally
-       then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
+    if o.ShowTally then(ret=(numAvg, numStdDev, tally numgensHist, comAvg, comStdDev, tally complexityHist); return ret;);
     if o.Verbose then (
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The statistics returned (mean and standard deviation of # of min gens and mean and standard deviation of degree comlexity) do NOT include those for the zero ideals."<< endl
 	);
-    ret = (numAvg, numStdDev, comAvg, comStdDev)
+    (numAvg, numStdDev, comAvg, comStdDev)
   )
 )
 
@@ -667,7 +661,7 @@ pdimStats (List) := o-> (ideals) -> (
         stdio <<"There are "<<N<<" ideals in this sample. Of those, " << numberOfZeroIdeals << " are the zero ideal." << endl;
 	if numberOfZeroIdeals>0 then stdio <<"The projective dimension statistics do include those for the zero ideals."<< endl
 	);
-    ret=(avg, stdDev)
+    (avg, stdDev)
 )
 
 --**********************************--
@@ -707,16 +701,17 @@ extractNonzeroIdealsFromGens = ( generatingSets ) -> (
 -- the following function is needed to fix the Boij-Soederberg "matrix BettiTally" method
 -- that we can't use directly for StdDev computation, because we're working over RR not over ZZ:
 matrix(BettiTally, ZZ, ZZ) := opts -> (B,lowestDegree, highestDegree) -> (
-     c := pdim B + 1;
-     r := highestDegree - lowestDegree + 1;
-     --M := mutableMatrix(ZZ,r,c);
-     M := mutableMatrix(RR,r,c);
-     scan(pairs B, (i,v) -> (
-	       if v != 0 then
-	         M_(i_2-i_0-lowestDegree, i_0) = v;
-	       ));
-     matrix M
-     )
+    c := pdim B + 1;
+    r := highestDegree - lowestDegree + 1;
+    --M := mutableMatrix(ZZ,r,c);
+    M := mutableMatrix(RR,r,c);
+    scan(pairs B, (i,v) -> (
+	    if v != 0 then
+	    M_(i_2-i_0-lowestDegree, i_0) = v;
+	    )
+	);
+    matrix M
+    )
 
 
 

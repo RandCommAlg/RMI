@@ -62,7 +62,7 @@ and here:
        if numberOfZeroIdeals>0 then stdio <<"The zero ideals are included in the reported count of Cohen-Macaulay quotient rings."<< endl;
        stdio << cm << " out of " << N << " ideals in the given sample are Cohen-Macaulay." << endl;
        );
-*** NOT DONE YET 
+*** DONE
 
 
 Here you create a list by appending one element to it at a time:
@@ -76,7 +76,10 @@ Here you create a list by appending one element to it at a time:
 
 That is very slow!  Find all such code and eliminate it.  Use "apply" or "for"
 instead.
-
+*** OK here is what it should be:
+dimsHistogram = apply(ideals, i-> dim i)
+*** DONE for this one. 
+*** TO DO for other places it appears. 
 
 Probably all uses of "sub(...,RR)" can be eliminated.  For example, instead of
 
@@ -100,6 +103,7 @@ to
 
 ?
 *** BECAUSE WERE WERE SILLY. WILL CHANGE SOON! 
+*** DONE IN A FEW PLACES; KEEP CHECKING FOR THIS…
 
 Here's another one:
 
@@ -114,7 +118,7 @@ It could be simply this:
 	)
 
 Fix all similar things.  If you assign a value to a variable, you should use the assigned value later.
-
+*** 
 
 
 In this code:
@@ -132,7 +136,7 @@ it would be better to use a method function, like this:
    	 toSymbol = method()
 	 toSymbol Symbol := ...
 	 toSymbol String := ...
-
+*** 
 
 
 The code
@@ -183,7 +187,7 @@ remove the comma from
 this is confusing:
        This model was inspired by random graphs.
 Do you mean it was inspired by a particular method for generating random graphs?
-*** 
+***  ?? 
 
 In
 	To parallel the two variants
