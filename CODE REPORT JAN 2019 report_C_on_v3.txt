@@ -192,12 +192,12 @@ remove the comma from
 this is confusing:
        This model was inspired by random graphs.
 Do you mean it was inspired by a particular method for generating random graphs?
-***  ?? 
+*** Yes. Fixed. 
 
 In
 	To parallel the two variants
 you use "parallel" as a verb, but it's an adjective or a noun.
-*** I looked it up; it can be used as a verb too. OK? 
+*** DONE. (By the way, I looked it up; it can be used as a verb too; however, since that paragraph has been rewritten, that word is now gone.) 
 
 Change
 	 the model with fixed number of monomials to be generated
@@ -288,7 +288,7 @@ an English sentence as though it were an English word.  This must be fixed in ma
 The same remark applies to
 
    	   will work on a @TO List@ of
-*** THIS IS actually LOT OF WORK ….. NOT DONE YET. 
+*** DONE - PARTIALLY. 
 
 
 Always begin a sentence with an English word, not with a Macaulay2 identifier:
@@ -300,7 +300,7 @@ Also here:
         degStats computes the degree of R/I for each ideal I in the list and computes the mean and statnadr deviation of the degrees. 
 
 Find all such instances and fix.
-
+*** DONE
 
 The misuse of "simply" should be eliminated.  In this context:
 
@@ -329,7 +329,7 @@ Does "trivially" have a meaning in
 	how many ideals are, say, trivially Cohen-Macaulay.
 
 ?  If so, what?
-***
+*** no clue. ???? 
 
 
 Probably change
@@ -340,28 +340,31 @@ to
 *** DONE
 
 
+
 This is too cryptic:
 
      This type is used to store the information about a model: model name, parameters, and generating function.
+*** I AGREE!
 
 It would be good to say what a "model" is here.  Also, this:
 
    This type is used to store a sample from a given Model. To create a sample, use the sample method.
 
 It would be good to say what a "sample" is.  Also change
+*** ^^^ NOT DONE YET ^^^ I agree!! 
 
    from a given Model
 
 to
 
    from a given model
-
+*** DONE
 
 
 The documentation for getData has no text saying what it does (except the headline, which is not enough).
 
 Similarly for SampleSize.
-
+*** ^^^ NOT DONE YET ^^^ 
 
 
 This documentation is opaque:
@@ -377,6 +380,7 @@ This documentation is opaque:
 	///
 
 Apparently the symbol Histogram is used as a key in some hash tables, but the documentation doesn't reveal it.
+*** ^^^ NOT DONE YET vvv
 
 Same remark about this one:
 
@@ -434,6 +438,10 @@ ModelName is used as a key in certain hash tables.  Similarly here:
       Stores the paramters of the model from which the sample was generated from.
 
 And spell that word correctly, too.
+*** ^^^ NOT DONE YET ^^^ 
+
+*** ANOTHER NOTE FROM SONJA: 
+Headlines such as “  statistics on the Krull dimension of a list of monomial ideals” are replaced by “  statistics on the Krull dimension of a list of objects”, because this is really more accurate. Such methods can be used on a list of any objects to which the underlying command can be applied. Thoughts? 
 
 
 change
@@ -442,16 +450,16 @@ to
     from the given model
 
 Search for all such needlessly capitalized English words and fix them.
-
+*** DONE [I think?]
 
 change
 	Note that the degree-1 monomials were not generated, 
 to
 	Note that no monomials of degree 1 were generated, 
-
+*** DONE
 
 change "folder" to "directory", everywhere
-
+*** DONE 
 
 This is confusing:
 
