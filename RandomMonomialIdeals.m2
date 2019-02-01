@@ -752,12 +752,12 @@ doc ///
    Once a sample (that is, a set of random objects) is generated, one can compute various statistics of algebraic properties of the sample. 
    The methods in the package offer a way to compute and summarize statistics of some of the common properties, such as 
    degree, dimension, projective dimension, Castelnuovo-Mumford regularity, etc. 
-   For example, we can use @TO dimStats@ to get the Krull dimension statistics: 
+   For example, we can use the method @TO dimStats@ to get the Krull dimension statistics: 
   Example 
    ideals=idealsFromGeneratingSets(L)
    dimStats(ideals,ShowTally=>true)
   Text 
-   The first entry in the output of  @TO dimStats@ is the mean Krull dimension of the sample. 
+   The first entry in the output of the method @TO dimStats@ is the mean Krull dimension of the sample. 
    The second entry is the standard deviation.
    Similarly, one can obtain the mean and standard deviations of the number of minimal generators and degree complexity via @TO mingenStats@,
    and the average Betti table shape, mean Betti table, and its standard deviation via @TO bettiStats@: 
@@ -850,7 +850,7 @@ doc ///
     random generating sets of monomials
  Description
   Text
-   This method creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables.
+   This function creates $N$ random sets of monomials of degree $d$, $1\leq d\leq D$, in $n$ variables.
    It does so by calling @TO randomMonomialSet@ $N$ times.
  SeeAlso
   randomMonomialSet
@@ -861,18 +861,18 @@ doc ///
   bettiStats
   (bettiStats,List)
  Headline
-  statistics on Betti tables of a sample of monomial ideals
+  statistics on Betti tables of a sample of monomial ideals or list of objects
  Usage
   bettiStats(List)
  Inputs
   L: List
-   of @TO monomialIdeal@s, or any objects to which @TO betti@ @TO res@ can be applied.
+   of objects of type @TO MonomialIdeal@, or any objects to which @TO betti@ @TO res@ can be applied.
  Outputs
   : Sequence
    of objects of type @TO BettiTally@, representing the mean Betti table shape and the mean Betti table of the elements in the list {\tt L}.
  Description
   Text
-   For a sample of ideals stored as a list, this method computes some basic Betti table statistics of the sample.
+   For a sample of ideals stored as a list, this function computes some basic Betti table statistics of the sample.
    Namely, it computes the average shape of the Betti tables (where 1 is recorded in entry (ij) for each element if $beta_{ij}$ is not zero),
    and it also computes the average Betti table (that is, the table whose (ij) entry is the mean value of $beta_{ij}$ for all ideals in the sample).
   Example
@@ -897,8 +897,6 @@ doc ///
   Example
    apply(L,i->betti res i)
    meanBetti
-  Text
-   Note that this method will work on a list of any objects to which @TO betti@ @TO res@ can be applied.
 ///
 
 doc ///
@@ -909,7 +907,7 @@ doc ///
     optional input to store all Betti tables computed
   Description
     Text
-     The method that computes statistics on Betti tables has an option to save all of the Betti tables to a file.
+     The function that computes statistics on Betti tables has an option to save all of the Betti tables to a file.
      This may be useful if the computation from the resolution, which is what is called from @TO bettiStats@, takes too long.
     Example
      ZZ/101[a..e];
@@ -949,24 +947,24 @@ doc ///
   degStats
   (degStats,List)
  Headline
-  statistics on the degrees of a list of monomial ideals
+  statistics on the degrees of a list of objects
  Usage
   degStats(List)
  Inputs
   ideals: List
-   of @TO monomialIdeal@s or any objects to which @TO degree@ can be applied.
+   of objects of type @TO MonomialIdeal@, or any objects to which @TO degree@ can be applied.
  Outputs
   : Sequence
    whose first entry is the average degree of a list of monomial ideals, second entry is the standard deviation of the degree, and third entry (if option turned on) is the degree tally
  Description
   Text
-   degStats computes the degree of $R/I$ for each ideal $I$ in the list and computes the mean and standard deviation of the degrees. 
+   This function computes the degree of $R/I$ for each ideal $I$ in the list and computes the mean and standard deviation of the degrees. 
   Example
    R=ZZ/101[a,b,c];
    ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
    degStats(ideals)
   Text
-   The following examples use the existing methods @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or 
+   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or 
    @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3))
@@ -1010,7 +1008,7 @@ doc ///
     list of randomly generated monomial ideals, and the number of zero ideals removed from the sample, if any
  Description
   Text
-   This method creates $N$ random monomial ideals, with each monomial generator having degree $d$, $1\leq d\leq D$, in $n$ variables.
+   This function creates $N$ random monomial ideals, with each monomial generator having degree $d$, $1\leq d\leq D$, in $n$ variables.
    If $p$ is a real number, it generates each of these ideals according to the Erdos-Renyi-type model (see @HREF"https://arxiv.org/abs/1701.07130"@):
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
@@ -1022,7 +1020,7 @@ doc ///
   Example
    randomMonomialIdeals(3,2,1.0,1)
   Text
-   If $M$ is an integer, then the method creates $N$ random monomial with $M$ (not necessarily minimal) generators:
+   If $M$ is an integer, then the function creates $N$ random monomial with $M$ (not necessarily minimal) generators:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables, 
    then generate the corresponding ideal.
   Example
@@ -1043,7 +1041,7 @@ doc ///
   Text
    Note that no monomials of degree 1 were generated, since the first probability vector entry, $p_1$, is 0.
 
-   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then the method creates a list of objects of type 
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then the function creates a list of objects of type 
    @TO MonomialIdeal@, where at most $M_d$ monomials are of degree $d$.
 
   Example
@@ -1051,7 +1049,7 @@ doc ///
   Text
    Observe that there are at most one degree-1, one degree-2, and one degree-3 monomials generating each ideal.
    
-   If {\tt Strategy=>"ER"}, which is the default setting for the graded fixed number of generators version of the method, 
+   If {\tt Strategy=>"ER"}, which is the default setting for the graded fixed number of generators version of the function, 
    each set of monomials used to generate a monomial ideal in the list is not necessarily minimal.
    Else if {\tt Strategy=> "Minimal"} then each monomial ideal in the list is generated by minimal sets of $M_d$ monomials, 
    or maximum number possible, of total degree $d$, starting from the smallest degree.
@@ -1063,8 +1061,8 @@ doc ///
    Also observe that {\tt Strategy=>"Minimal"} generally gives more generators than the default {\tt Strategy=>"ER"}.
      
  Caveat
-  Since the method returns a list of objects of type @TO MonomialIdeal@s, only the minimal generating set will be displayed.
-  In contrast, the method @TO randomMonomialSet@ will display the full (not necessarily minimal) generating set produced by the model.
+  Since the function returns a list of objects of type @TO MonomialIdeal@s, only the minimal generating set will be displayed.
+  In contrast, the function @TO randomMonomialSet@ will display the full (not necessarily minimal) generating set produced by the model.
  SeeAlso
    randomMonomialSets
    idealsFromGeneratingSets
@@ -1108,7 +1106,7 @@ doc ///
    random set of monomials
  Description
   Text
-   The method randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables.
+   The function randomMonomialSet creates a list of monomials, up to a given degree $d$, $1\leq d\leq D$, in $n$ variables.
    If $p$ is a real number, it generates the set according to the Erdos-Renyi-type model, that is, based on a Binomial distribution:
    from the list of all monomials of degree $1,\dots,D$ in $n$ variables, it selects each one, independently, with probability $p$.
   Example
@@ -1120,7 +1118,7 @@ doc ///
   Example
    randomMonomialSet(3,2,1.0)
   Text
-   If $M$ is an integer, then the method creates a list of monomials of length $M$:
+   If $M$ is an integer, then the function creates a list of monomials of length $M$:
    randomly select $M$ monomials from the list of all monomials of degree $1,\dots,D$ in $n$ variables.
   Example
    n=10; D=5; M=4;
@@ -1128,7 +1126,7 @@ doc ///
   Text
    Note that it returns a set with $M = 4$ monomials.
   Text
-   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the method will return all those monomials (and not $M$ of them). For example:
+   If $M$ is greater than the total number of monomials in $n$ variables of degree at most $D$, then the function will return all those monomials (and not $M$ of them). For example:
   Example
    randomMonomialSet(2,2,10)
   Text
@@ -1140,21 +1138,21 @@ doc ///
    integers whose i-th entry is the number of monomials of each degree to include in the monomial set. 
    
    Consider the following two examples:
-   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then the method generates the set utilizing the graded Erdos-Renyi-type model:
+   If $p=p_1,\dots,p_D$ is a list of real numbers of length $D$, then the function generates the set utilizing the graded Erdos-Renyi-type model:
    select each monomial of degree $1\le d\le D$, independently, with probability $p_d$.
   Example
    randomMonomialSet(2,3,{0.0, 1.0, 1.0})
   Text
    Note that the degree-1 monomials were not generated, since the first probability vector entry is 0.
   Text
-   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then the method creates a list of monomials, 
+   If $M=M_1,\dots,M_D$ is a list of integers of length $D$, then the function creates a list of monomials, 
    where $M_d$ monomials are of degree $d$.
   Example
    randomMonomialSet(2,3,{2,1,1})
   Text
    Observe that there are two degree-1, one degree-2, and one degree-3 monomials.
 
-   If {\tt Strategy=>"ER"}, the default setting for the graded fixed number of generators version of the method, 
+   If {\tt Strategy=>"ER"}, the default setting for the graded fixed number of generators version of the function, 
    the set of monomials we obtain will not necessarily be minimal.
    Else if {\tt Strategy=> "Minimal"} then the set of monomials constitutes a minimal generating set which is 
    build up of $M_d$ monomials, or the maximum number possible, of total degree $d$, for $d$ from 1 to $D$, starting from $d=1$.
@@ -1186,16 +1184,16 @@ doc ///
    of sets of monomials
  Outputs
   : List
-   of @TO monomialIdeal@s
+   of monomial ideals
  Description
   Text
-   idealsFromGeneratingSets takes a list of sets of monomials and converts each set into a monomial ideal.
+   Given a list of sets of monomials, the function converts each set into a monomial ideal.
   Example
    n=4; D=2; p=1.0; N=3;
    B=randomMonomialSets(n,D,p,N); B/print
    idealsFromGeneratingSets(B)
   Text
-   In case the {\tt IncludeZeroIdeals} is set to false, the method also counts how many sets are converted to the zero ideal.
+   In case the option {\tt IncludeZeroIdeals} is set to false, the function also counts how many sets are converted to the zero ideal.
  SeeAlso
   randomMonomialIdeals
 ///
@@ -1205,19 +1203,19 @@ doc ///
   mingenStats
   (mingenStats, List)
  Headline
-  statistics on the minimal generators of a list of monomial ideals: number and degree complexity
+  statistics on the minimal generators of a list of ideals: number and degree complexity
  Usage
   mingenStats(List)
  Inputs
   ideals: List
-   of @TO monomialIdeal@s or @TO ideal@s
+   of objects of type @TO MonomialIdeal@ or @TO Ideal@
  Outputs
   : Sequence
    with the following entries: the average number of minimal generators, the standard deviation of the number of minimal generators, the average degree complexity, and the standard deviation of the degree complexity.
    If the option ShowTally is turned on, then the output sequence also includes the tallies of the two numbers following their standard deviation.
  Description
   Text
-   mingenStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation for 
+   This function removes zero ideals from the list of ideals, then calculates the average and the standard deviation for 
    the number of minimal generators and degree complexity of the list of nonzero ideals.
   Example
    n=4; D=3; p={0.0,1.0,0.0}; N=3;
@@ -1230,7 +1228,7 @@ doc ///
    B=randomMonomialIdeals(3,3,0.0,1);
    mingenStats(B)
  Caveat
-  mingenStats removes zero ideals from the list of ideals before computing the two values.
+  The function mingenStats removes zero ideals from the list of ideals before computing the two values.
 ///
 
 doc ///
@@ -1264,7 +1262,7 @@ doc ///
     [randomMonomialSets, VariableName]
     [randomMonomialIdeals, VariableName]
   Headline
-    optional input to choose the variable name for the generated polynomials
+    optional input to choose the indexed variable name for the polynomial ring
   Description
     Text
       Put {\tt VariableName => x} for a choice of string or symbol x as an argument in
@@ -1285,7 +1283,7 @@ doc ///
     [randomMonomialSets, Strategy]
     [randomMonomialIdeals, Strategy]
   Headline
-    optional input to choose the strategy for generating the monomial set
+    optional input to choose the strategy for generating the random monomial set
   Description
     Text
       Put {\tt Strategy => "ER"} or {\tt Strategy => "Minimal"} as an argument in the function @TO randomMonomialSet@, 
@@ -1306,7 +1304,7 @@ doc ///
    optional input to choose whether zero ideals should be included
  Description
    Text
-     When the option is used with the method @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), 
+     When the option is used with the function @TO randomMonomialIdeals@, if {\tt IncludeZeroIdeals => true} (the default), 
      then zero ideals will be included in the list of random monomial ideals.
      If {\tt IncludeZeroIdeals => false}, then any zero ideals produced will be excluded, along with the number of them.
    Example
@@ -1321,7 +1319,7 @@ doc ///
    Example
      randomMonomialIdeals(n,D,p,N,IncludeZeroIdeals=>false)
    Text
-     The option can also be used with the method @TO bettiStats@.
+     The option can also be used with the function @TO bettiStats@.
      If {\tt ideals} contains zero ideals, you may wish to exclude them when computing the Betti table statistics.
      In this case, use the optional input as follows:
    Example
@@ -1346,19 +1344,19 @@ doc ///
   dimStats(List)
  Inputs
   ideals: List
-    of @TO monomialIdeal@s or any objects to which @TO dim@ can be applied.
+    of objects of type @TO MonomialIdeal@ or any type to which @TO dim@ can be applied.
  Outputs
   : Sequence
    whose first entry is the average Krull dimension of a list of monomial ideals, the second entry is the standard deviation of the Krull dimension, and third entry (if option turned on) is the Krull dimension tally
  Description
   Text
-   dimStats finds the average and standard deviation of the Krull dimension for a list of monomial ideals.
+   The function dimStats computes the average and standard deviation of the Krull dimension for a list of monomial ideals.
   Example
    R=ZZ/101[a,b,c];
    ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
    dimStats(ideals)
   Text
-   The following examples use the existing methods @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+   The following examples use the existing functions @TO randomMonomialSets@ and @TO idealsFromGeneratingSets@ or @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    ideals = idealsFromGeneratingSets(randomMonomialSets(4,3,1.0,3))
    dimStats(ideals)
@@ -1425,26 +1423,26 @@ doc ///
   pdimStats(List)
  Inputs
   ideals: List
-   of @TO monomialIdeal@s or @TO ideal@s
+   of objects of type @TO MonomialIdeal@ or any type to which @TO pdim@ can be applied.
  Outputs
   : Sequence
    whose first entry is the mean projective dimension, the second entry is the standard deviation of the projective dimension, 
    and third entry (if option turned on) is the projective dimension tally for quotient rings of ideals in the list {\em ideals}.
  Description
   Text
-   pdimStats finds the mean and standard deviation of the projective dimension of elements in the list:
+   The function pdimStats computes the mean and standard deviation of the projective dimension of elements in the list:
   Example
    R=ZZ/101[a,b,c];
    ideals = {monomialIdeal(a^3,b,c^2), monomialIdeal(a^3,b,a*c)}
    pdimStats(ideals)
   Text
-   The method can also output the projective dimension tally as follows: 
+   The function can also output the projective dimension tally as follows: 
   Example
    R=ZZ/101[a,b,c];
    ideals = {monomialIdeal(a,c),monomialIdeal(b),monomialIdeal(a^2*b,b^2)}
    pdimStats(ideals, ShowTally=>true)
   Text
-   The following examples use the existing methods @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
+   The following examples use the existing functions @TO randomMonomialIdeals@ to automatically generate a list of ideals, rather than creating the list manually:
   Example
    ideals = randomMonomialIdeals(4,3,1.0,3)
    pdimStats(ideals)
@@ -1464,14 +1462,14 @@ doc ///
   regStats(List)
  Inputs
   : List
-   of @TO monomialIdeal@s or any object to which @TO regularity@ can be applied
+   of objects of type @TO MonomialIdeal@ or any type to which @TO regularity@ can be applied.
  Outputs
   : Sequence
    whose first entry is the mean regularity of a list of monomial ideals, second entry is the standard deviation of the 
    regularities, and third entry (if option is turned on) is the regularity tally.
  Description
   Text
-   regStats removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the 
+   This function removes zero ideals from the list of ideals, then calculates the average and the standard deviation of the 
    regularity of the list of nonzero ideals.
   Example
    R=ZZ/101[a,b,c];
@@ -1483,7 +1481,7 @@ doc ///
    B=randomMonomialIdeals(3,3,0.0,1)
    regStats(B)
  Caveat
-  regStats removes zero ideals from the list of ideals before computing the two values.
+  The function removes zero ideals from the list of ideals before computing the two values.
  SeeAlso
   ShowTally
  ///
@@ -1498,14 +1496,14 @@ doc ///
   CMStats(List)
  Inputs
   ideals: List
-    of objects of type @TO monomialIdeal@, or any type to which @TO isCM@ can be applied
+    of objects of type @TO MonomialIdeal@, or any type to which @TO isCM@ can be applied
  Outputs
   : QQ
-   the fraction of Cohen-Macaulay ideals in the list
+    the fraction of Cohen-Macaulay ideals in the list
  Description
   Text
-   CMStats checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay and 
-   returns the proportion that are.
+    The function checks whether the coordinate ring of each ideal in the given sample is arithmetically Cohen-Macaulay and 
+    returns the proportion that are.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3,b,c2", monomialIdeal"a3,b,ac"}
@@ -1522,13 +1520,13 @@ doc ///
   borelFixedStats(List)
  Inputs
   ideals: List
-    of objects of type @TO monomialIdeal@, or any type to which @TO isBorel@ can be applied
+    of objects of type @TO MonomialIdeal@, or any type to which @TO isBorel@ can be applied
  Outputs
   : QQ
-   the fraction of Borel-fixed monomial ideals in the list
+    the fraction of Borel-fixed monomial ideals in the list
  Description
   Text
-   borelFixedStats computes the fraction of Borel-fixed ideals in the list of monomial ideals.
+    The function computes the fraction of Borel-fixed ideals in the list of monomial ideals.
   Example
     R=ZZ/101[a,b,c];
     ideals = {monomialIdeal"a3", monomialIdeal"a3,b,ac"}
@@ -1550,9 +1548,9 @@ doc ///
    optional input to request verbose feedback
   Description
    Text
-     Some of the methods that use this option by default exclude zero ideals when computing statistics on a set of ideals.
+     Some of the functions that use this option by default exclude zero ideals when computing statistics on a set of ideals.
      Others do not, but the user may wish to know how many ideals are, say, trivially Cohen-Macaulay.
-     If {\tt Verbose => true}, then the methods will display an additional informational statement regarding the statistics in question.
+     If {\tt Verbose => true}, then the functions will display an additional informational statement regarding the statistics in question.
      The default value is false.
    Example
      n=3;D=3;p=0.0;N=3;
@@ -1566,7 +1564,7 @@ doc ///
      regStats(ideals, Verbose => true)
      CMStats(ideals, Verbose => true)
    Text
-     Other methods that have this option are as follows. Let us look at a list of nontrivial ideals to see more interesting statistics.
+     Other functions that have this option are as follows. Let us look at a list of nontrivial ideals to see more interesting statistics.
    Example
      n=3;D=3;p=0.1;N=3;
      ideals = randomMonomialIdeals(n,D,p,N)
@@ -1629,7 +1627,7 @@ doc ///
     a sample of size $N$ from the given model
   Description
    Text
-    The method generates $N$ realizations of the random variable that has the distribution specified by the given model.
+    The function generates $N$ realizations of the random variable that has the distribution specified by the given model.
    Example
     s=sample(ER(3,2,0.2),4)
    Text
@@ -1766,269 +1764,269 @@ doc ///
 ///
 
 doc ///
- Key
-  writeSample
-  (writeSample,Sample,String)
- Headline
-  write sample to a file
- Usage
-  writeSample(Sample,String)
- Inputs
-  S: Sample
-    to be written to file
-  FileName: String
-    file name to write sample to
- Description
-  Text
-   Write a sample to disk. This creates a directory in which the model and data are stored.
-   The sample can then be read via the @TO (sample,String)@ function.
- SeeAlso
-   (sample,String)
+  Key
+    writeSample
+    (writeSample,Sample,String)
+  Headline
+    write sample to a file
+  Usage
+    writeSample(Sample,String)
+  Inputs
+    S: Sample
+      to be written to file
+    FileName: String
+      file name to write sample to
+  Description
+    Text
+      Write a sample to disk. This creates a directory in which the model and data are stored.
+      The sample can then be read via the @TO (sample,String)@ function.
+  SeeAlso
+    (sample,String)
 ///
 
 doc ///
- Key
-  getData
-  (getData,Sample)
- Headline
-  get the underlying samples
- Usage
-  Data = getData(Sample)
- Inputs
-  S: Sample
-    to extract data from
- Outputs
-  Data: List
-   of all samples in object
- Description
-  Example
-   getData sample(ER(3,4,0.1),5)
+  Key
+    getData
+    (getData,Sample)
+  Headline
+    get the underlying samples
+  Usage
+    Data = getData(Sample)
+  Inputs
+    S: Sample
+      to extract data from
+  Outputs
+    Data: List
+      of all samples in object
+  Description
+    Example
+      getData sample(ER(3,4,0.1),5)
 ///
 
 doc ///
- Key
-  ER
- Headline
-  model for sampling from Erdos-Renyi type distributions on monomials
- Description
-  Text
-   An Erdos-Renyi type model on monomials is a distribution over sets of monomials.
-   When generating a monomial set, each monomial considered is added to the set with a fixed probability.
-   The monomials are chosen from a given polynomial ring and are bounded by degree.
-  Example
-   n=4; D=8; p=0.05;
-   myModel = ER(n,D,p)
- SeeAlso
-  randomMonomialSets
+  Key
+    ER
+  Headline
+    model for sampling from Erdos-Renyi type distributions on monomials
+  Description
+    Text
+      An Erdos-Renyi type model on monomials is a distribution over sets of monomials.
+      When generating a monomial set, each monomial considered is added to the set with a fixed probability.
+      The monomials are chosen from a given polynomial ring and are bounded by degree.
+    Example
+      n=4; D=8; p=0.05;
+      myModel = ER(n,D,p)
+  SeeAlso
+    randomMonomialSets
+///
+ 
+doc ///
+  Key
+    (ER,ZZ,ZZ,RR)
+  Headline
+    Erdos-Renyi type distribution on monomials over (n,D,p)
+  Usage
+    ER(ZZ,ZZ,RR)
+  Inputs
+    n: ZZ
+      number of variables
+    D: ZZ
+      maximum degree
+    p: RR
+      the probability of selecting a monomial
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates an ER-type model for sampling monomials in $n$ variables of degree at most $D$ independently with probability $p$.
+    Example
+      n=3; D=4; p=0.1;
+      myModel = ER(n,D,p)
+  SeeAlso
+    randomMonomialSets
 ///
 
 doc ///
- Key
-  (ER,ZZ,ZZ,RR)
- Headline
-  Erdos-Renyi type distribution on monomials over (n,D,p)
- Usage
-  ER(ZZ,ZZ,RR)
- Inputs
-  n: ZZ
-    number of variables
-  D: ZZ
-    maximum degree
-  p: RR
-     the probability of selecting a monomial
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates an ER-type model for sampling monomials in $n$ variables of degree at most $D$ independently with probability $p$.
-  Example
-   n=3; D=4; p=0.1;
-   myModel = ER(n,D,p)
- SeeAlso
-  randomMonomialSets
+  Key
+    (ER,PolynomialRing,ZZ,RR)
+  Headline
+    Erdos-Renyi type distribution on monomials over (R,D,p)
+  Usage
+    ER(PolynomialRing,ZZ,RR)
+  Inputs
+    R: PolynomialRing
+      the ring in which monomials are chosen from
+    D: ZZ
+      maximum degree
+    p: RR
+      the probability of selecting a monomial
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates an ER-type model for sampling monomials of degree at most $D$ from the ring $R$ independently with probability $p$.
+    Example
+      D=4; p=0.1;
+      myModel = ER(ZZ/101[a..d],D,p)
+  SeeAlso
+    randomMonomialSets
 ///
 
 doc ///
- Key
-  (ER,PolynomialRing,ZZ,RR)
- Headline
-  Erdos-Renyi type distribution on monomials over (R,D,p)
- Usage
-  ER(PolynomialRing,ZZ,RR)
- Inputs
-  R: PolynomialRing
-    the ring in which monomials are chosen from
-  D: ZZ
-    maximum degree
-  p: RR
-     the probability of selecting a monomial
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates an ER-type model for sampling monomials of degree at most $D$ from the ring $R$ independently with probability $p$.
-  Example
-   D=4; p=0.1;
-   myModel = ER(ZZ/101[a..d],D,p)
- SeeAlso
-  randomMonomialSets
+  Key
+    (ER,ZZ,ZZ,ZZ)
+  Headline
+    Erdos-Renyi type distribution on monomials over (n,D,M)
+  Usage
+    ER(ZZ,ZZ,ZZ)
+  Inputs
+    n: ZZ
+      number of variables
+    D: ZZ
+      maximum degree
+    M: ZZ
+      number of monomials in the set
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates an ER-type model for sampling a set of $M$ monomials in $n$ variables of degree at most $D$.
+    Example
+      n=3; D=4; M=5;
+      myModel = ER(n,D,M)
+  SeeAlso
+    randomMonomialSets
 ///
 
 doc ///
- Key
-  (ER,ZZ,ZZ,ZZ)
- Headline
-  Erdos-Renyi type distribution on monomials over (n,D,M)
- Usage
-  ER(ZZ,ZZ,ZZ)
- Inputs
-  n: ZZ
-    number of variables
-  D: ZZ
-    maximum degree
-  M: ZZ
-     number of monomials in the set
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates an ER-type model for sampling a set of $M$ monomials in $n$ variables of degree at most $D$.
-  Example
-   n=3; D=4; M=5;
-   myModel = ER(n,D,M)
- SeeAlso
-  randomMonomialSets
+  Key
+    (ER,PolynomialRing,ZZ,ZZ)
+  Headline
+    Erdos-Renyi type distribution on monomials over (R,D,M)
+  Usage
+    ER(PolynomialRing,ZZ,ZZ)
+  Inputs
+    R: PolynomialRing
+      the ring in which monomials are chosen from
+    D: ZZ
+      maximum degree
+    M: ZZ
+      number of monomials in the set
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates an ER-type model for sampling a set of $M$ monomials of degree at most $D$ from the ring $R$.
+    Example
+      D=4; M=5;
+      myModel = ER(ZZ/101[a..d],4,5)
+  SeeAlso
+    randomMonomialSets
 ///
 
 doc ///
- Key
-  (ER,PolynomialRing,ZZ,ZZ)
- Headline
-  Erdos-Renyi type distribution on monomials over (R,D,M)
- Usage
-  ER(PolynomialRing,ZZ,ZZ)
- Inputs
-  R: PolynomialRing
-    the ring in which monomials are chosen from
-  D: ZZ
-    maximum degree
-  M: ZZ
-     number of monomials in the set
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates an ER-type model for sampling a set of $M$ monomials of degree at most $D$ from the ring $R$.
-  Example
-   D=4; M=5;
-   myModel = ER(ZZ/101[a..d],4,5)
- SeeAlso
-  randomMonomialSets
+  Key
+    (ER,ZZ,ZZ,List)
+  Headline
+    Graded Erdos-Renyi type distribution on monomials over (n,D,L)
+  Usage
+    ER(ZZ,ZZ,List)
+  Inputs
+    n: ZZ
+      number of variables
+    D: ZZ
+      maximum degree
+    L: List 
+      of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+      or of integers whose i-th entry is the number of monomials of degree i in each set
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
+    Example
+      n1=3; D1=4; L1={0.1,0.2,0.3,0.4};
+      n2=3; D2=4; L2={1,2,2,1};
+      myModel1 = ER(n1,D1,L1)
+      myModel2 = ER(n2,D2,L2)
+  SeeAlso
+    randomMonomialSets
 ///
 
 doc ///
- Key
-  (ER,ZZ,ZZ,List)
- Headline
-  Graded Erdos-Renyi type distribution on monomials over (n,D,L)
- Usage
-  ER(ZZ,ZZ,List)
- Inputs
-  n: ZZ
-    number of variables
-  D: ZZ
-    maximum degree
-  L: List 
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
-     or of integers whose i-th entry is the number of monomials of degree i in each set
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates a graded ER-type model for sampling monomials in $n$ variables of degree at most $D$.
-  Example
-   n1=3; D1=4; L1={0.1,0.2,0.3,0.4};
-   n2=3; D2=4; L2={1,2,2,1};
-   myModel1 = ER(n1,D1,L1)
-   myModel2 = ER(n2,D2,L2)
- SeeAlso
-  randomMonomialSets
-///
-
-doc ///
- Key
-  (ER,PolynomialRing,ZZ,List)
- Headline
-  Graded Erdos-Renyi type distribution on monomials over (R,D,L)
- Usage
-  ER(PolynomialRing,ZZ,List)
- Inputs
-  R: PolynomialRing
-    the ring in which monomials are chosen from
-  D: ZZ
-    maximum degree
-  L: List 
-     of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
-     or of integers whose i-th entry is the number of monomials of degree i in each set
- Outputs
-  : Model
-   Erdos-Renyi type model
- Description
-  Text
-   Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
-  Example
-   D1=4; L1={0.1,0.2,0.3,0.4};
-   D2=4; L2={1,2,2,1};
-   myModel1 = ER(ZZ/101[a..d],D1,L1)
-   myModel2 = ER(ZZ/101[a..d],D2,L2)
- SeeAlso
-  randomMonomialSets
+  Key
+    (ER,PolynomialRing,ZZ,List)
+  Headline
+    Graded Erdos-Renyi type distribution on monomials over (R,D,L)
+  Usage
+    ER(PolynomialRing,ZZ,List)
+  Inputs
+    R: PolynomialRing
+      the ring in which monomials are chosen from
+    D: ZZ
+      maximum degree
+    L: List 
+      of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
+      or of integers whose i-th entry is the number of monomials of degree i in each set
+   Outputs
+     : Model
+       Erdos-Renyi type model
+   Description
+     Text
+       Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
+     Example
+       D1=4; L1={0.1,0.2,0.3,0.4};
+       D2=4; L2={1,2,2,1};
+       myModel1 = ER(ZZ/101[a..d],D1,L1)
+       myModel2 = ER(ZZ/101[a..d],D2,L2)
+  SeeAlso
+    randomMonomialSets
 ///
 
 
 doc ///
- Key
-  statistics
-  (statistics,Sample,Function)
- Headline
-  generate statistics for a sample
- Usage
-  statistics(S,f)
- Inputs
-  S: Sample
-    of randomly generated objects from an object of type @TO Model@
-  f: Function
-    that is computed for each data point in the sample S
- Outputs
-  : HashTable
-   containing the basic statistics for the function f applied to the sample s
- Description
-  Text
-   Generates statistics for the sample via the given function. The function is applied
-   to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
-   its result is then used to calculate a mean, standard deviation, and a histogram.
-  Example
-   s=sample(ER(6,3,0.2),15);
-   statistics(s, degree@@ideal)
-  Text
-   The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
-   The same output is produced by the following statistics: 
-  Example
-   s=sample(ER(2,2,0.8),10)
-   statistics(s,betti@@gens@@ideal)
-  Text
-   In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
-   An adventurous user my wish to get statistics of other functions applied to the sample. 
-   If the output of f is not ZZ or BettiTally, the method will tally the sample data: 
-  Example 
-   statistics(s,mingens@@ideal)
- Caveat 
-   In fact, anything that can be run through "tally" can be used as the input function f to this method. 
+  Key
+    statistics
+    (statistics,Sample,Function)
+  Headline
+    generate statistics for a sample
+  Usage
+    statistics(S,f)
+  Inputs
+    S: Sample
+      of randomly generated objects from an object of type @TO Model@
+    f: Function
+      that is computed for each data point in the sample S
+   Outputs
+     : HashTable
+       containing the basic statistics for the function f applied to the sample s
+   Description
+     Text
+       Generates statistics for the sample via the given function. The function is applied
+       to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
+       its result is then used to calculate a mean, standard deviation, and a histogram.
+     Example
+       s=sample(ER(6,3,0.2),15);
+       statistics(s, degree@@ideal)
+     Text
+       The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
+       The same output is produced by the following statistics: 
+     Example
+       s=sample(ER(2,2,0.8),10)
+       statistics(s,betti@@gens@@ideal)
+     Text
+       In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
+       An adventurous user my wish to get statistics of other functions applied to the sample. 
+       If the output of f is not ZZ or BettiTally, the method will tally the sample data: 
+     Example 
+       statistics(s,mingens@@ideal)
+  Caveat 
+    In fact, anything that can be run through "tally" can be used as the input function f to this method. 
 ///
 
 doc ///

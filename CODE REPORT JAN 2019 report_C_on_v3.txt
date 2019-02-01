@@ -288,7 +288,7 @@ an English sentence as though it were an English word.  This must be fixed in ma
 The same remark applies to
 
    	   will work on a @TO List@ of
-*** DONE - PARTIALLY. 
+*** DONE. 
 
 
 Always begin a sentence with an English word, not with a Macaulay2 identifier:
