@@ -928,7 +928,7 @@ doc ///
     optional input to show the number of objects in the list whose Betti tables are pure
   Description
     Text
-      Putting the option {\tt CountPure => true} in @TO bettiStats@ adds the number of pure Betti tables to the Betti table statistics. 
+      Putting the option {\tt CountPure => true} in function @TO bettiStats@ adds the number of pure Betti tables to the Betti table statistics. 
       In the following example, exactly one of the ideals has a pure Betti table: 
     Example
      ZZ/101[a..c];
@@ -1592,11 +1592,23 @@ doc ///
   Key
    Sample
   Headline
-   a type used to store a sample from a statistical model
+   a type used to store a data sample from a statistical model
   Description
    Text 
-    This type is used to store a sample from a given model. 
-    To create a sample, use the @TO sample@ method. 
+    A sample of algebraic objects is a set of data collected by a random generating process, necessarily captured
+    by a formal statistical model. The type Sample defined here stores a set of data generated using an objet
+    of type Model. This allows for a streamlined way to sample random objects, store the data as a proper statistical sample,
+    and study their algebraic properties under the probabilistic regime. 
+    
+    An object of type Sample is a hash table with the following keys: name of the model used to generate the sample,
+    values of the model's parameters used to generate the sample, the size of the sample (that is, the number of
+	data points in it), and the data itself. 
+   Example
+    s=sample(ER(3,2,0.2),4)
+    peek s
+  SeeAlso
+   Model
+   statistics
 ///
 
 doc ///
@@ -1606,7 +1618,18 @@ doc ///
    a type used to store a statistical model and its parameters
   Description
    Text 
-    This type is used to store the information about a model: model name, parameters, and generating function.
+    In order to generate and study random algebraic objects formally, one should define a statistical model for 
+    such objects. A model captures the random generating process of the objects. It consists of a name,
+    a set of parameters, and a generating function, stored under the corresponding keys in the hash table. 
+   Example
+    ER(3,2,0.2)   
+   Text
+    Combined with the type Sample, the type Model defined here stores such information and 
+    allows for a streamlined way to sample random objects, store the data as a proper statistical sample,
+    and study their algebraic properties under the probabilistic regime. 
+  SeeAlso
+   Sample
+   statistics
 ///
 
 doc ///
@@ -1654,14 +1677,14 @@ doc ///
   Usage
    sample(String)
   Inputs
-   FileName: String
-     where the sample is stored
+   : String
+     name of the directory where the sample is stored
   Outputs
    : Sample
-    Sample read from disk
+    Sample read from the specified directory
   Description
    Text
-    A sample is read from the specified filename
+    A sample is read from the specified directory............
   SeeAlso
     Sample
     writeSample
@@ -1768,16 +1791,17 @@ doc ///
     writeSample
     (writeSample,Sample,String)
   Headline
-    write sample to a file
+    write sample data to a directory
   Usage
     writeSample(Sample,String)
   Inputs
     S: Sample
-      to be written to file
-    FileName: String
-      file name to write sample to
+      to be written to a file
+    DirName: String
+      name of the directory where the sample data should be stored
   Description
     Text
+      ......... FIX ME ....
       Write a sample to disk. This creates a directory in which the model and data are stored.
       The sample can then be read via the @TO (sample,String)@ function.
   SeeAlso
@@ -1973,17 +1997,17 @@ doc ///
     L: List 
       of real numbers whose i-th entry is the probability of selecing a monomial of degree i, 
       or of integers whose i-th entry is the number of monomials of degree i in each set
-   Outputs
-     : Model
-       Erdos-Renyi type model
-   Description
-     Text
-       Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
-     Example
-       D1=4; L1={0.1,0.2,0.3,0.4};
-       D2=4; L2={1,2,2,1};
-       myModel1 = ER(ZZ/101[a..d],D1,L1)
-       myModel2 = ER(ZZ/101[a..d],D2,L2)
+  Outputs
+    : Model
+      Erdos-Renyi type model
+  Description
+    Text
+      Creates a graded ER-type model for sampling monomials of degree at most $D$ from the ring $R$.
+    Example
+      D1=4; L1={0.1,0.2,0.3,0.4};
+      D2=4; L2={1,2,2,1};
+      myModel1 = ER(ZZ/101[a..d],D1,L1)
+      myModel2 = ER(ZZ/101[a..d],D2,L2)
   SeeAlso
     randomMonomialSets
 ///
@@ -2002,29 +2026,29 @@ doc ///
       of randomly generated objects from an object of type @TO Model@
     f: Function
       that is computed for each data point in the sample S
-   Outputs
-     : HashTable
-       containing the basic statistics for the function f applied to the sample s
-   Description
-     Text
-       Generates statistics for the sample via the given function. The function is applied
-       to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
-       its result is then used to calculate a mean, standard deviation, and a histogram.
-     Example
-       s=sample(ER(6,3,0.2),15);
-       statistics(s, degree@@ideal)
-     Text
-       The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
-       The same output is produced by the following statistics: 
-     Example
-       s=sample(ER(2,2,0.8),10)
-       statistics(s,betti@@gens@@ideal)
-     Text
-       In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
-       An adventurous user my wish to get statistics of other functions applied to the sample. 
-       If the output of f is not ZZ or BettiTally, the method will tally the sample data: 
-     Example 
-       statistics(s,mingens@@ideal)
+  Outputs
+    : HashTable
+      containing the basic statistics for the function f applied to the sample s
+  Description
+    Text
+      This function generates statistics for the sample via the given function. The function is applied
+      to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
+      its result is then used to calculate a mean, standard deviation, and a histogram.
+    Example
+      s=sample(ER(6,3,0.2),15);
+      statistics(s, degree@@ideal)
+    Text
+      The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
+      The same output is produced by the following statistics: 
+    Example
+      s=sample(ER(2,2,0.8),10)
+      statistics(s,betti@@gens@@ideal)
+    Text
+      In the example above, the entry Mean is the average - entry-wise - of the Betti tables of the random ideals in the sample. 
+      An adventurous user my wish to get statistics of other functions applied to the sample. 
+      If the output of f is not ZZ or BettiTally, the method will tally the sample data: 
+    Example 
+      statistics(s,mingens@@ideal)
   Caveat 
     In fact, anything that can be run through "tally" can be used as the input function f to this method. 
 ///

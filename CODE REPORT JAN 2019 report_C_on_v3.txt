@@ -344,22 +344,24 @@ to
 This is too cryptic:
 
      This type is used to store the information about a model: model name, parameters, and generating function.
-*** I AGREE!
+	*** I AGREE!
+*** DONE
 
 It would be good to say what a "model" is here.  Also, this:
 
    This type is used to store a sample from a given Model. To create a sample, use the sample method.
 
-It would be good to say what a "sample" is.  Also change
-*** ^^^ NOT DONE YET ^^^ I agree!! 
+It would be good to say what a "sample" is.  
+*** DONE. 	Completely agree. This was a set of terrible documentation nodes. 
 
+
+Also change
    from a given Model
-
 to
-
    from a given model
 *** DONE
 
+**** SONJA, START HERE ON FRIDAY MORNING : 
 
 The documentation for getData has no text saying what it does (except the headline, which is not enough).
 
@@ -475,24 +477,24 @@ This is confusing:
 	    where the sample is stored
 
 Is the argument the name of a fie or the name of a directory?
-
+*** DONE. (Directory!!)
 
 
 English prose should use English words:
 
         This may be useful if betti res computation, ...
-
+*** DONE
 
 
 "outputted" is not a word, because "output" is a noun
-
+*** really? 
 
 This sentence needs a subject:
 
 	    Generates statistics for the sample via the given function. 
 
 Find all such sentences and fix them.
-
+*** DONE (found only a couple). 
 
 
 
