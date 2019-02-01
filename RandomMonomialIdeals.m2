@@ -204,18 +204,24 @@ getData = method()
 getData Sample := s -> (s.Data)
 
 writeSample = method()
-writeSample (Sample, String) := (s, filename) -> (
-    if fileExists filename then (
-	stderr << "warning: filename already exists. Overwriting." << endl;
-        if not isDirectory filename then (
-	    removeFile filename;
-	    mkdir filename;
-	);
-    ) else (
-        mkdir filename;
-    );
-    realpath filename | "Model.txt" << s.SampleSize << endl << s.ModelName << endl << serialize s.Parameters << close;
-    realpath filename | "Data.txt" << serialize s.Data << close; -- Write other data
+writeSample (Sample, String) := (s, dirname) -> (
+    if fileExists dirname then (
+	stderr << "warning: directory or file with this name already exists." << endl;
+        if not isDirectory dirname then (
+	    stderr << "warning: overwrting file." << endl;
+	    removeFile dirname;
+	    mkdir dirname;
+	    );
+    	if isDirectory dirname then (
+	    stderr << "warning: udpating name of directory:" << endl;
+	    dirname = dirname |"New";
+    	    stderr << dirname << endl; 
+	    mkdir dirname;
+	    ); 
+	) 
+    else mkdir dirname;
+    realpath dirname | "Model.txt" << s.SampleSize << endl << s.ModelName << endl << serialize s.Parameters << close;
+    realpath dirname | "Data.txt" << serialize s.Data << close; -- Write other data
 )
 
 
@@ -1548,10 +1554,10 @@ doc ///
    optional input to request verbose feedback
   Description
    Text
-     Some of the functions that use this option by default exclude zero ideals when computing statistics on a set of ideals.
-     Others do not, but the user may wish to know how many ideals are, say, trivially Cohen-Macaulay.
-     If {\tt Verbose => true}, then the functions will display an additional informational statement regarding the statistics in question.
-     The default value is false.
+     Some of the functions that use this option by default exclude zero ideals when computing statistics on 
+     a set of ideals, while others do not. 
+     If {\tt Verbose => true}, then the functions will display this type of additional informational. 
+     The default value is false. 
    Example
      n=3;D=3;p=0.0;N=3;
      ideals = randomMonomialIdeals(n,D,p,N)
@@ -1601,11 +1607,10 @@ doc ///
     and study their algebraic properties under the probabilistic regime. 
     
     An object of type Sample is a hash table with the following keys: name of the model used to generate the sample,
-    values of the model's parameters used to generate the sample, the size of the sample (that is, the number of
-	data points in it), and the data itself. 
+    values of the model's parameters used to generate the sample, the size of the sample 
+    (that is, the number of data points in it), and the data itself. 
    Example
-    s=sample(ER(3,2,0.2),4)
-    peek s
+    peek sample(ER(3,2,0.2),4)
   SeeAlso
    Model
    statistics
@@ -1647,10 +1652,10 @@ doc ///
      sample size
   Outputs
    : Sample
-    a sample of size $N$ from the given model
+    a sample of size $N$ from the given model $M$
   Description
    Text
-    The function generates $N$ realizations of the random variable that has the distribution specified by the given model.
+    This function generates $N$ realizations of the random variable that has the distribution specified by the given model.
    Example
     s=sample(ER(3,2,0.2),4)
    Text
@@ -1667,27 +1672,35 @@ doc ///
     statistics(s,degree@@ideal)
   SeeAlso
    statistics
+   getData
 ///
 
 doc ///
   Key
-   (sample,String)
+    (sample,String)
   Headline
-   creates a sample from a directory on disk
+    creates an object of type Sample from a sample stored in a directory on disk
   Usage
-   sample(String)
+    sample(String)
   Inputs
-   : String
-     name of the directory where the sample is stored
+    : String
+      name of the directory where the sample is stored
   Outputs
-   : Sample
-    Sample read from the specified directory
+    : Sample
+      Sample read from the specified directory
   Description
-   Text
-    A sample is read from the specified directory............
+    Text
+      A random sample of objects can be generated from an arbitrary model and stored to a directory on disk
+      using the function writeSample. 
+      This shows how to retrieve that stored sample and have it loaded as an object of type Sample: 
+    Example 
+      writeSample(sample(ER(2,3,0.1),5), "testDirectory")
+      mySample = sample("testDirectory")
+      peek mySample 
   SeeAlso
     Sample
     writeSample
+    Model
 ///
 
 doc ///
@@ -1734,24 +1747,33 @@ doc ///
   Key
     ModelName
   Headline
-    model name from Sample
+    name of the model used to generate a given sample
   Description
-    Text
-      Stores the name of the model from which the sample was generated.
+    Text 
+      An object of type Sample contians several pieces of information about the random sample, namely: 
+      the name of the model used to generate the sample,
+      values of the model's parameters used to generate the sample, 
+      the size of the sample (that is, the number of data points in it), and the data itself. 
+      As each of these is a hash table entry, one obtains the model name by using the hash key ModelName: 
     Example
       (sample(ER(2,2,0.5),2)).ModelName
   SeeAlso
-    sample
+    Sample
 ///
 
 doc ///
   Key
     Parameters
   Headline
-    model parameters from Sample
+    values of the model parameters that were used to generate a given sample
   Description
-    Text
-      Stores the parameters of the model from which the sample was generated.
+    Text 
+      An object of type Sample contians several pieces of information about the random sample, namely: 
+      the name of the model used to generate the sample,
+      values of the model's parameters used to generate the sample, 
+      the size of the sample (that is, the number of data points in it), and the data itself. 
+      As each of these is a hash table entry, one obtains the value of the parameters that were used to generate
+      the given sample via the hash key Parameters: 
     Example
       (sample(ER(2,2,0.5),2)).Parameters
   SeeAlso
@@ -1766,24 +1788,33 @@ doc ///
     model construct function
   Description
     Text
-      Function that generates random elements according to the given model
+      An object of type Model consists of a model name, 
+      a set of parameters, and a generating function, stored under the corresponding keys in the hash table. 
+      The key Generate points to the function that is used to generate random elements according to the given model. 
     Example
       myModel = ER(2,2,0.5)
-      myModel.Generate
+      peek myModel
   SeeAlso
-    model
+    Model
 ///
 
 doc ///
   Key
     SampleSize
   Headline
-    size of the sample
+    size of the random sample
   Description
+    Text 
+      An object of type Sample contians several pieces of information about the random sample, namely: 
+      the name of the model used to generate the sample,
+      values of the model's parameters used to generate the sample, 
+      the size of the sample (that is, the number of data points in it), and the data itself. 
+      As each of these is a hash table entry, one obtains the sample size by using the hash key SampleSize: 
     Example
-     (sample(ER(1,1,0.0),10)).SampleSize
+      s = sample(ER(1,1,0.0),10)
+      s.SampleSize
   SeeAlso
-    sample
+    Sample
 ///
 
 doc ///
@@ -1801,10 +1832,17 @@ doc ///
       name of the directory where the sample data should be stored
   Description
     Text
-      ......... FIX ME ....
-      Write a sample to disk. This creates a directory in which the model and data are stored.
-      The sample can then be read via the @TO (sample,String)@ function.
+      Write a random sample to a directory on disk. This function creates 
+      a directory in which the model and data are stored: one text file contains the information 
+      about the model used to generate the sample, and another text file contains the 
+      infromation about the sample itself. 
+    Example
+      writeSample(sample(ER(2,3,0.1),5), "testDirectory")
+      mySample = sample("testDirectory")
+      peek mySample 
   SeeAlso
+    Sample
+    Model
     (sample,String)
 ///
 
@@ -1823,8 +1861,17 @@ doc ///
     Data: List
       of all samples in object
   Description
+    Text 
+      An object of type Sample contians several pieces of information about the random sample, namely: 
+      the name of the model used to generate the sample,
+      values of the model's parameters used to generate the sample, 
+      the size of the sample (that is, the number of data points in it), and the data itself. 
+      The function getData is used to extract the sample data. 
+      
+      In the example below, we obtain a sample of size $5$ from the ER model with parameter values $(3,4,0.1)$
     Example
-      getData sample(ER(3,4,0.1),5)
+      s = sample(ER(3,4,0.1),5)
+      getData s      
 ///
 
 doc ///
@@ -2023,7 +2070,7 @@ doc ///
     statistics(S,f)
   Inputs
     S: Sample
-      of randomly generated objects from an object of type @TO Model@
+      containing randomly generated objects from an object of type @TO Model@
     f: Function
       that is computed for each data point in the sample S
   Outputs
@@ -2031,15 +2078,16 @@ doc ///
       containing the basic statistics for the function f applied to the sample s
   Description
     Text
-      This function generates statistics for the sample via the given function. The function is applied
-      to each element in the sample, and -- provided that the function has numerical (ZZ) or BettiTally output --
+      This function generates statistics for the sample by applying the given function to each sample point and computing
+      some basic summary statistics. Specifically, the function $f$ is applied
+      to each element in the sample, and -- provided that the function has output of type either numerical (ZZ) or BettiTally --
       its result is then used to calculate a mean, standard deviation, and a histogram.
     Example
       s=sample(ER(6,3,0.2),15);
       statistics(s, degree@@ideal)
     Text
       The output above shows the histogram of the degrees of ideals in the sample, as well as mean degree and its standard deviation.
-      The same output is produced by the following statistics: 
+      The same kind of output is produced by the following statistics: 
     Example
       s=sample(ER(2,2,0.8),10)
       statistics(s,betti@@gens@@ideal)
@@ -2057,30 +2105,63 @@ doc ///
   Key
     Mean
   Headline
-    return value for statistics
+    a summary statistic for a list of objects
   Description
     Text
-      Get the mean from the hash table returned by @TO statistics@.
+      A sample mean is one of the basic summary statistics for a sample of randomly generated objects 
+      (or any list of objects in general). 
+      The mean value statistic for some property of a list of objects is stored under the key Mean in 
+      the hash table returned by the function @TO statistics@.  
+    Example
+      s=sample(ER(6,3,0.2),100);
+      myStats = statistics(s, degree@@ideal);
+      myStats.Mean 
+    Text
+      The last line returns the average degree of the 100 ideals in the sample $s$. 
+  SeeAlso
+    statistics 
 ///
 
 doc ///
   Key
     StdDev
   Headline
-    return value for statistics
+    a summary statistic for a list of objects
   Description
     Text
-      Get the standard deviation from the hash table returned by @TO statistics@.
+      A sample standard deviation is -- along with sample mean -- 
+      one of the basic summary statistics for a sample of randomly generated objects 
+      (or any list of objects in general). 
+      The standard deviation value statistic for some property of a list of objects is stored under the key StdDev in 
+      the hash table returned by the function @TO statistics@.  
+    Example
+      s=sample(ER(6,3,0.2),100);
+      myStats = statistics(s, degree@@ideal);
+      myStats.StdDev 
+    Text
+      The last line returns the standard deviation of the degrees of the 100 ideals in the sample $s$. 
+      Note that it is more meaningful to look at this value along with the mean value rather than as a stand-alone statistic.
+  SeeAlso
+    Mean
+    statistics
 ///
 
 doc ///
   Key
     Histogram
   Headline
-    return value for statistics
+    a summary statistic for a list of objects
   Description
     Text
-      Get the histogram from the hash table returned by @TO statistics@.
+      The symbol Histogram is used as a key in the hash table returned by the function @TO statistics@. 
+      It one of the summary statistics for a given data sample. 
+    Example
+      s=sample(ER(6,3,0.2),100);
+      myStats = statistics(s, dim@@ideal);
+      myStats.Histogram 
+  SeeAlso
+    statistics
+    ShowTally
 ///
 
 --******************************************--
@@ -2163,7 +2244,7 @@ TEST ///
 ///
 
 TEST ///
-    -- Check all possible values are outputted with a probability of 1
+    -- Check all possible values are returned with a probability of 1
     n=4; D=3;
     assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,1.0))
     assert (product(toList((D+1)..D+n))/n!-1==#randomMonomialSet(n,D,{1.0,1.0,1.0}))

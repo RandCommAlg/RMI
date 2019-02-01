@@ -329,7 +329,7 @@ Does "trivially" have a meaning in
 	how many ideals are, say, trivially Cohen-Macaulay.
 
 ?  If so, what?
-*** no clue. ???? 
+*** DONE. This was to explain that if any/many of the ideals in the list are the zero ideal, you’ll get ‘skewed’ statistics (well, this depends on your point of view?) as output of, say, the CMStats function. The text has been updated to clarify. 
 
 
 Probably change
@@ -361,12 +361,11 @@ to
    from a given model
 *** DONE
 
-**** SONJA, START HERE ON FRIDAY MORNING : 
-
 The documentation for getData has no text saying what it does (except the headline, which is not enough).
+*** DONE
 
 Similarly for SampleSize.
-*** ^^^ NOT DONE YET ^^^ 
+*** DONE
 
 
 This documentation is opaque:
@@ -382,7 +381,7 @@ This documentation is opaque:
 	///
 
 Apparently the symbol Histogram is used as a key in some hash tables, but the documentation doesn't reveal it.
-*** ^^^ NOT DONE YET vvv
+*** DONE 
 
 Same remark about this one:
 
@@ -396,6 +395,9 @@ Same remark about this one:
 	      Get the standard deviation from the hash table returned by @TO statistics@.
 	///
 
+*** DONE 
+
+
 And this one:
 
 	doc ///
@@ -407,6 +409,7 @@ And this one:
 	    Text
 	      Get the mean from the hash table returned by @TO statistics@.
 	///
+*** DONE 
 
 
 Change
@@ -435,12 +438,17 @@ This is confusing:
 	      Stores the name of the model from which the sample was generated from.
 
 because the symbol ModelName doesn't store anything.  Probably you meant to say that
-ModelName is used as a key in certain hash tables.  Similarly here:
+ModelName is used as a key in certain hash tables.  
+*** DONE 
+
+
+Similarly here:
 
       Stores the paramters of the model from which the sample was generated from.
 
 And spell that word correctly, too.
-*** ^^^ NOT DONE YET ^^^ 
+*** DONE 
+
 
 *** ANOTHER NOTE FROM SONJA: 
 Headlines such as “  statistics on the Krull dimension of a list of monomial ideals” are replaced by “  statistics on the Krull dimension of a list of objects”, because this is really more accurate. Such methods can be used on a list of any objects to which the underlying command can be applied. Thoughts? 
@@ -487,7 +495,7 @@ English prose should use English words:
 
 
 "outputted" is not a word, because "output" is a noun
-*** really? 
+*** really? OK, we changed it to “returned”. This was within a comment in the tests of the code. 
 
 This sentence needs a subject:
 
