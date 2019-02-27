@@ -294,6 +294,7 @@ randomMonomialSets (PolynomialRing,ZZ,RR,ZZ) := List => o -> (R,D,p,N) -> (
 
 randomMonomialSets (ZZ,ZZ,ZZ,ZZ) := List => o -> (n,D,M,N) -> (
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    if not (instance(o.VariableName,Symbol) or instance(o.VariableName,String) or instance(o.VariableName,IndexedVariableTable)) then error "expected VariableName to be a string or symbol";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     apply(N,i-> randomMonomialSet(R,D,M,o))
@@ -307,6 +308,7 @@ randomMonomialSets (PolynomialRing,ZZ,ZZ,ZZ) := List => o -> (R,D,M,N) -> (
 randomMonomialSets (ZZ,ZZ,List,ZZ) := List => o -> (n,D,pOrM,N) -> (
     if n<1 then error "n expected to be a positive integer";
     if N<1 then stderr << "warning: N expected to be a positive integer" << endl;
+    if not (instance(o.VariableName,Symbol) or instance(o.VariableName,String) or instance(o.VariableName,IndexedVariableTable)) then error "expected VariableName to be a string or symbol";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     apply(N,i-> randomMonomialSet(R,D,pOrM,o))
@@ -334,6 +336,7 @@ randomMonomialSet (PolynomialRing,ZZ,RR) := List => o -> (R,D,p) -> (
 
 randomMonomialSet (ZZ,ZZ,ZZ) := List => o -> (n,D,M) -> (
     if n<1 then error "n expected to be a positive integer";
+    if not (instance(o.VariableName,Symbol) or instance(o.VariableName,String) or instance(o.VariableName,IndexedVariableTable)) then error "expected VariableName to be a string or symbol";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     randomMonomialSet(R,D,M)
@@ -349,6 +352,7 @@ randomMonomialSet (PolynomialRing,ZZ,ZZ) := List => o -> (R,D,M) -> (
 
 randomMonomialSet (ZZ,ZZ,List) := List => o -> (n,D,pOrM) -> (
     if n<1 then error "n expected to be a positive integer";
+    if not (instance(o.VariableName,Symbol) or instance(o.VariableName,String) or instance(o.VariableName,IndexedVariableTable)) then error "expected VariableName to be a string or symbol";
     x := toSymbol o.VariableName;
     R := o.Coefficients[x_1..x_n];
     randomMonomialSet(R,D,pOrM,o)
@@ -652,13 +656,10 @@ pdimStats (List) := o-> (ideals) -> (
 --  Internal methods	    	    --
 --**********************************--
 
-toSymbol = (p) -> (
-     if instance(p,Symbol)
-         then p
-     else if instance(p,String)
-         then getSymbol p
-     else
-         error ("expected a string or symbol, but got: ", toString p))
+toSymbol = method()
+toSymbol Symbol := p -> p
+toSymbol String := p -> getSymbol p
+toSymbol IndexedVariableTable := p -> p
 
 -- Internal method that takes as input list of ideals and splits out the zero ideals, counting them:
     -- input list of ideals
