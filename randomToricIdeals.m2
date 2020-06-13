@@ -1,3 +1,82 @@
+------------------------------------------
+----- this part: Jun 2020 code for generating binomial ideals as differences of randomly generated monomials: 
+
+-- trying an example first: 
+R=QQ[a,b,c,x,y,z]
+take(random flatten entries basis(2,R),3) 
+-- "take(L,k)" takes the first k els of list L
+-- but it shuffles the entire list just so i can get 3 random elements. that's not good.
+-- this is faster: 
+d=4 -- what degree monomials do you want?
+-- make a list "mons" of all mons of degree d in your ring;
+-- then select two random indices, indPlus and indMinus,
+-- and make a binomial out of mons_indPlus - mons_indMinus
+mons = flatten entries basis(d,R);
+k = 3; -- how many binomials do you want? 
+binomials = {};
+scan(k, i-> (
+	indPlus = random(0,#mons);
+	indMinus = random(0,#mons);
+	binomials = append(binomials, mons_indPlus-mons_indMinus)
+	)
+    )
+binomials = flatten binomials-- <<<<<, THIS IS WHAT WE WANT TO SAVE. 
+-- now we can maybe use things like bettiStats or whatever to see how many gens we got. 
+-- but not after we hav some more general code. Right now we're getting homogeneous binomials of 
+-- fixed degree. 
+-- want to change degree on the fly? here's a try: 
+maxDegree = 4;
+mons = {};
+scan(0..maxDegree, d-> mons = append(mons, flatten entries basis(d,R)));
+mons = flatten mons;
+k = 3; -- how many binomials do you want? 
+binomials = {};
+scan(maxDegree, i-> (
+	indPlus = random(0,#mons);
+	indMinus = random(0,#mons);
+	binomials = append(binomials, mons_indPlus-mons_indMinus)
+	)
+    )
+binomials = flatten binomials-- <<<<<, THIS IS WHAT WE WANT TO SAVE. 
+--degree check:
+betti ideal  binomials
+--these are *not* homogeneous. it now makes sense to run a command like degreeStats (from RMI) :) 
+loadPackage"RandomMonomialIdeals"
+----degStats (binomials,ShowTally => true)--this breaks so need to make each bin into its ideal (stupid):
+--bin = apply(binomials,b->ideal(b)); 
+--degStats (bin,ShowTally => true)
+s=new Sample from {SampleSize => k, Data=>binomials} --,ModelName=>"foo",Parameters=>k}
+binomialDegrees = apply(s.Data, degree@@ideal)
+
+
+-------
+
+-- Note: maybe we want homogeneous binomials in degrees from 0 to maxDegree? Let's try that too: 
+maxDegree = 4;
+mons = {};
+scan(0..maxDegree, d-> mons = append(mons, flatten entries basis(d,R)));
+-- don't flatten! this keeps the distinct degrees in distinct sublists :) 
+k = 3; -- how many binomials do you want? 
+binomials = {};
+scan(maxDegree, i-> (
+	currentDegree = random(1,maxDegree);
+	indPlus = random(0,#mons_currentDegree);
+	indMinus = random(0,#mons_currentDegree);
+	binomials = append(binomials, mons_currentDegree_indPlus-mons_currentDegree_indMinus)
+	)
+    )
+binomials = flatten binomials -- <<<<<, THIS IS WHAT WE WANT TO SAVE. 
+--degree check:
+betti ideal  binomials -- i got 1 quadric nad 3 quartics. 
+s=new Sample from {SampleSize => k, Data=>binomials} --,ModelName=>"foo",Parameters=>k}
+peek s
+-- but this is OK:
+binomialDegrees = apply(s.Data, degree@@ideal)
+
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+----- below: Jan 2018 code for generating I_A from a random A, where A is a mtx of exponents of randomly generated Laurent monomials.
 -- back in business Jan 2018:
 -- hot to get toric ideal I_A from a matrix A: 
 loadPackage"FourTiTwo"
