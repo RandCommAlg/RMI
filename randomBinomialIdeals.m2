@@ -11,9 +11,10 @@
 ---------------------------------------------------------------------------------------------
 --      randomBinomials
 ---------------------------------------------------------------------------------------------
--- make a list "mons" of all mons of degree d in your ring;
+-- make a list "mons" of all mons of degree d in ring R; 
 -- then select two random indices, indPlus and indMinus,
--- and make a binomial out of mons_indPlus - mons_indMinus
+-- and make a binomial out of mons_indPlus - mons_indMinus,
+-- and add k such binomials to a list. 
 -- 
 -- if Homogeneous=>true then: 
 -- OUTPUT: list of k homogeneous binomials (of format M1-M2) of degree d in ring R.
@@ -21,8 +22,8 @@
 -- OUTPUT: list of k (non-homogeneous) binomials (of format M1-M2) of degree at most d in ring R.
 ---------------------------------------------------------------------------------------------
 randomBinomials = method(TypicalValue => List, Options=>{Homogeneous=>false})
-randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,d,k) -> ( 
-    if o.Homogeneous then mons = flatten entries basis(d,R) else (
+randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> ( 
+    if o.Homogeneous then mons = flatten entries basis(maxDegree,R) else (
 	mons = {};
 	scan(0..maxDegree, d-> mons = append(mons, flatten entries basis(d,R)));
 	mons = flatten mons
@@ -46,6 +47,16 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,d,k) -> (
     randomBinomials(QQ[x,y,z],3,4,Homogeneous=>true)
     *}
 
+writeData = method()
+-- outline of method taken from RandomMonomialIdeals.m2 writeSample :) 
+writeData (List, String, String) := (s, parameters, filename) -> (
+    if fileExists filename then (
+	stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
+ 	--stderr << "warning: overwrting file." << endl;
+	--    removeFile filename;
+	) 
+    else filename << parameters << endl << s << endl << close;
+)
 
 
 
