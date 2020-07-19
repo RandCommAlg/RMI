@@ -28,16 +28,17 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
 	scan(0..maxDegree, d-> mons = append(mons, flatten entries basis(d,R)));
 	mons = flatten mons
 	);
-    mons = drop(mons,1); -- no 0. 
+    mons = drop(mons,1); -- no 0.  TO DO: enable this later; it may produce monomials not true binomials.
     binomials = {};
     scan(k, i-> (
 	    indPlus = random(0,#mons-1);
 	    indMinus = random(0,#mons-1);
-	    binomials = append(binomials, mons_indPlus-mons_indMinus)
+	    binomials = append(binomials, mons_indPlus-mons_indMinus);
 	    )
     	);
     flatten binomials
     )
+-- but the list may include zeros. 
 ---------------------------------------------------------------------------------------------
 
 -- see code at end of file for examples on how this runs. 
@@ -50,6 +51,14 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
 writeData = method()
 -- outline of method taken from RandomMonomialIdeals.m2 writeSample :) 
 writeData (List, String, String) := (s, parameters, filename) -> (
+    if fileExists filename then (
+	stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
+ 	--stderr << "warning: overwrting file." << endl;
+	--    removeFile filename;
+	) 
+    else filename << parameters << endl << s << endl << close;
+)
+writeData (Array, String, String) := (s, parameters, filename) -> (
     if fileExists filename then (
 	stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
  	--stderr << "warning: overwrting file." << endl;

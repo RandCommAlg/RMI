@@ -22,11 +22,11 @@ flatten flatten expos  -- etc.
 -- PRESETS -- this is setup by hand for each data-generating run -- 
 -- set up what kind of data you want 
 -- ******************************************************************
-numVars = 4  
-maxDegree = 5 
+numVars = 3
+maxDegree = 10 
 homogeneous = true --  or false
-binomialsInEachSample = 10 -- how many binomials in each sample 
-sampleSize = 100  -- how many samples of the above many binomials each.
+binomialsInEachSample = 5 -- how many binomials in each sample 
+sampleSize = 15  -- how many samples of the above many binomials each.
 
 -- ******************************************************************
 -- PREREQUISITES 
@@ -39,17 +39,28 @@ load"randomBinomialIdeals.m2"
 -- ******************************************************************
 filename = concatenate("RandomBinomialDataSet.",toString numVars,"vars.deg",toString maxDegree,".sampleSize",toString sampleSize);
 parameters = concatenate("numVars = ",toString numVars,", maxDegree = ",toString maxDegree,", binomialsInEachSample = ",toString binomialsInEachSample,", sampleSize = ",toString sampleSize);
-expos = {}; 
+expos = []; 
 S = QQ[x_0..x_(numVars-1)];
 scan(sampleSize,i-> (
-	bins = randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>homogeneous);
+	bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>homogeneous);
 	assert(#bins == binomialsInEachSample); -- just to make sure I got the correct sample size; if wrong it'll print error on dialog so easy to spot!
-	expos = append(expos, apply(bins,b->exponents b));
+	expos = expos| apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
 	)
     )
+print concatenate("writing to file ",filename);
 writeData(expos, parameters, filename);
- 
 
+
+-- ******************************************************************
+-- notes for future:
+	--expos = append(expos, apply(bins,b->exponents b)); -- this makes everything with {}. We prefer [].
+	-- At the moment, since we know we only have binomials: 
+	expos = expos| apply(bins,b->[new Array from (exponents b)_0,new Array from (exponents b)_1]);
+	-- but if we genereate a 0 then this is a problem; it assumes there is no 0 in the list! 
+	-- if we want this to work for general polynomials, replace above line by the below one:
+	--expos = expos| apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
+-- ******************************************************************
+ 
 
 
 
