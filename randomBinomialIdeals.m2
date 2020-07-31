@@ -48,6 +48,7 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
     randomBinomials(QQ[x,y,z],3,4,Homogeneous=>true)
     *}
 
+
 writeData = method()
 -- outline of method taken from RandomMonomialIdeals.m2 writeSample :) 
 writeData (List, String, String) := (s, parameters, filename) -> (
