@@ -40,8 +40,14 @@ load"randomBinomialIdeals.m2"
 -- the random binomial ideals saved as a text file,
 -- and the size of each minimal GB saved in a different text file. 
 -- ******************************************************************
-filename = concatenate("RandomBinomialDataSet.",toString numVars,"vars.deg",toString maxDegree,".sampleSize",toString sampleSize,".",toString currentTime(),".txt");
-parameters = concatenate("numVars = ",toString numVars,", maxDegree = ",toString maxDegree,", binomialsInEachSample = ",toString binomialsInEachSample,", sampleSize = ",toString sampleSize);
+filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".txt";
+  --for foolproof automation:
+  filenamesuffix := temporaryFileName();
+  while  fileExists(filename|filenamesuffix)  do filenamesuffix = temporaryFileName(); 
+filename = filename|filenamesuffix;
+
+
+parameters = "numVars = "|toString numVars|", maxDegree = "|toString maxDegree|", binomialsInEachSample = "|toString binomialsInEachSample|", sampleSize = "|toString sampleSize;
 expos = []; 
 ideals ={};
 S = QQ[x_0..x_(numVars-1)];

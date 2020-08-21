@@ -48,8 +48,11 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
     randomBinomials(QQ[x,y,z],3,4,Homogeneous=>true)
     *}
 
+----------------------------------
+--- File read/write operations ---
+----------------------------------
 
-writeData = method()
+writeData = method(TypicalValue => null, Options=>{OneAtATime=>false})
 -- outline of method taken from RandomMonomialIdeals.m2 writeSample :) 
 writeData (List, String, String) := (s, parameters, filename) -> (
     if fileExists filename then (
@@ -59,15 +62,26 @@ writeData (List, String, String) := (s, parameters, filename) -> (
 	) 
     else filename << parameters << endl << s << endl << close;
 )
-writeData (Array, String, String) := (s, parameters, filename) -> (
-    if fileExists filename then (
-	stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
- 	--stderr << "warning: overwrting file." << endl;
-	--    removeFile filename;
-	) 
-    else filename << parameters << endl << s << endl << close;
+writeData (Array, String, String) := null => o-> (s, parameters, filename) -> (
+    if o.OneAtATime then (
+	 print"one at a time!"
+	 ) else (
+    	if fileExists filename then (
+	    stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
+ 	    --stderr << "warning: overwrting file." << endl;
+	    --    removeFile filename;
+	    ) 
+    	else filename << parameters << endl << s << endl << close;
+	);
 )
 
+--getFilename = () -> (
+--  filename := temporaryFileName();
+--  while fileExists(filename) 
+--    or fileExists(filename|"PHCinput") 
+--    or fileExists(filename|"PHCoutput") do filename = temporaryFileName();
+--  filename
+--)
 
 
 
