@@ -43,16 +43,16 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
 
 -- see code at end of file for examples on how this runs. 
 -- here's a short example of usage:
-{*
-    randomBinomials(QQ[x,y,z],3,4)
-    randomBinomials(QQ[x,y,z],3,4,Homogeneous=>true)
-    *}
+--{*
+--    randomBinomials(QQ[x,y,z],3,4)
+--    randomBinomials(QQ[x,y,z],3,4,Homogeneous=>true)
+--    *}
 
 ----------------------------------
 --- File read/write operations ---
 ----------------------------------
 
-writeData = method(TypicalValue => null, Options=>{OneAtATime=>false})
+writeData = method(TypicalValue => List, Options=>{OneAtATime=>false,InfoLine=>false})
 -- outline of method taken from RandomMonomialIdeals.m2 writeSample :) 
 writeData (List, String, String) := (s, parameters, filename) -> (
     if fileExists filename then (
@@ -64,15 +64,20 @@ writeData (List, String, String) := (s, parameters, filename) -> (
 )
 writeData (Array, String, String) := null => o-> (s, parameters, filename) -> (
     if o.OneAtATime then (
-	 print"one at a time!"
-	 ) else (
-    	if fileExists filename then (
-	    stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
- 	    --stderr << "warning: overwrting file." << endl;
-	    --    removeFile filename;
-	    ) 
-    	else filename << parameters << endl << s << endl << close;
-	);
+	 print"one at a time!";
+	 line := "what to put into the file, assuming we want one entry per line";
+	 f << line << endl;
+	 ) 
+     else if not o.InfoLine then (
+	 --if fileExists filename then 
+	 --stderr << "error: file with this name already exists. Rename the old file and try again." << endl;
+	 ----stderr << "warning: overwrting file." << endl;
+	 ----    removeFile filename;
+	 while  fileExists(filename)  do   filename = filename|"v"|toString random(100)|".txt";
+ 	 filename << s << endl << close;
+	 )
+     else  -- print the infoline as well as the data:
+      filename << parameters << endl << s << endl << close; 
 )
 
 --getFilename = () -> (

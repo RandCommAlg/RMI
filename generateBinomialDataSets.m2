@@ -1,53 +1,17 @@
 -- ******************************************************************
--- README  
--- ******************************************************************
--- Random binomial data is written to a FILE. The filename for this data set is of
--- the format "RandomBinomialDataSet.3vars.deg4.sampleSize10". 
--- The format of the file is: 
--- 1st line contiains parameters for the data generated,
--- 2nd line is a list of lists of binomial exponents, as in this:
-bins = randomBinomials(QQ[a,b,c],2, 3,Homogeneous=>false)
-expos = apply(bins,b->exponents b) 
--- if you do not like all the {}s used, we can easily remove them one level at a time:
-flatten expos
-flatten flatten expos  -- etc. 
--- We can also easily put new lines after each set of binomials, or whatever. 
---
--- END OF README. 
--- ******************************************************************
-
-
-
--- ******************************************************************
--- PRESETS -- this is setup by hand for each data-generating run -- 
--- set up what kind of data you want 
--- ******************************************************************
-numVars = 3
-maxDegree = 10 
-homogeneous = true --  or false
-binomialsInEachSample = 5 -- how many binomials in each sample 
-sampleSize = 15  -- how many samples of the above many binomials each.
-
--- ******************************************************************
--- PREREQUISITES 
--- ******************************************************************
-load"randomBinomialIdeals.m2"
-
-
--- ******************************************************************
 -- GENERATE GB training DATA 
 -- run this section of code once to get BOTH
 -- the random binomial ideals saved as a text file,
 -- and the size of each minimal GB saved in a different text file. 
 -- ******************************************************************
 filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".txt";
-  --for foolproof automation:
-  filenamesuffix := temporaryFileName();
-  while  fileExists(filename|filenamesuffix)  do filenamesuffix = temporaryFileName(); 
-filename = filename|filenamesuffix;
-
-
+  --for foolproof automation: --  filename=temporaryFileName()|".txt"; 
+  --just add a "version number" at the end of the text file if one of the same name already exists. We do have a time stamp, so that should take care of most conflicts, but just in case, double-fool-proof?:)
+  while  fileExists(filename)  do   filename = filename|"v"|toString random(10)|".txt";
+-- store the preset parameters for this data set on the first line of the data file: 
 parameters = "numVars = "|toString numVars|", maxDegree = "|toString maxDegree|", binomialsInEachSample = "|toString binomialsInEachSample|", sampleSize = "|toString sampleSize;
+filename << parameters << endl << close;
+   
 expos = []; 
 ideals ={};
 S = QQ[x_0..x_(numVars-1)];
@@ -69,6 +33,11 @@ scan(ideals, I-> gbSizes = gbSizes | [# flatten entries gens gb I]);
 assert(#gbSizes ==sampleSize) -- just to make sure we have same # of gbs as we do samples of binomial sets. 
 concatenate(filename,".gbSizes.txt") << gbSizes << endl << close;
 
+-- writing data into a file one at a time
+	 f := openOut filename;
+	 line := "what to put into the file, assuming we want one entry per line";
+	 f << line << endl;	 
+	 close f;
 
 
 
