@@ -26,6 +26,7 @@ load"randomBinomialIdeals.m2"
 
 load"generateBinomialDataSets.m2" 
 
+generateGBdata(numVars,maxDegree,homogeneous,binomialsInEachSample,sampleSize,OneAtATime=>true)
 
 -- ******************************************************************
 -- here is an example: 
