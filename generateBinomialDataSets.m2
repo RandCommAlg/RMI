@@ -6,25 +6,28 @@
 -- ******************************************************************
 
 
-generateGBdata = method(TypicalValue => List, Options=>{homogeneous=>false,OneAtATime=>false,InfoLine=>true})--IdealsOnly=>false,
+generateGBdata = method(TypicalValue => List, Options=>{Homogeneous=>false,OneAtATime=>true,InfoLine=>true})--IdealsOnly=>false,
 generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSample,sampleSize) -> ( 
     S = ZZ/32003[x_0..x_(numVars-1)];
     filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".txt";
     --for foolproof automation: --  filename=temporaryFileName()|".txt"; 
     --just add a "version number" at the end of the text file if one of the same name already exists. We do have a time stamp, so that should take care of most conflicts, but just in case, double-fool-proof?: [adding random # at the end])
     while  fileExists(filename)  do   filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".v"|toString random(100)|".txt";
-    f := openOut filename;
     
     -- store the preset parameters for this data set on the first line of the data file: 
     parameters = "numVars = "|toString numVars|", maxDegree = "|toString maxDegree|", binomialsInEachSample = "|toString binomialsInEachSample|", sampleSize = "|toString sampleSize;
-    if o.InfoLine then f << parameters << endl;
+    if o.InfoLine then (
+	    f := openOut filename;
+	    f << parameters << endl;
+	    close f;
+	    );
     
     if not o.OneAtATime then (
     	expos = []; 
     	ideals ={};
     	scan(sampleSize,i-> (
 		-- generate a new random binomial set: 
-		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.homogeneous);
+		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.Homogeneous);
 		assert(#bins == binomialsInEachSample); -- just to make sure I got the correct sample size; if wrong it'll print error on dialog so easy to spot!
 		-- save exponents to the list for learning: 
 		expos = expos| apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
@@ -32,33 +35,36 @@ generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSa
 		ideals = append(ideals,ideal toList bins);
 		)
     	    );
+	f = openOutAppend filename;
     	f << expos << endl;
+	close f;
     	gbSizes = [];
     	-- TO DO: 
     	-- for generating larger samples, include a timer and throw out an ideal we can't compute in a few minutes. 
-    	-- how to best handle this? not sure yet. 
+    	-- how to best handle this? try "try" command :D see Slack!  
     	scan(ideals, I-> gbSizes = gbSizes | [# flatten entries gens gb I]);
     	--gbSizes
     	assert(#gbSizes ==sampleSize); -- just to make sure we have same # of gbs as we do samples of binomial sets. 
     	concatenate(filename,".gbSizes.txt") << gbSizes << endl << close;
 
     ) else ( 
-    	-- this is when we want to generate a rnadom binomial set, write it to file f, then compute gb write size gb, THEN continue.
-	gbf := openOut concatenate(filename,".gbSizes.txt");
+    	-- generate a random binomial set, write it to file f, then compute gb write size gb, and only THEN continue to next random set.
 	scan(sampleSize,i-> (
 		-- generate a new random binomial set: 
-		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>homogeneous);
+		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.Homogeneous);
 		assert(#bins == binomialsInEachSample); -- just to make sure I got the correct sample size; if wrong it'll print error on dialog so easy to spot!
 		-- save exponents to the open file f: 
 		expos =  apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));	
-    		f << expos;
+    		f := openOutAppend filename;
+		f << expos;
+		close f;
+		gbf := openOutAppend concatenate(filename,".gbSizes.txt");
 		gbf <<  [# flatten entries gens gb ideal toList bins];
+		close gbf;
 		)
 	    );
-	close gbf; 	
 	-- Eventually we will time out the operations and if gb doesn't complete we can save a 0 or a -1 in the gb sizes file. 
 	);
-    close f;
     print("Saved data to file starting with "|filename);
     )
 

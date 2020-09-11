@@ -10,31 +10,37 @@
 
 
 -- ******************************************************************
--- PRESETS -- this is setup by hand for each data-generating run -- 
--- set up what kind of data you want 
--- ******************************************************************
-numVars = 3
-maxDegree = 2 
-homogeneous = true --  or false
-binomialsInEachSample = 5 -- how many binomials in each sample 
-sampleSize = 3  -- how many samples of the above many binomials each.
-
--- ******************************************************************
 -- PREREQUISITES 
 -- ******************************************************************
 load"randomBinomialIdeals.m2"
 
 load"generateBinomialDataSets.m2" 
 
-generateGBdata(numVars,maxDegree,homogeneous,binomialsInEachSample,sampleSize,OneAtATime=>true)
 
 -- ******************************************************************
--- here is an example: 
-bins = randomBinomials(QQ[a,b,c],2, 3,Homogeneous=>false)
--- for some reason this is broken at the moment though it's meant to showcase what the hell is going on. 
--- but the method (not this simple example) seems to be working so WHATEVER. 
-expos = []; 
-expos = expos| apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
---
--- END simple example. 
+-- PRESETS -- this is setup by hand for each data-generating run -- 
+-- set up what kind of data you want 
 -- ******************************************************************
+numVars = 3
+maxDegree = 2 
+homogeneous = true --  do you prefer to have binomials all of maxDegree (true), or up to maxDegree (false)?
+binomialsInEachSample = 5 -- how many binomials in each sample 
+sampleSize = 3  -- how many samples of the above many binomials each.
+
+
+-- ******************************************************************
+-- DATA GENERATION CALLS 
+-- ******************************************************************
+
+-- probably the way we will be running this is : 
+generateGBdata(numVars,maxDegree,binomialsInEachSample,sampleSize,Homogeneous=>homogeneous,OneAtATime=>true)
+
+-- change homogeneous flat to check it's working: 
+generateGBdata(numVars,maxDegree,binomialsInEachSample,sampleSize) -- ,Homogeneous=>false, OneAtATime=>true  are default anyway.
+
+-- maybe you hate the "info line" at the start of the data file? you can remove it:
+generateGBdata(numVars,maxDegree,binomialsInEachSample,sampleSize, InfoLine=>false)
+
+-- not writing random binomials & gbs to files one at a time (not recommended except for small examples!) : 
+generateGBdata(numVars,maxDegree,binomialsInEachSample,sampleSize,Homogeneous=>homogeneous, OneAtATime=>false) 
+    
