@@ -30,13 +30,13 @@ generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSa
 		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.Homogeneous);
 		assert(#bins == binomialsInEachSample); -- just to make sure I got the correct sample size; if wrong it'll print error on dialog so easy to spot!
 		-- save exponents to the list for learning: 
-		expos = expos| apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
+		expos = expos|apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));
 		-- save ideals so we can compute GB down below: 
 		ideals = append(ideals,ideal toList bins);
 		)
     	    );
 	f = openOutAppend filename;
-    	f << expos << endl;
+    	f << replace(" ","",expos) << endl; 
 	close f;
     	gbSizes = [];
     	-- TO DO: 
@@ -56,7 +56,7 @@ generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSa
 		-- save exponents to the open file f: 
 		expos =  apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));	
     		f := openOutAppend filename;
-		f << expos;
+		f << replace(" ","",toString(expos));
 		close f;
 		gbf := openOutAppend concatenate(filename,".gbSizes.txt");
 		gbf <<  [# flatten entries gens gb ideal toList bins];
@@ -101,7 +101,7 @@ scan(sampleSize,i-> (
 	)
     )
 print concatenate("writing to file ",filename);
-writeData(expos, parameters, filename);
+writeData(replace(" ","",expos), parameters, filename);
 
 -- notes for future:
 	--expos = append(expos, apply(bins,b->exponents b)); -- this makes everything with {}. We prefer [].
