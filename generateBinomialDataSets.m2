@@ -9,7 +9,7 @@
 generateGBdata = method(TypicalValue => List, Options=>{Homogeneous=>false,OneAtATime=>true,InfoLine=>true})--IdealsOnly=>false,
 generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSample,sampleSize) -> ( 
     S = ZZ/32003[x_0..x_(numVars-1)];
-    filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".txt";
+    filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString binomialsInEachSample|"binomialsEach."|toString currentTime()|".txt";
     --for foolproof automation: --  filename=temporaryFileName()|".txt"; 
     --just add a "version number" at the end of the text file if one of the same name already exists. We do have a time stamp, so that should take care of most conflicts, but just in case, double-fool-proof?: [adding random # at the end])
     while  fileExists(filename)  do   filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString currentTime()|".v"|toString random(100)|".txt";
