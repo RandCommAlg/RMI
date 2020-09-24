@@ -6,7 +6,7 @@
 -- ******************************************************************
 
 
-generateGBdata = method(TypicalValue => List, Options=>{Homogeneous=>false,OneAtATime=>true,InfoLine=>true})--IdealsOnly=>false,
+generateGBdata = method(TypicalValue => List, Options=>{Homogeneous=>false,OneAtATime=>true,InfoLine=>true,ExcludeZeroBinomials=>true})--IdealsOnly=>false,
 generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSample,sampleSize) -> ( 
     S = ZZ/32003[x_0..x_(numVars-1)];
     filename = "RandomBinomialDataSet."|toString numVars|"vars.deg"|toString maxDegree|".sampleSize"|toString sampleSize|"."|toString binomialsInEachSample|"binomialsEach."|toString currentTime()|".txt";
@@ -51,7 +51,7 @@ generateGBdata(ZZ,ZZ,ZZ,ZZ) := List => o -> (numVars,maxDegree,binomialsInEachSa
     	-- generate a random binomial set, write it to file f, then compute gb write size gb, and only THEN continue to next random set.
 	scan(sampleSize,i-> (
 		-- generate a new random binomial set: 
-		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.Homogeneous);
+		bins = new Array from randomBinomials(S,maxDegree,binomialsInEachSample,Homogeneous=>o.Homogeneous,ExcludeZeroBinomials=>o.ExcludeZeroBinomials);
 		assert(#bins == binomialsInEachSample); -- just to make sure I got the correct sample size; if wrong it'll print error on dialog so easy to spot!
 		-- save exponents to the open file f: 
 		expos =  apply(bins,b->new Array from apply(exponents b,monexpo->new Array from monexpo));	

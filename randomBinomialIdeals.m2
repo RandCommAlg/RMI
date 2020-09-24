@@ -16,12 +16,13 @@
 -- and make a binomial out of mons_indPlus - mons_indMinus,
 -- and add k such binomials to a list. 
 -- 
+-- ExcludeZeroBinomials=>true, controls whether zero binomials are allowed
 -- if Homogeneous=>true then: 
 -- OUTPUT: list of k homogeneous binomials (of format M1-M2) of degree d in ring R.
 -- if Homogeneous=>false then: 
 -- OUTPUT: list of k (non-homogeneous) binomials (of format M1-M2) of degree at most d in ring R.
 ---------------------------------------------------------------------------------------------
-randomBinomials = method(TypicalValue => List, Options=>{Homogeneous=>false})
+randomBinomials = method(TypicalValue => List, Options=>{Homogeneous=>false, ExcludeZeroBinomials=>true})
 randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> ( 
     if o.Homogeneous then mons = flatten entries basis(maxDegree,R) else (
 	mons = {};
@@ -33,6 +34,13 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
     scan(k, i-> (
 	    indPlus = random(0,#mons-1);
 	    indMinus = random(0,#mons-1);
+	    if (o.ExcludeZeroBinomials==true) then(
+	    	while (indPlus==indMinus) do(
+	    	    indPlus = random(0,#mons-1);
+	      	    indMinus = random(0,#mons-1);
+	      	    );
+		);
+	    --
 	    binomials = append(binomials, mons_indPlus-mons_indMinus);
 	    )
     	);
