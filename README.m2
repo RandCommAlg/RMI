@@ -2,6 +2,22 @@
 -- README  
 -- ******************************************************************
 
+
+-- ******************************************************************
+-- ******************************************************************
+-- option 1  for  generating  random toric ideals: kernel of  random monomial maps.
+-- ******************************************************************
+-- ******************************************************************
+
+-- check the file  "randomBinomialIdeals.m2" starting at line 63!  
+
+
+-- ******************************************************************
+-- ******************************************************************
+-- option 2  for  generating  random binomial ideals: differences of random monomials. 
+-- ******************************************************************
+-- ******************************************************************
+
 -- Random binomial data is written to a FILE. The filename for this data set is of
 -- the format "RandomBinomialDataSet.3vars.deg4.sampleSize10". 
 -- The format of the file is: 
