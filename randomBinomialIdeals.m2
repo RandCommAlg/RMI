@@ -90,32 +90,32 @@ B:= delete(sub(1,F), flatten flatten flatten apply(toList(0..U), i->apply(toList
 apply(B, b->phi b)
 )
 
-randomMonomialSet = method();
-randomMonomialSet(ZZ,ZZ,ZZ) := (n,D,M) -> (
+randomLaurentMonomialSet = method();
+randomLaurentMonomialSet(ZZ,ZZ,ZZ) := (n,D,M) -> (
 -- fixed M model with L1 norm monomial generationg model
 allMonomials = allLaurentMonomials(n,D);
 B = take(random(allMonomials),M)
 )
 
-randomMonomialSet(ZZ,ZZ,RR) := (n,D,p) -> (
+randomLaurentMonomialSet(ZZ,ZZ,RR) := (n,D,p) -> (
 -- ER model with L1 norm monomial generating model
 allMonomials = allLaurentMonomials(n,D);
 B = select(allMonomials, m->random(0.0,1.0)<=p)
 )
 
-randomMonomialSet(ZZ,ZZ,ZZ,ZZ) := (n,L,U,M) -> (
+randomLaurentMonomialSet(ZZ,ZZ,ZZ,ZZ) := (n,L,U,M) -> (
 -- fixed M model with positive degree sum/negative degree sum monomial generating model
 allMonomials = allLaurentMonomials(n,L,U);
 B = take(random(allMonomials),M)
 )
 
-randomMonomialSet(ZZ,ZZ,ZZ,RR) := (n,L,U,p) -> (
+randomLaurentMonomialSet(ZZ,ZZ,ZZ,RR) := (n,L,U,p) -> (
 -- ER model with positive degree sum/negative degree sum monomial generating model
 allMonomials = allLaurentMonomials(n,L,U);
 B= select(allMonomials, m->random(0.0,1.0)<=p)
 )
 
-randomMonomialSet(ZZ,ZZ,List) := (n,D,pOrM) -> (
+randomLaurentMonomialSet(ZZ,ZZ,List) := (n,D,pOrM) -> (
 -- start of graded model
 if all(pOrM,q->instance(q,ZZ)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,D));
@@ -127,7 +127,7 @@ else if all(pOrM,q->instance(q,RR)) then (
     )
 )
 
-randomMonomialSet(ZZ,ZZ,ZZ,List) := (n,L,U,pOrM) -> (
+randomLaurentMonomialSet(ZZ,ZZ,ZZ,List) := (n,L,U,pOrM) -> (
 -- start of graded model
 if all(pOrM,q->instance(q,ZZ)) then (
         allMonomials = sort values partition(m-> first degree m, allLaurentMonomials(n,L,U));
