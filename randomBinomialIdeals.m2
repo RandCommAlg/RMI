@@ -62,6 +62,9 @@ randomBinomials(PolynomialRing,ZZ,ZZ) := List => o -> (R,maxDegree,k) -> (
 -----------------------------------------------------------------------------------
 ----- below: Jan 2018 code for generating I_A from a random A, where A is a mtx of exponents of randomly generated Laurent monomials.
 
+--- January 2021: this code  below  has  been modified and used to  generate a bunch of toric ideals  with Dylan's problem.
+---  The code below still needs to  be updated! 
+--- Sonja 17.Feb.2021. 
 
 -- let's create a function for the above: 
 allLaurentMonomials = method(TypicalValue=>List);
